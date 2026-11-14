@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b5502f">
-<meta name="app-build" content="20261114232722">
+<meta name="app-build" content="20261115012353">
 <title>Our China Trip • Trip Planner</title>
 <style>
 :root{
@@ -184,7 +184,62 @@ body:has(.sheet .driver) #chatFab{display:none}
 .dbtn.damap{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(181,80,47,.28)}
 .dbtn.damap:hover{filter:brightness(1.05)}
 .dtip{font-size:12.5px;line-height:1.45;color:var(--muted);text-align:center;margin:12px 4px 0}
-@media print{.cnav{display:none!important}}
+@media print{.cnav,.cpick .pk,.changes{display:none!important}}
+/* co-planning: picks */
+.cpick{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;vertical-align:top}
+.ctop .cpick{margin-left:auto;flex:none;gap:4px}
+.ctop .pk{width:30px;height:30px;margin:-5px 0;font-size:14px}
+.cpbs{margin-top:6px}
+.cbody .cnav:has(+ .cpbs){display:inline-flex;margin-right:4px;vertical-align:middle}
+.cnav + .cpbs{display:inline-flex;vertical-align:middle}
+body:has(.sheet.mbsheet) #chatFab{display:none}
+.pk{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:15px;line-height:1;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;color:#b9aa9c}
+.pk:hover,.pk:focus-visible{border-color:#e3cdb8;background:var(--accent-soft)}
+.pk.on{background:#fff4e8;border-color:#f0c9a0;color:inherit}
+.pbs{display:inline-flex;gap:4px;flex-wrap:wrap}
+.pb{display:inline-flex;align-items:center;gap:2px;font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:999px;background:#f6efe8;color:#6b5a4c;white-space:nowrap}
+.pb.pb-her{background:#fdeef3;color:#a43d64}
+.pb.pb-keith{background:#eaf2fb;color:#2f5f8f}
+.card.must{box-shadow:0 0 0 1.5px #f2c14e inset,0 1px 2px rgba(0,0,0,.04)}
+.card.hl{animation:hl 2.4s ease-out}
+@keyframes hl{0%,30%{box-shadow:0 0 0 3px #f2a33a,0 6px 18px rgba(242,163,58,.35);background:#fff6e6}100%{box-shadow:none;background:#fff}}
+/* co-planning: what changed */
+.changes{max-width:640px;margin:12px auto 0;padding:0 14px}
+@media (min-width:900px){.changes{max-width:none;margin:12px 16px 0;padding:0}}
+.chg{background:linear-gradient(180deg,#fffaf3,#fff);border:1px solid #f0d9bf;border-radius:14px;padding:10px 12px 8px;box-shadow:0 2px 8px rgba(181,80,47,.07)}
+.chgh{display:flex;align-items:center;gap:8px;font-size:14px}
+.chgh b{flex:1}
+.chgx{min-height:32px;padding:4px 12px;font-size:13px}
+.chg ul{list-style:none;margin:6px 0 0;padding:0}
+.chgl{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:0;background:none;font:inherit;font-size:13.5px;color:var(--ink);padding:7px 2px;border-top:1px solid #f4e6d6;cursor:pointer;line-height:1.35}
+.chg li:first-child .chgl{border-top:0}
+.chgl:hover,.chgl:focus-visible{color:var(--accent)}
+.chgd{flex:none;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.chga{margin-left:auto;color:var(--muted);font-size:17px;padding-left:6px}
+.chgmore{font-size:12.5px;color:var(--muted);padding:4px 2px 2px 17px}
+/* co-planning: Maybe list */
+#bMaybe .mbn{display:inline-block;min-width:18px;padding:0 5px;border-radius:999px;background:rgba(255,255,255,.3);font-size:11.5px;text-align:center;margin-left:2px}
+.mbcount{display:inline-block;min-width:22px;padding:1px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:13px;text-align:center;vertical-align:middle}
+.mbform{background:#faf6f1;border:1px solid var(--line);border-radius:14px;padding:12px 12px 4px;margin-bottom:14px}
+.mbform .field{margin-bottom:10px}
+.mbform textarea{min-height:56px}
+.mbform .seg button{flex:1}
+.mbaddb{width:100%;margin-bottom:8px;min-height:44px}
+.mbs{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.mbi{border:1px solid var(--line);border-left:4px solid #e0b25a;border-radius:12px;padding:10px 12px;background:#fff}
+.mbi.open{border-color:#f0c9a0;box-shadow:0 2px 10px rgba(181,80,47,.08)}
+.mbt{font-weight:600;font-size:15px;line-height:1.3}
+.mbt .cemo{margin-right:6px}
+.mbnote{font-size:13px;color:#5c5047;margin-top:4px;white-space:pre-wrap;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mbrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.mbrow .cnav,.mbrow .cpick{margin-top:8px}
+.mbact{margin-top:8px}
+.mbday{flex:1;min-height:38px}
+.mbdel{min-height:38px;padding:0 12px}
+.mbpick{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.mbpick .btn{width:100%;min-height:42px}
+.mbempty{color:var(--muted);font-size:14px;text-align:center;padding:16px 8px;border:1px dashed var(--line);border-radius:12px;list-style:none}
+.tomaybe{width:100%;margin-bottom:10px}
 .x{border:0;background:#f3ece3;border-radius:50%;width:34px;height:34px;font-size:16px}
 
 /* toast */
@@ -257,6 +312,7 @@ body:has(.sheet .driver) #chatFab{display:none}
   <div class="tools" role="toolbar" aria-label="Plan tools">
     <button class="tbtn primary" id="bShare" type="button" data-t="share"></button>
     <button class="tbtn" id="bRefresh" type="button" data-t="refresh"></button>
+    <button class="tbtn" id="bMaybe" type="button"></button>
     <button class="tbtn" id="bUndo" type="button" disabled data-t="undo"></button>
     <button class="tbtn" id="bDownload" type="button" data-t="download"></button>
     <button class="tbtn" id="bLoad" type="button" data-t="load"></button>
@@ -268,13 +324,14 @@ body:has(.sheet .driver) #chatFab{display:none}
 </header>
 <div class="jump"><nav class="chips" id="chips" aria-label="Jump to day"></nav></div>
 <div class="firsthelp" id="firsthelp" hidden><div>👋 <span data-th="banner"></span><button class="btn" id="hideHelp" type="button" data-t="gotit"></button></div></div>
+<div class="changes" id="changes" hidden></div>
 <main id="board" aria-label="Itinerary"></main>
 <footer class="ver foot" id="footVer"></footer>
 <input type="file" id="fileIn" accept=".json,application/json" hidden>
 <div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
 
 <script>
-const BUILD={"id": "20261114232722", "at": "2026-11-14T23:27:22+08:00", "label": "14 Nov 2026, 23:27 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
+const BUILD={"id": "20261115012353", "at": "2026-11-15T01:23:53+08:00", "label": "15 Nov 2026, 01:23 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
 // ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
 // Text fields are [English, Thai]. Plain strings are used for both languages.
 const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
@@ -521,7 +578,15 @@ share:"📤 Share",undo:"↩️ Undo",undoShort:"Undo",download:"⬇️ Download
  resetH:"Reset to original?",resetMsg:"This replaces the shared plan (for both of you) with Keith's original itinerary. You can undo straight after.",resetOk:"Reset",
  helpH:"How it works",helpBody:"✏️ <b>Edit:</b> tap any activity or day header.<br>↕️ <b>Move:</b> drag the ⠿ handle (or press &amp; hold a card on phones) and drop it anywhere – into another day or into 💡 Ideas. You can also open an activity and use ↑ / ↓ or change its Day.<br>➕ <b>Add:</b> “Add activity” under each day, “Add a day” at the end.<br>↩️ <b>Undo:</b> the Undo button reverses your last change.<br>🌐 <b>EN / ไทย:</b> switch language at the top. Edits are kept in the language you type them in.<br>💾 <b>Saving:</b> automatic. Changes go to one shared plan that both of you use (and a backup stays on this device).<br>🔄 <b>Refresh:</b> gets the latest changes from the other person. The newest change wins.<br>📤 <b>Share:</b> copy a link or send the plan file. 📂 <b>Load plan</b> opens one.<br>🖨️ <b>Print / Save PDF</b> for a tidy printable copy.<br>⌨️ Keyboard: focus ⠿ and use arrow keys.",
  navDriver:"Go 🚕",navDriverAria:t=>`Show ${t} in Chinese for a taxi or Didi driver`,navDriverH:"Show this to the driver",navCopy:"📋 Copy address",navCopyName:"📋 Copy name",navCopied:"Copied ✓ Paste it into Didi’s “Where to?”",navCopiedBtn:"✓ Copied",navNoCopy:"Couldn’t copy. Press and hold the Chinese text instead",navAmap:"🧭 Open in Amap",navNoZh:"No Chinese name saved for this one yet. Open Amap and show the driver the place on the map.",navDidiHint:"Didi: tap “Where to?” (您要去哪儿) and paste.",zhSec:"📍 Chinese name & address (for maps and taxis)",fZh:"Chinese name",fZhAddr:"Chinese address",phZh:"e.g. 雍和宫",phZhAddr:"e.g. 北京市东城区雍和宫大街12号",
- itinerary:"Itinerary",tools:"Plan tools",jumpTo:"Jump to day",titleLbl:"Trip title",docTitle:" – Planner",defaultTitle:"Our Trip"},
+ itinerary:"Itinerary",tools:"Plan tools",jumpTo:"Jump to day",titleLbl:"Trip title",docTitle:" – Planner",defaultTitle:"Our Trip",
+ pickH:"Love it",pickS:"Must-do",pickHA:t=>`Love “${t}”`,pickSA:t=>`Mark “${t}” as a must-do`,tHeart:"Loved ❤️",tStar:"Marked as a must-do ⭐",tUnpick:"Removed your pick",
+ pYou:"You",pKeith:"Keith",pHer:"Her",pBot:"Trip Buddy",pickedBy:"Picks",
+ chH:"Since you last looked",chMore:n=>`and ${n} more`,chOk:"Got it",chJump:"Tap to see it",
+ mbBtn:"💭 Maybe",mbH:"💭 Maybe list",mbSub:"Ideas we might do. Heart the ones you like, then pop them into a day when you’re ready.",
+ mbTitle:"Idea",mbTitlePh:"e.g. Hot pot near the hotel",mbNote:"Note (optional)",mbNotePh:"Why it looks good, opening hours, a link…",mbCity:"Where",mbAny:"Not sure",
+ mbAdd:"＋ Add to Maybe",mbEmpty:"No ideas yet. Add the first one above ✨",mbToDay:"📅 Add to day…",mbWhich:"Which day?",mbTime:"Time (optional)",mbTimePh:"e.g. 15:00",
+ mbPlace:"Add to this day",mbDel:"Delete",mbDelA:t=>`Delete “${t}”`,toMaybe:"💭 Back to Maybe",tToMaybe:"Moved back to Maybe 💭",tIdeaAdded:"Added to Maybe 💭",tToDay:l=>`Added to ${l} ✓`,
+ tMaybeNeed:"Give the idea a name first",cBJ:"Beijing",cSH:"Shanghai"},
 th:{refresh:"🔄 รีเฟรช",sAuto:"🔁 ซิงก์อัตโนมัติเปิดอยู่",sChecked:"ตรวจล่าสุด",tPartner:"อัปเดตตามที่แฟนแก้ไขแล้ว ✓",sSaved:"บันทึกแล้ว ✓",sSaving:"กำลังบันทึก…",sChecking:"กำลังตรวจสอบการเปลี่ยนแปลง…",sOffline:"ออฟไลน์ – บันทึกไว้ในเครื่องนี้",sLocal:"บันทึกไว้ในเครื่องนี้",sLast:"แก้ไขล่าสุด",
  tUpToDate:"เป็นแผนล่าสุดแล้ว ✓",tGotLatest:"อัปเดตเป็นแผนล่าสุดแล้ว ✓",tPushed:"บันทึกการแก้ไขของคุณลงแผนที่แชร์แล้ว ✓",
  tOffline:"เชื่อมต่ออินเทอร์เน็ตไม่ได้ – แผนบันทึกไว้ในเครื่องนี้ และจะซิงก์เมื่อกลับมาออนไลน์",tNewApp:"อัปเดตแอปเป็นเวอร์ชันล่าสุดแล้ว ✓",
@@ -550,7 +615,15 @@ share:"📤 แชร์",undo:"↩️ เลิกทำ",undoShort:"เลิ�
  resetH:"กลับเป็นแผนเดิม?",resetMsg:"แผนที่แชร์ (ของทั้งสองคน) จะถูกแทนที่ด้วยแผนเดิมของ Keith กดเลิกทำได้ทันทีหลังจากนี้",resetOk:"กลับเป็นแผนเดิม",
  helpH:"วิธีใช้",helpBody:"✏️ <b>แก้ไข:</b> แตะที่กิจกรรมหรือหัวข้อของวัน<br>↕️ <b>ย้าย:</b> ลากที่ ⠿ (หรือกดค้างที่การ์ดบนมือถือ) แล้ววางที่ไหนก็ได้ – ในวันอื่นหรือใน 💡 ไอเดีย หรือเปิดกิจกรรมแล้วกด ↑ / ↓ หรือเปลี่ยน “วัน”<br>➕ <b>เพิ่ม:</b> “เพิ่มกิจกรรม” ใต้แต่ละวัน และ “เพิ่มวัน” ด้านท้าย<br>↩️ <b>เลิกทำ:</b> ปุ่มเลิกทำจะย้อนการเปลี่ยนแปลงล่าสุด<br>🌐 <b>EN / ไทย:</b> สลับภาษาได้ที่ด้านบน ข้อความที่แก้จะเก็บไว้ตามภาษาที่พิมพ์<br>💾 <b>บันทึก:</b> อัตโนมัติ การแก้ไขจะเข้าไปที่แผนที่แชร์ร่วมกันของทั้งสองคน (และสำรองไว้ในเครื่องนี้ด้วย)<br>🔄 <b>รีเฟรช:</b> ดึงการแก้ไขล่าสุดจากอีกคน การแก้ไขล่าสุดจะถูกใช้<br>📤 <b>แชร์:</b> คัดลอกลิงก์หรือส่งไฟล์แผน 📂 <b>เปิดแผน</b> เพื่อเปิดแผนที่ได้รับ<br>🖨️ <b>พิมพ์ / บันทึก PDF</b> สำหรับฉบับพิมพ์สวย ๆ<br>⌨️ คีย์บอร์ด: โฟกัสที่ ⠿ แล้วใช้ปุ่มลูกศร",
  navDriver:"ไปกัน 🚕",navDriverAria:t=>`โชว์ ${t} เป็นภาษาจีนให้คนขับแท็กซี่หรือ Didi ดู`,navDriverH:"ยื่นให้คนขับดูได้เลย",navCopy:"📋 ก๊อปที่อยู่",navCopyName:"📋 ก๊อปชื่อร้าน/ที่",navCopied:"ก๊อปแล้ว ✓ ไปวางในช่อง “Where to?” ของ Didi ได้เลย",navCopiedBtn:"✓ ก๊อปแล้ว",navNoCopy:"ก๊อปไม่ได้ กดค้างที่ตัวหนังสือจีนแทนนะ",navAmap:"🧭 เปิดใน Amap",navNoZh:"ที่นี่ยังไม่มีชื่อภาษาจีนนะ เปิด Amap แล้วยื่นแผนที่ให้คนขับดูแทนได้เลย",navDidiHint:"Didi: แตะช่อง “Where to?” (您要去哪儿) แล้ววางได้เลย",zhSec:"📍 ชื่อ & ที่อยู่ภาษาจีน (ไว้เปิดแผนที่/เรียกรถ)",fZh:"ชื่อภาษาจีน",fZhAddr:"ที่อยู่ภาษาจีน",phZh:"เช่น 雍和宫",phZhAddr:"เช่น 北京市东城区雍和宫大街12号",
- itinerary:"แผนการเดินทาง",tools:"เครื่องมือ",jumpTo:"ไปยังวัน",titleLbl:"ชื่อทริป",docTitle:" – แผนเที่ยว",defaultTitle:"ทริปของเรา"}
+ itinerary:"แผนการเดินทาง",tools:"เครื่องมือ",jumpTo:"ไปยังวัน",titleLbl:"ชื่อทริป",docTitle:" – แผนเที่ยว",defaultTitle:"ทริปของเรา",
+ pickH:"ชอบเลย",pickS:"ห้ามพลาด",pickHA:t=>`กดใจ “${t}”`,pickSA:t=>`ปักหมุด “${t}” ว่าห้ามพลาด`,tHeart:"กดใจแล้ว ❤️",tStar:"ปักหมุดห้ามพลาดแล้ว ⭐",tUnpick:"เอาออกแล้วน้า",
+ pYou:"เรา",pKeith:"Keith",pHer:"แฟน",pBot:"บัดดี้ประจำทริป",pickedBy:"ใครชอบบ้าง",
+ chH:"มีอะไรใหม่ตั้งแต่ครั้งก่อน",chMore:n=>`และอีก ${n} อย่าง`,chOk:"โอเค",chJump:"แตะเพื่อดู",
+ mbBtn:"💭 อาจจะไป",mbH:"💭 ลิสต์ “อาจจะไป”",mbSub:"เก็บไอเดียไว้ตรงนี้ก่อนนะ ชอบอันไหนกดหัวใจไว้ แล้วค่อยใส่ลงวันที่อยากไปตอนพร้อม",
+ mbTitle:"ไอเดีย",mbTitlePh:"เช่น หม้อไฟใกล้โรงแรม",mbNote:"โน้ต (ไม่ใส่ก็ได้)",mbNotePh:"ทำไมน่าไป เวลาเปิด หรือแปะลิงก์…",mbCity:"อยู่เมืองไหน",mbAny:"ยังไม่แน่ใจ",
+ mbAdd:"＋ เพิ่มลงลิสต์",mbEmpty:"ยังไม่มีไอเดียเลย เพิ่มอันแรกด้านบนได้เลยน้า ✨",mbToDay:"📅 ใส่ลงวัน…",mbWhich:"วันไหนดี?",mbTime:"เวลา (ไม่ใส่ก็ได้)",mbTimePh:"เช่น 15:00",
+ mbPlace:"ใส่วันนี้เลย",mbDel:"ลบ",mbDelA:t=>`ลบ “${t}”`,toMaybe:"💭 ย้ายกลับไปอาจจะไป",tToMaybe:"ย้ายกลับไปลิสต์อาจจะไปแล้ว 💭",tIdeaAdded:"เพิ่มลงลิสต์อาจจะไปแล้ว 💭",tToDay:l=>`ใส่ลง ${l} แล้ว ✓`,
+ tMaybeNeed:"ตั้งชื่อไอเดียก่อนน้า",cBJ:"ปักกิ่ง",cSH:"เซี่ยงไฮ้"}
 };
 let lang="en";
 try{ lang=localStorage.getItem(LANG_KEY)||((navigator.language||"").toLowerCase().startsWith("th")?"th":"en"); }catch(e){}
@@ -616,7 +689,7 @@ function normalize(p){
   if(p.title_en==null&&p.title_th==null&&!Array.isArray(p.title)){ const en=String(p.title||"Our Trip"); pt.title_en=en; pt.title_th=TH_LOOKUP.ptitle[en]||en; }
   return Object.assign({app:"china-trip-planner",version:2},pt,{
     days:p.days.map(d=>{const o=Object.assign({id:d.id||uid(),date:String(d.date||""),items:(d.items||[]).map(ni)},normFields(d,DAY_F,"d_")); const w=normWx(d.weather); if(w) o.weather=w; return o;}),
-    ideas:(p.ideas||[]).map(ni),savedAt:p.savedAt||null});
+    ideas:(p.ideas||[]).map(ni),savedAt:p.savedAt||null}, (l=>l?{log:l}:{})(normLog(p.log)));
 }
 const original=()=>normalize(clone(ORIGINAL_DATA));
 
@@ -626,7 +699,18 @@ const original=()=>normalize(clone(ORIGINAL_DATA));
 const NAV_F=["zh","zh_addr","zh_city"];
 const SEED=typeof NAV_SEED!=="undefined"?NAV_SEED:{};
 // copies the nav fields onto o, always at the end and in this order (sync compares plans as JSON)
-function navFields(src,o){ NAV_F.forEach(f=>{ delete o[f]; if(src[f]!=null) o[f]=String(src[f]); }); delete o.nav; if(src.nav===false) o.nav=false; return o; }
+function navFields(src,o){ NAV_F.forEach(f=>{ delete o[f]; if(src[f]!=null) o[f]=String(src[f]); }); delete o.nav; if(src.nav===false) o.nav=false; return pickFields(src,o); }
+// co-planning picks per item: picks:{keith:{h:1,s:1},her:{h:1}} (h = ❤️ love it, s = ⭐ must-do); kept last, in a fixed order
+const PICK_WHO=["keith","her"];
+function pickFields(src,o){ delete o.picks; const p=src.picks;
+  if(p&&typeof p==="object"){ const out={}; PICK_WHO.forEach(w=>{ const v=p[w]; if(v&&typeof v==="object"){ const r={}; if(v.h) r.h=1; if(v.s) r.s=1; if(r.h||r.s) out[w]=r; } }); if(Object.keys(out).length) o.picks=out; }
+  return o; }
+// plan-level changelog: [{id,ts,by:"keith"|"her"|"bot",a,item,t,th,d}] (a: add|edit|move|maybe|del|idea|heart|star; d = day id or "ideas"), capped
+const LOG_CAP=60, LOG_BY=["keith","her","bot"];
+function logEntry(x){ const o={id:String(x.id),ts:Number(x.ts)||0,by:LOG_BY.includes(x.by)?x.by:"bot",a:String(x.a||"edit"),item:String(x.item||"")};
+  ["t","th","d"].forEach(k=>{ if(x[k]!=null&&x[k]!=="") o[k]=String(x[k]); }); return o; }
+function normLog(l){ if(!Array.isArray(l)) return null;
+  const L=l.filter(x=>x&&typeof x==="object"&&x.id).map(logEntry).sort((a,b)=>a.ts-b.ts).slice(-LOG_CAP); return L.length?L:null; }
 const ADCODE={"北京":"110000","上海":"310000"};
 const NAV_CATS=["sightseeing","food","shopping","hotel"];
 const GENERIC=/\b(no plans?|free (time|day|afternoon|morning|evening)|tbd|to be planned|rest|relax|chill|inside the park|in the park|early (lunch|dinner)|warm up|return to|back to (the )?(hotel|apartment)|packing|check-?out)\b|ว่าง|ยังไม่มีแผน|พักผ่อน/i;
@@ -817,14 +901,15 @@ function cardHTML(it,day){
   const pill=it.status!=="planned"?`<span class="pill ${it.status}">${T("status")[it.status]}</span>`:"";
   let link="";
   if(it.link){const href=/^[a-z]+:/i.test(it.link)?it.link:"https://"+it.link; if(/^(https?|mailto|tel):/i.test(href)) link=`<a class="clink" href="${esc(href)}" target="_blank" rel="noopener">🔗 ${esc(it.link.replace(/^https?:\/\/(www\.)?/,""))}</a>`;}
-  return `<li class="card" data-id="${it.id}" data-cat="${it.cat}">
+  const must=it.picks&&PICK_WHO.some(w=>it.picks[w]&&it.picks[w].s);
+  return `<li class="card${must?" must":""}" data-id="${it.id}" data-cat="${it.cat}">
     <button class="handle" type="button" aria-label="${esc(T("moveAria")(title))}" title="${esc(T("moveTitle"))}">⠿</button>
     <div class="cbody" role="button" tabindex="0" aria-label="${esc(T("editAria")(title))}">
-      <div class="ctop"><span class="ctime">${esc(tx(it,"time"))}</span>${pill}<span class="sr">${catName}</span></div>
+      <div class="ctop"><span class="ctime">${esc(tx(it,"time"))}</span>${pill}<span class="sr">${catName}</span>${pickHTML(it,day,title)}</div>
       <div class="ctitle"><span class="cemo" aria-hidden="true">${emo}</span>${esc(title)}</div>
       ${notes?`<div class="cnotes">${esc(notes)}</div>`:""}
       ${link}
-      ${navHTML(it,day,title)}
+      ${navHTML(it,day,title)}${it.picks?`<div class="cpbs">${pickBadges(it)}</div>`:""}
     </div></li>`;
 }
 const tdeg=v=>v==null?"–":String(v).replace("-","−")+"°";
@@ -866,6 +951,9 @@ function render(){
   b.innerHTML=h; b.scrollLeft=sx;
   $("#chips").innerHTML=plan.days.map((d,i)=>`<button class="chip" type="button" data-jump="${d.id}"><b>${esc(T("dayN")(i+1))}</b>${esc(fmtDate(d.date,"short"))}</button>`).join("")+
     `<button class="chip" type="button" data-jump="ideas"><b>${T("ideas")}</b>${plan.ideas.length}</button>`;
+  const mbb=$("#bMaybe"); if(mbb) mbb.innerHTML=`${esc(T("mbBtn"))}<span class="mbn">${plan.ideas.length}</span>`;
+  try{ Changes.paint(); }catch(e){}
+  if(document.querySelector("#sheet .mbs")) paintMaybe();
 }
 function setLang(l){
   if(!LANGS.includes(l)||l===lang) return;
@@ -918,6 +1006,7 @@ function editItem(id,isNew,lidForNew){
     <label class="field"><span>${T("fZh")}</span><input name="zh" lang="zh-CN" value="${esc(it.zh||"")}" placeholder="${esc(T("phZh"))}"></label>
     <label class="field"><span>${T("fZhAddr")}</span><input name="zh_addr" lang="zh-CN" value="${esc(it.zh_addr||"")}" placeholder="${esc(T("phZhAddr"))}"></label></details>
    ${isNew?"":`<div class="field"><span>${T("fMove")}</span><div class="movebar"><button class="btn" type="button" data-mv="-1" aria-label="${esc(T("upAria"))}">${T("up")}</button><button class="btn" type="button" data-mv="1" aria-label="${esc(T("downAria"))}">${T("down")}</button><span class="hint" style="margin:0 4px">${T("orPick")}</span></div></div>`}
+   ${isNew||where==="ideas"?"":`<button class="btn tomaybe" type="button" data-tomaybe>${T("toMaybe")}</button>`}
    <div class="actions">${isNew?"":`<button class="btn danger" type="button" data-del>${T("del")}</button>`}<button class="btn primary" type="button" data-save>${isNew?T("add"):T("save")}</button></div>`,
   s=>{
     const val={cat:it.cat,status:it.status};
@@ -928,7 +1017,7 @@ function editItem(id,isNew,lidForNew){
       const g=n=>s.querySelector(`[name=${n}]`).value.trim();
       const to=g("where");
       snapshot();
-      const target=isNew?it:findItem(it.id).item;
+      const target=isNew?it:findItem(it.id).item; const before=isNew?"":itemSig(target);
       const oldTitleEn=target.title_en||"", zhIn=g("zh"), adIn=g("zh_addr");
       const txt={time:g("time"),title:g("title")||T("untitled"),notes:s.querySelector("[name=notes]").value.replace(/\s+$/,"")};
       if(isNew){ ITEM_F.forEach(f=>setBoth(target,f,txt[f])); }
@@ -945,16 +1034,19 @@ function editItem(id,isNew,lidForNew){
       navFields(Object.assign({},target),target);
       if(isNew) listById(to).push(target);
       else if(to!==findItem(it.id).lid) moveItem(it.id,to,null);
+      if(isNew) logAct(to==="ideas"?"idea":"add",target,to);
+      else { if(itemSig(target)!==before) logAct("edit",target,to); if(to!==where) logAct(to==="ideas"?"maybe":"move",target,to); }
       closeSheet(); commit(); toast(isNew?T("tAdded"):T("tSaved"));
       if(isNew||to!==where) flash(it.id);
     };
     s.querySelector("[data-save]").onclick=doSave;
     s.querySelectorAll("input").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();doSave();}}));
     const del=s.querySelector("[data-del]"); if(del) del.onclick=()=>{ deleteItem(it.id); closeSheet(); };
+    const mb=s.querySelector("[data-tomaybe]"); if(mb) mb.onclick=()=>{ closeSheet(); toMaybe(it.id); };
     s.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{ nudge(it.id,+b.dataset.mv); });
   });
 }
-function deleteItem(id){ const f=findItem(id); if(!f) return; snapshot(); f.list.splice(f.idx,1); commit(); toast(T("tDeleted")(tx(f.item,"title")),true); }
+function deleteItem(id){ const f=findItem(id); if(!f) return; snapshot(); f.list.splice(f.idx,1); logAct("del",f.item,f.lid); commit(); toast(T("tDeleted")(tx(f.item,"title")),true); }
 function nudge(id,dir){
   const f=findItem(id); if(!f) return; const ni=f.idx+dir;
   snapshot();
@@ -964,11 +1056,12 @@ function nudge(id,dir){
     if(li<0||li>=lids.length){undoStack.pop();return;}
     moveItem(id,lids[li],dir>0?0:null);
   }
+  { const g=findItem(id); logAct(g.lid==="ideas"&&f.lid!=="ideas"?"maybe":"move",g.item,g.lid); }
   commit(); flash(id); toast(T("tMoved")(dayLabel(findItem(id).lid)));
 }
 function hop(id,dir){
   const f=findItem(id); if(!f) return; const lids=[...plan.days.map(d=>d.id),"ideas"]; const li=lids.indexOf(f.lid)+dir;
-  if(li<0||li>=lids.length) return; snapshot(); moveItem(id,lids[li],Math.min(f.idx,listById(lids[li]).length)); commit(); flash(id); toast(T("tMoved")(dayLabel(lids[li])));
+  if(li<0||li>=lids.length) return; snapshot(); moveItem(id,lids[li],Math.min(f.idx,listById(lids[li]).length)); logAct(lids[li]==="ideas"?"maybe":"move",f.item,lids[li]); commit(); flash(id); toast(T("tMoved")(dayLabel(lids[li])));
 }
 function flash(id){ const el=document.querySelector(`.card[data-id="${id}"]`); if(!el) return;
   el.scrollIntoView({block:"nearest",inline:"nearest",behavior:"smooth"}); el.animate&&el.animate([{background:"#ffe9c7"},{background:"#fff"}],{duration:900}); }
@@ -1018,6 +1111,7 @@ board.addEventListener("click",e=>{
   if(dragJustEnded) return;
   const t=e.target;
   if(t.closest("a.clink")) return;
+  const pk=t.closest("[data-pick]"); if(pk) return togglePick(pk.dataset.id,pk.dataset.pick);
   const drv=t.closest("[data-driver]"); if(drv) return showDriver(drv.dataset.driver);
   const add=t.closest("[data-add]"); if(add) return editItem(null,true,add.dataset.add);
   if(t.closest("#bAddDay")) return editDay(null,true);
@@ -1026,7 +1120,7 @@ board.addEventListener("click",e=>{
 });
 board.addEventListener("keydown",e=>{
   const cb=e.target.closest&&e.target.closest(".cbody");
-  if(cb&&e.target.closest("a,.cnav")) return;
+  if(cb&&e.target.closest("a,.cnav,.cpick")) return;
   if(cb&&(e.key==="Enter"||e.key===" ")){e.preventDefault(); editItem(cb.closest(".card").dataset.id); return;}
   const h=e.target.closest&&e.target.closest(".handle"); if(!h) return;
   const id=h.closest(".card").dataset.id; const map={ArrowUp:()=>nudge(id,-1),ArrowDown:()=>nudge(id,1),ArrowLeft:()=>hop(id,-1),ArrowRight:()=>hop(id,1)};
@@ -1038,7 +1132,7 @@ $("#chips").addEventListener("click",e=>{const c=e.target.closest("[data-jump]")
 let drag=null, pending=null, dragJustEnded=false, raf=0;
 board.addEventListener("pointerdown",e=>{
   if(e.button>0) return;
-  const card=e.target.closest(".card"); if(!card||e.target.closest("a,.cnav")) return;
+  const card=e.target.closest(".card"); if(!card||e.target.closest("a,.cnav,.cpick")) return;
   const onHandle=!!e.target.closest(".handle");
   pending={card,id:card.dataset.id,x:e.clientX,y:e.clientY,pid:e.pointerId,type:e.pointerType,onHandle,timer:0};
   if(e.pointerType!=="mouse"&&!onHandle){
@@ -1106,7 +1200,7 @@ function finishDrag(cancel){
   dragJustEnded=true; setTimeout(()=>dragJustEnded=false,50);
   const list=d.card.parentElement; const toLid=list&&list.dataset.lid; const toIdx=list?[...list.children].indexOf(d.card):-1;
   if(cancel||!toLid||(toLid===d.fromLid&&toIdx===d.fromIdx)){ render(); return; }
-  snapshot(); moveItem(d.id,toLid,toIdx); commit();
+  snapshot(); moveItem(d.id,toLid,toIdx); { const g=findItem(d.id); if(g) logAct(toLid==="ideas"&&d.fromLid!=="ideas"?"maybe":"move",g.item,toLid); } commit();
   if(toLid!==d.fromLid) toast(T("tMoved")(dayLabel(toLid)),true);
 }
 
@@ -1178,6 +1272,7 @@ function replacePlan(p,msg){ snapshot(); plan=p; commit(); toast(msg,true); }
 $("#bPrint").onclick=()=>{ document.querySelectorAll(".tips").forEach(t=>t.open=true); setTimeout(()=>window.print(),50); };
 $("#bReset").onclick=()=>confirmBox(T("resetH"),T("resetMsg"),T("resetOk"),()=>{replacePlan(original(),T("tReset"));},true);
 $("#bUndo").onclick=undo;
+$("#bMaybe").onclick=()=>openMaybe();
 $("#bHelp").onclick=()=>openSheet(`<h2>${T("helpH")}${closeX()}</h2>
   <p class="hint">${T("helpBody")}</p>
   <p class="ver" id="verInfo">${T("verLbl")}: ${esc(BUILD.label)}</p>
@@ -1185,6 +1280,213 @@ $("#bHelp").onclick=()=>openSheet(`<h2>${T("helpH")}${closeX()}</h2>
 $("#hideHelp").onclick=()=>{ $("#firsthelp").hidden=true; try{localStorage.setItem(HELP_KEY,"1")}catch(e){} };
 window.addEventListener("beforeprint",()=>document.querySelectorAll(".tips").forEach(t=>t.open=true));
 window.addEventListener("storage",e=>{ if(e.key===STORE_KEY&&e.newValue){ try{plan=normalize(JSON.parse(e.newValue)); render();}catch(_){} } });
+
+/* ---------- co-planning: picks (❤️ / ⭐), changelog, "what changed" banner, Maybe list ----------
+   Who am I: the chat identity if this phone set one (#me=keith|her), otherwise Thai view = her, English view = Keith. */
+function whoAmI(){ try{ const v=localStorage.getItem("chinaTripPlanner.chatAs"); if(v==="keith"||v==="her") return v; }catch(e){} return lang==="th"?"her":"keith"; }
+function pname(w){ if(w===whoAmI()&&lang==="th") return T("pYou"); return w==="keith"?T("pKeith"):w==="her"?T("pHer"):w==="bot"?T("pBot"):""; }
+const itemSig=it=>JSON.stringify([it.time_en,it.time_th,it.title_en,it.title_th,it.notes_en,it.notes_th,it.link,it.cat,it.status,it.zh||"",it.zh_addr||""]);
+function logAct(a,it,lid){
+  if(!it) return;
+  const e=logEntry({id:"l"+uid(),ts:Date.now(),by:whoAmI(),a,item:it.id,t:String(it.title_en||"").slice(0,80),th:String(it.title_th||"").slice(0,80),d:lid||""});
+  if(!Array.isArray(plan.log)) plan.log=[];
+  plan.log.push(e); if(plan.log.length>LOG_CAP) plan.log.splice(0,plan.log.length-LOG_CAP);
+}
+function pickBadges(it){
+  const p=it.picks||{};
+  const L=PICK_WHO.filter(w=>p[w]).map(w=>`<span class="pb pb-${w}">${esc(pname(w))} ${p[w].h?"❤️":""}${p[w].s?"⭐":""}</span>`);
+  return L.length?`<span class="pbs" title="${esc(T("pickedBy"))}">${L.join("")}</span>`:"";
+}
+// place cards (the ones with Go 🚕) and every idea get the pick buttons
+function pickHTML(it,day,title,force,withBadges){
+  if(!force&&day&&!navInfo(it,day)) return "";
+  const mp=(it.picks||{})[whoAmI()]||{};
+  const b=(k,on,off,lbl,aria)=>`<button class="pk${mp[k]?" on":""}" type="button" data-pick="${k}" data-id="${esc(it.id)}" aria-pressed="${mp[k]?"true":"false"}" aria-label="${esc(T(aria)(title))}" title="${esc(T(lbl))}">${mp[k]?on:off}</button>`;
+  return `<div class="cpick">${b("h","❤️","🤍","pickH","pickHA")}${b("s","⭐","☆","pickS","pickSA")}${withBadges?pickBadges(it):""}</div>`;
+}
+function togglePick(id,k){
+  const f=findItem(id); if(!f||!/^[hs]$/.test(k)) return null;
+  snapshot();
+  const it=f.item, me=whoAmI(), p=clone(it.picks||{}), m=p[me]=Object.assign({},p[me]);
+  const on=!m[k]; if(on) m[k]=1; else delete m[k];
+  it.picks=p; navFields(Object.assign({},it),it); // canonical field order (sync compares plans as JSON)
+  if(on) logAct(k==="h"?"heart":"star",it,f.lid);
+  commit(); toast(on?T(k==="h"?"tHeart":"tStar"):T("tUnpick"));
+  const b=document.querySelector(`#sheet [data-pick="${k}"][data-id="${id}"]`)||document.querySelector(`.card[data-id="${id}"] [data-pick="${k}"]`);
+  if(b){ try{ b.focus({preventScroll:true}); }catch(e){} if(on&&b.animate) b.animate([{transform:"scale(1.4)"},{transform:"scale(1)"}],{duration:280,easing:"ease-out"}); }
+  return on;
+}
+
+/* "What changed" banner: diffs the plan this phone last saw against the one it just received.
+   Unseen changes stay (localStorage) until "Got it"; nothing on the very first visit. */
+const Changes=(function(){
+  const KEY="chinaTripPlanner.changes", MAX=5;
+  let armed=false; try{ armed=!!localStorage.getItem(STORE_KEY); }catch(e){}
+  let events=[]; try{ events=JSON.parse(localStorage.getItem(KEY)||"[]"); if(!Array.isArray(events)) events=[]; }catch(e){ events=[]; }
+  const keep=()=>{ try{ events.length?localStorage.setItem(KEY,JSON.stringify(events)):localStorage.removeItem(KEY); }catch(e){} };
+  const index=p=>{ const m=new Map(); p.days.forEach(d=>d.items.forEach((it,j)=>m.set(it.id,{it,lid:d.id,j}))); p.ideas.forEach((it,j)=>m.set(it.id,{it,lid:"ideas",j})); return m; };
+  function note(prev,next,by){
+    if(!prev||!next) return [];
+    if(!armed){ armed=true; return []; } // first sync on a fresh phone: nothing to report
+    const me=whoAmI(), A=index(prev), B=index(next);
+    const old=new Set((prev.log||[]).map(x=>x.id)), fresh=(next.log||[]).filter(x=>!old.has(x.id));
+    const fb=by==="keith-assistant"||by==="bot"?"bot":"";
+    const whoFor=(id,acts)=>{ for(let i=fresh.length-1;i>=0;i--){ const x=fresh[i]; if(x.item===id&&(!acts||acts.includes(x.a))) return x.by; } return ""; };
+    const by_=(id,acts)=>whoFor(id,acts)||whoFor(id)||fb;
+    const ev=[], now=Date.now();
+    const push=(who,a,it,lid)=>{ if(who&&who===me) return; ev.push({who,a,id:it.id,lid,t:String(it.title_en||"").slice(0,60),th:String(it.title_th||"").slice(0,60),ts:now}); };
+    B.forEach((b,id)=>{ const a=A.get(id);
+      if(!a){ push(by_(id,["add","idea"]),b.lid==="ideas"?"idea":"add",b.it,b.lid); return; }
+      if(a.lid!==b.lid) push(by_(id,["move","maybe"]),b.lid==="ideas"?"maybe":"move",b.it,b.lid);
+      else if(a.j!==b.j&&fresh.some(x=>x.item===id&&x.a==="move")) push(by_(id,["move"]),"move",b.it,b.lid);
+      if(itemSig(a.it)!==itemSig(b.it)) push(by_(id,["edit"]),"edit",b.it,b.lid);
+      PICK_WHO.forEach(w=>{ const pa=(a.it.picks||{})[w]||{}, pb=(b.it.picks||{})[w]||{};
+        if(pb.h&&!pa.h) push(w,"heart",b.it,b.lid); if(pb.s&&!pa.s) push(w,"star",b.it,b.lid); });
+    });
+    A.forEach((a,id)=>{ if(!B.has(id)) push(by_(id,["del"]),"del",a.it,a.lid); });
+    if(ev.length){ events=events.concat(ev).slice(-40); keep(); }
+    return ev;
+  }
+  const PER_LID={add:1,move:1,edit:1,del:1};
+  function lines(){
+    const g=new Map();
+    events.forEach(e=>{ const k=e.who+"|"+e.a+"|"+(PER_LID[e.a]?e.lid:""); let L=g.get(k); if(!L){ L={who:e.who,a:e.a,lid:e.lid,ids:[],ev:[]}; g.set(k,L); }
+      if(!L.ids.includes(e.id)){ L.ids.push(e.id); L.ev.push(e); } });
+    return [...g.values()];
+  }
+  const CH={
+    en:{add:(n,t,d)=>n>1?`added ${n} things on ${d}`:`added “${t}” on ${d}`, idea:(n,t)=>n>1?`added ${n} ideas to Maybe`:`added “${t}” to Maybe`,
+        move:(n,t,d)=>n>1?`moved ${n} things on ${d}`:`moved “${t}” to ${d}`, maybe:(n,t)=>n>1?`moved ${n} things back to Maybe`:`moved “${t}” back to Maybe`,
+        edit:(n,t,d)=>n>1?`updated ${n} things on ${d}`:`updated “${t}” on ${d}`, del:(n,t,d)=>n>1?`removed ${n} things${d?` from ${d}`:""}`:`removed “${t}”${d?` from ${d}`:""}`,
+        heart:(n,t)=>n>1?`loved ${n} things ❤️`:`loved “${t}” ❤️`, star:(n,t)=>n>1?`marked ${n} must-dos ⭐`:`marked “${t}” as a must-do ⭐`},
+    th:{add:(n,t,d)=>n>1?`เพิ่ม ${n} อย่างใน${d}`:`เพิ่ม “${t}” ใน${d}`, idea:(n,t)=>n>1?`เพิ่ม ${n} ไอเดียลงลิสต์อาจจะไป`:`เพิ่ม “${t}” ลงลิสต์อาจจะไป`,
+        move:(n,t,d)=>n>1?`ย้าย ${n} อย่างใน${d}`:`ย้าย “${t}” ไป${d}`, maybe:(n,t)=>n>1?`ย้าย ${n} อย่างกลับไปลิสต์อาจจะไป`:`ย้าย “${t}” กลับไปลิสต์อาจจะไป`,
+        edit:(n,t,d)=>n>1?`แก้ ${n} อย่างใน${d}`:`แก้ “${t}” ใน${d}`, del:(n,t,d)=>n>1?`ลบ ${n} อย่าง${d?`จาก${d}`:""}`:`ลบ “${t}”${d?` จาก${d}`:""}`,
+        heart:(n,t)=>n>1?`กดใจ ${n} อย่าง ❤️`:`กดใจ “${t}” ❤️`, star:(n,t)=>n>1?`ปักหมุดห้ามพลาด ${n} อย่าง ⭐`:`ปักหมุด “${t}” ว่าห้ามพลาด ⭐`}};
+  const short=s=>{ s=String(s||""); return s.length>42?s.slice(0,40).trimEnd()+"…":s; };
+  function text(L){
+    const e=L.ev[L.ev.length-1], live=findItem(e.id);
+    const t=short(live?tx(live.item,"title"):(lang==="th"?e.th||e.t:e.t||e.th));
+    const di=plan.days.findIndex(d=>d.id===L.lid), d=di>=0?T("dayN")(di+1):"";
+    const v=CH[lang][L.a]?CH[lang][L.a](L.ids.length,t,d):"";
+    const who=L.who?pname(L.who):"";
+    if(who) return who+" "+v;
+    return lang==="en"?v.charAt(0).toUpperCase()+v.slice(1):v;
+  }
+  function paint(){
+    const el=$("#changes"); if(!el) return;
+    const all=lines(); if(!all.length){ el.hidden=true; el.innerHTML=""; return; }
+    const show=all.slice(0,MAX), more=all.length-show.length;
+    el.innerHTML=`<div class="chg" role="status"><div class="chgh"><b>✨ ${esc(T("chH"))}</b><button class="btn chgx" type="button" data-chg-x>${esc(T("chOk"))}</button></div>
+      <ul>${show.map((L,i)=>`<li><button type="button" class="chgl" data-chg="${i}" title="${esc(T("chJump"))}"><span class="chgd" aria-hidden="true"></span>${esc(text(L))}<span class="chga" aria-hidden="true">›</span></button></li>`).join("")}</ul>
+      ${more>0?`<div class="chgmore">${esc(T("chMore")(more))}</div>`:""}</div>`;
+    el.hidden=false;
+  }
+  function spot(ids,lid){
+    const live=ids.filter(id=>findItem(id));
+    if(!live.length){ if(lid&&(lid==="ideas"||plan.days.some(d=>d.id===lid))) jump(lid); return false; }
+    const first=document.querySelector(`.card[data-id="${live[0]}"]`);
+    if(first) first.scrollIntoView({behavior:"smooth",block:"center",inline:"center"});
+    live.forEach(id=>{ const c=document.querySelector(`.card[data-id="${id}"]`); if(!c) return; c.classList.remove("hl"); void c.offsetWidth; c.classList.add("hl"); setTimeout(()=>c.classList.remove("hl"),2600); });
+    return true;
+  }
+  function dismiss(){ events=[]; keep(); paint(); }
+  document.addEventListener("click",e=>{
+    const x=e.target.closest&&e.target.closest("[data-chg-x]"); if(x){ dismiss(); return; }
+    const b=e.target.closest&&e.target.closest("[data-chg]"); if(b){ const L=lines()[+b.dataset.chg]; if(L) spot(L.ids,L.lid); }
+  });
+  return {note,paint,dismiss,lines:()=>lines().map(L=>({who:L.who,a:L.a,lid:L.lid,ids:L.ids.slice(),text:text(L)})),get events(){return events},arm(){armed=true;},get armed(){return armed}};
+})();
+
+/* Maybe list: unplaced ideas (plan.ideas). Add, heart, pop into a day, delete (with undo). */
+function addIdea(title,note,city){
+  title=String(title||"").trim().slice(0,120); if(!title){ toast(T("tMaybeNeed")); return null; }
+  note=String(note||"").trim().slice(0,600);
+  const cat=/hot ?pot|food|eat|restaurant|noodle|dumpling|duck|bao|cafe|coffee|tea|bar|snack|dessert|ร้าน|กิน|อาหาร|หม้อไฟ|ก๋วยเตี๋ยว|เป็ด|เกี๊ยว|คาเฟ่|กาแฟ|ชา|ขนม/i.test(title)?"food":/shop|mall|market|outlet|ช้อป|ตลาด|ห้าง/i.test(title)?"shopping":"sightseeing";
+  const raw={id:uid(),cat,status:"idea",link:"",time_en:"",time_th:"",title_en:title,title_th:title,notes_en:note,notes_th:note};
+  if(city==="北京"||city==="上海") raw.zh_city=city;
+  const it=normalize({title_en:"x",title_th:"x",days:[],ideas:[raw]}).ideas[0];
+  snapshot(); plan.ideas.push(it); logAct("idea",it,"ideas"); commit(); toast(T("tIdeaAdded"),true);
+  return it;
+}
+const hhmm=s=>{ const m=String(s||"").match(/^\s*(\d{1,2})[:.](\d{2})/); return m?(+m[1])*60+(+m[2]):null; };
+function ideaToDay(id,lid,time){
+  const f=findItem(id), day=plan.days.find(d=>d.id===lid); if(!f||!day) return false;
+  snapshot(); const it=f.item; f.list.splice(f.idx,1);
+  time=String(time||"").trim();
+  if(time){ if(tx(it,"time")) setTx(it,"time",time); else setBoth(it,"time",time); }
+  if(it.status==="idea") it.status="planned";
+  const t=hhmm(it.time_en); let at=day.items.length;
+  if(t!=null){ const k=day.items.findIndex(x=>{ const v=hhmm(x.time_en); return v!=null&&v>t; }); if(k>=0) at=k; }
+  day.items.splice(at,0,it); logAct("move",it,lid); commit(); return true;
+}
+function toMaybe(id){
+  const f=findItem(id); if(!f||f.lid==="ideas") return false;
+  snapshot(); f.list.splice(f.idx,1); if(f.item.status==="planned") f.item.status="idea";
+  plan.ideas.push(f.item); logAct("maybe",f.item,"ideas"); commit(); toast(T("tToMaybe"),true); return true;
+}
+function mbRow(it){
+  const title=tx(it,"title"), notes=tx(it,"notes"), n=navInfo(it,null), id=esc(it.id);
+  const city=String(it.zh_city||"")||navCity(it,null);
+  const pre=(plan.days.find(d=>navCity({},d)===city&&city)||plan.days[0]||{}).id;
+  return `<li class="mbi" data-id="${id}">
+    <div class="mbt"><span class="cemo" aria-hidden="true">${CAT_EMO[it.cat]||"⭐"}</span>${esc(title)}</div>
+    ${notes?`<div class="mbnote">${esc(notes)}</div>`:""}
+    <div class="mbrow">${n?`<div class="cnav"><button class="nbtn" type="button" data-driver="${id}" aria-label="${esc(T("navDriverAria")(title))}">${T("navDriver")}</button></div>`:""}${pickHTML(it,null,title,true,true)}</div>
+    <div class="mbrow mbact"><button class="btn mbday" type="button" data-today aria-expanded="false">${esc(T("mbToDay"))}</button><button class="btn mbdel" type="button" data-mbdel aria-label="${esc(T("mbDelA")(title))}">🗑</button></div>
+    <div class="mbpick" hidden>
+      <div class="row2"><label class="field"><span>${esc(T("mbWhich"))}</span><select name="day">${plan.days.map(d=>`<option value="${esc(d.id)}"${d.id===pre?" selected":""}>${esc(dayLabel(d.id))}</option>`).join("")}</select></label>
+      <label class="field"><span>${esc(T("mbTime"))}</span><input name="time" value="${esc(tx(it,"time"))}" placeholder="${esc(T("mbTimePh"))}" list="timeSug"></label></div>
+      <button class="btn primary" type="button" data-place>${esc(T("mbPlace"))}</button>
+    </div></li>`;
+}
+function paintMaybe(){
+  const ul=document.querySelector("#sheet .mbs"); if(!ul) return;
+  const openId=(ul.querySelector(".mbi.open")||{}).dataset; const keepOpen=openId&&openId.id;
+  const score=it=>PICK_WHO.reduce((n,w)=>{ const p=(it.picks||{})[w]; return n+(p?(p.s?2:0)+(p.h?1:0):0); },0);
+  const L=plan.ideas.map((it,i)=>({it,i})).sort((a,b)=>score(b.it)-score(a.it)||a.i-b.i);
+  ul.innerHTML=L.length?L.map(x=>mbRow(x.it)).join(""):`<li class="mbempty">${esc(T("mbEmpty"))}</li>`;
+  const cnt=document.querySelector("#sheet .mbcount"); if(cnt) cnt.textContent=plan.ideas.length;
+  if(keepOpen){ const r=ul.querySelector(`.mbi[data-id="${keepOpen}"]`); if(r){ r.classList.add("open"); r.querySelector(".mbpick").hidden=false; r.querySelector("[data-today]").setAttribute("aria-expanded","true"); } }
+}
+function openMaybe(){
+  openSheet(`<h2><span>${esc(T("mbH"))} <span class="mbcount">${plan.ideas.length}</span></span>${closeX()}</h2>
+    <p class="hint">${esc(T("mbSub"))}</p>
+    <form class="mbform" autocomplete="off">
+      <label class="field"><span>${esc(T("mbTitle"))}</span><input name="mbt" maxlength="120" placeholder="${esc(T("mbTitlePh"))}"></label>
+      <label class="field"><span>${esc(T("mbNote"))}</span><textarea name="mbn" rows="2" maxlength="600" placeholder="${esc(T("mbNotePh"))}"></textarea></label>
+      <div class="field"><span>${esc(T("mbCity"))}</span><div class="seg" data-seg="city">
+        <button type="button" data-v="北京" aria-pressed="false">🏯 ${esc(T("cBJ"))}</button><button type="button" data-v="上海" aria-pressed="false">🌃 ${esc(T("cSH"))}</button><button type="button" data-v="" aria-pressed="true">🤷 ${esc(T("mbAny"))}</button></div></div>
+      <button class="btn primary mbaddb" type="submit">${esc(T("mbAdd"))}</button>
+    </form>
+    <datalist id="timeSug">${T("slots").map(x=>`<option>${esc(x)}</option>`).join("")}</datalist>
+    <ul class="mbs"></ul>`,
+  s=>{
+    s.classList.add("mbsheet");
+    s.querySelector("[data-x]").onclick=closeSheet;
+    let city="";
+    s.querySelector("[data-seg=city]").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
+      s.querySelectorAll("[data-seg=city] button").forEach(x=>x.setAttribute("aria-pressed",x===b)); city=b.dataset.v; });
+    const form=s.querySelector(".mbform");
+    form.addEventListener("submit",e=>{ e.preventDefault(); const t=form.mbt.value;
+      if(!t.trim()){ toast(T("tMaybeNeed")); form.mbt.focus(); return; }
+      if(addIdea(t,form.mbn.value,city)){ form.mbt.value=""; form.mbn.value=""; }
+    });
+    s.querySelector(".mbs").addEventListener("click",e=>{
+      const t=e.target, row=t.closest(".mbi"); if(!row) return; const id=row.dataset.id;
+      const pk=t.closest("[data-pick]"); if(pk){ togglePick(id,pk.dataset.pick); return; }
+      if(t.closest("[data-driver]")){ showDriver(id); return; }
+      const td=t.closest("[data-today]"); if(td){ const box=row.querySelector(".mbpick"); const op=box.hidden;
+        s.querySelectorAll(".mbi.open").forEach(r=>{ r.classList.remove("open"); r.querySelector(".mbpick").hidden=true; r.querySelector("[data-today]").setAttribute("aria-expanded","false"); });
+        if(op){ row.classList.add("open"); box.hidden=false; td.setAttribute("aria-expanded","true"); box.scrollIntoView({block:"nearest",behavior:"smooth"}); } return; }
+      if(t.closest("[data-place]")){ const lid=row.querySelector("[name=day]").value, tm=row.querySelector("[name=time]").value;
+        if(ideaToDay(id,lid,tm)){ closeSheet(); toast(T("tToDay")(dayLabel(lid)),true); setTimeout(()=>{ const c=document.querySelector(`.card[data-id="${id}"]`); if(c){ c.scrollIntoView({behavior:"smooth",block:"center",inline:"center"}); c.classList.add("hl"); setTimeout(()=>c.classList.remove("hl"),2600); } },60); }
+        return; }
+      if(t.closest("[data-mbdel]")){ deleteItem(id); return; }
+    });
+    paintMaybe();
+  });
+}
 
 /* ---------- shared online copy (sync) ---------- */
 // One shared JSON document on textdb.dev, keyed by an unguessable id. Last write wins.
@@ -1220,6 +1522,26 @@ const Sync=(function(){
   }
   // content comparison that ignores ids, edit flags and save times
   const key=p=>JSON.stringify(p,(k,v)=>k==="id"||k==="ed"||k==="savedAt"?undefined:v);
+  // co-planning: the plan as last synced (common base for a 3-way merge of picks + changelog)
+  const ids=p=>[...(p.days||[]).flatMap(d=>[d.id,...(d.items||[]).map(i=>i.id)]),...(p.ideas||[]).map(i=>i.id)].join(",");
+  const BASE_KEY="chinaTripPlanner.base";
+  function setBase(json){ try{ localStorage.setItem(BASE_KEY,json); }catch(e){} }
+  function getBase(){ try{ const s=localStorage.getItem(BASE_KEY); return s?normalize(JSON.parse(s)):null; }catch(e){ return null; } }
+  const core=p=>JSON.stringify(p,(k,v)=>k==="id"||k==="ed"||k==="savedAt"||k==="picks"||k==="log"?undefined:v);
+  const pickMap=p=>{ const m=new Map(); [...p.days.flatMap(d=>d.items),...p.ideas].forEach(it=>m.set(it.id,it.picks||{})); return m; };
+  function merge3(base,local,remote){
+    if(!base) return null;
+    const kb=core(base), kl=core(local), kr=core(remote);
+    if(kl!==kb&&kr!==kb&&kl!==kr) return null; // both changed the plan itself: let her choose
+    const out=clone(kl!==kb?local:remote);
+    const B=pickMap(base), Lm=pickMap(local), R=pickMap(remote);
+    const g=(M,id,w,k)=>{ const p=M.get(id); return p&&p[w]&&p[w][k]?1:0; };
+    [...out.days.flatMap(d=>d.items),...out.ideas].forEach(it=>{ const res={};
+      PICK_WHO.forEach(w=>["h","s"].forEach(k=>{ const b=g(B,it.id,w,k), l=g(Lm,it.id,w,k), r=g(R,it.id,w,k); if(l!==b?l:r) (res[w]=res[w]||{})[k]=1; }));
+      it.picks=res; });
+    const m=new Map(); [...(remote.log||[]),...(local.log||[])].forEach(e=>m.set(e.id,e)); out.log=[...m.values()];
+    return normalize(out);
+  }
   async function get(){
     const r=await fetch(url()+"?_="+Date.now(),{cache:"no-store"});
     if(!r.ok) throw new Error("HTTP "+r.status);
@@ -1229,16 +1551,19 @@ const Sync=(function(){
   }
   async function put(){
     const rev=meta.dirty?meta.editedAt:(meta.rev||Date.now());
-    const body=JSON.stringify({app:"china-trip-planner",rev,by:dev,plan});
+    const body=JSON.stringify({app:"china-trip-planner",rev,by:dev,plan}); const sent=JSON.stringify(plan);
     const r=await fetch(url(),{method:"POST",headers:{"content-type":"application/json"},body});
     if(!r.ok) throw new Error("HTTP "+r.status);
     if(meta.editedAt===rev||!meta.dirty){ meta.dirty=false; }
-    meta.rev=rev; saveMeta();
+    meta.rev=rev; saveMeta(); setBase(sent);
   }
   function takeRemote(d,undoable){
     if(undoable) snapshot();
-    plan=normalize(d.plan); save(); render();
-    meta.rev=d.rev; meta.dirty=false; saveMeta();
+    const prev=getBase()||plan;
+    plan=normalize(d.plan); save();
+    meta.rev=d.rev; meta.dirty=false; saveMeta(); setBase(JSON.stringify(plan));
+    try{ Changes.note(prev,plan,d.by); }catch(e){ console.warn(e); }
+    render();
   }
   // push local edits (debounced)
   function edited(){
@@ -1267,14 +1592,24 @@ const Sync=(function(){
       return res;
     }
     const same=key(normalize(d.plan))===key(plan);
-    if(same){ if(meta.dirty||meta.rev!==d.rev){ meta.dirty=false; meta.rev=d.rev; saveMeta(); } res="same"; }
+    if(same){ if(meta.dirty||meta.rev!==d.rev){ meta.dirty=false; meta.rev=d.rev; saveMeta(); }
+      // same content but different item ids (e.g. a fresh phone): adopt the shared ids so picks and the changelog line up
+      if(ids(d.plan)!==ids(plan)&&!busy()){ plan=normalize(d.plan); save(); render(); }
+      setBase(JSON.stringify(plan)); res="same"; }
     else if(meta.dirty&&d.rev===meta.rev){ // only this device changed since the last sync: save it (no conflict)
       res=(await pushNow())?"pushed":"offline"; if(mode==="refresh") toast(res==="offline"?T("tOffline"):T("tPushed"));
     }
     else { // the shared copy changed on the other phone
       if(quiet&&busy()){ deferred=true; state=meta.dirty?"saving":"saved"; paint(); return "deferred"; }
       deferred=false;
-      if(meta.dirty){ state="saved"; paint(); res=await conflict(d); }
+      const merged=meta.dirty?merge3(getBase(),plan,normalize(d.plan)):null;
+      if(merged){ // one side only touched picks/changelog (or both touched only those): merge quietly, no dialog
+        const base=getBase(); plan=merged; save();
+        try{ Changes.note(base||plan,normalize(d.plan),d.by); }catch(e){ console.warn(e); }
+        render(); meta.rev=d.rev; meta.editedAt=Math.max(Date.now(),d.rev+1); meta.dirty=true; saveMeta();
+        res=(await pushNow())?"merged":"offline";
+      }
+      else if(meta.dirty){ state="saved"; paint(); res=await conflict(d); }
       else { takeRemote(d,true); res="taken"; toast(quiet?T("tPartner"):T("tGotLatest"),true); }
     }
     if(res==="same"&&mode==="refresh") toast(T("tUpToDate"));
@@ -1327,7 +1662,7 @@ const Sync=(function(){
     document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ if(busy()) deferred=true; else pull("auto"); } });
     return pull("open");
   }
-  return {edited,pull,refresh,boot,paint,pushNow,get id(){return id},get meta(){return meta},get state(){return state},get polls(){return polls},get deferred(){return deferred},POLL_MS,whenIdle:()=>chain};
+  return {edited,pull,refresh,boot,paint,pushNow,merge3,getBase,get id(){return id},get meta(){return meta},get state(){return state},get polls(){return polls},get deferred(){return deferred},POLL_MS,whenIdle:()=>chain};
 })();
 $("#bRefresh").onclick=()=>{ Sync.refresh(); try{ Chat.poll(); }catch(e){} };
 
@@ -1499,6 +1834,7 @@ const Wx=(function(){
 async function boot(){
   plan=load(); render();
   const synced=Sync.boot();
+  synced.then(r=>{ if(r&&r!=="offline") Changes.arm(); },()=>{});
   Chat.poll();
   try{ Wx.load(); }catch(e){}
   try{ if(!localStorage.getItem(HELP_KEY)) $("#firsthelp").hidden=false; }catch(e){}
@@ -1508,7 +1844,7 @@ async function boot(){
     catch(e){ toast(e.message||T("tOpenFail")); }
     window.history.replaceState(null,"",location.href.split("#")[0]);
   }
-  window.__planner={nav:{navPlatform,amapNativeUrl,amapUrl,openAmap,get timer(){return amapTimer}},get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,Sync,Chat,Wx,BUILD,ready:true};
+  window.__planner={nav:{navPlatform,amapNativeUrl,amapUrl,openAmap,get timer(){return amapTimer}},get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,Sync,Changes,whoAmI,togglePick,openMaybe,addIdea,ideaToDay,toMaybe,Chat,Wx,BUILD,ready:true};
 }
 boot();
 })();
