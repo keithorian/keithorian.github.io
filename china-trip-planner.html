@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b5502f">
-<meta name="app-build" content="20261114230037">
+<meta name="app-build" content="20261114231712">
 <title>Our China Trip • Trip Planner</title>
 <style>
 :root{
@@ -158,15 +158,32 @@ body.dragging .card,body.dragging .cbody{cursor:grabbing}
 .nbtn{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:4px 11px;min-height:32px;font:inherit;font-size:12.5px;font-weight:600;text-decoration:none;cursor:pointer;white-space:nowrap}
 .nbtn:hover,.nbtn:focus-visible{background:var(--accent-soft);border-color:#e3cdb8;color:var(--accent)}
 a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--ink)}
-.driver{border:2px solid var(--ink);border-radius:16px;padding:18px 14px 14px;text-align:center;background:#fffdf8}
-.dask{font-size:20px;color:var(--muted);margin-bottom:10px;letter-spacing:.05em}
-.dzh{font-size:clamp(30px,9.5vw,46px);font-weight:800;line-height:1.2;word-break:break-word;-webkit-user-select:text;user-select:text}
-.dzh.dkw{font-size:clamp(22px,7vw,32px)}
-.daddr{font-size:clamp(20px,6.2vw,30px);font-weight:600;line-height:1.35;margin-top:12px;word-break:break-word;-webkit-user-select:text;user-select:text}
-.den{font-size:13px;color:var(--muted);margin-top:14px}
 .zhsec{margin:4px 0 2px}
 .zhsec summary{cursor:pointer;font-size:12.5px;font-weight:600;color:var(--muted);padding:8px 0;min-height:32px}
+/* show-the-driver pop-up */
 body:has(.sheet .driver) #chatFab{display:none}
+.sheet.drv{padding:8px 18px calc(18px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0;box-shadow:0 -10px 40px rgba(40,25,15,.22);overscroll-behavior:contain}
+@media (min-width:600px){.sheet.drv{border-radius:22px;padding-bottom:20px}}
+.dgrab{width:40px;height:5px;border-radius:3px;background:#e2d6c8;margin:0 auto 10px}
+.dhd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.dhd h2{margin:0;font-size:17px;font-weight:700;color:var(--ink)}
+.driver{position:relative;text-align:center;background:linear-gradient(180deg,#fffaf3,#fff);border:1px solid var(--line);border-radius:18px;padding:18px 16px 16px;box-shadow:0 1px 2px rgba(60,40,20,.06),0 8px 24px rgba(60,40,20,.08)}
+.dask{display:inline-block;font-size:14px;font-weight:600;letter-spacing:.12em;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:5px 14px 5px 16px;margin-bottom:14px}
+.dzh{text-wrap:balance;font-size:clamp(32px,10vw,46px);font-weight:800;line-height:1.18;letter-spacing:.02em;color:var(--ink);word-break:break-word;-webkit-user-select:text;user-select:text}
+.dzh.dkw{font-size:clamp(22px,7vw,30px);font-weight:700;letter-spacing:0}
+.daddr{text-wrap:balance;font-size:clamp(19px,5.6vw,24px);font-weight:600;line-height:1.5;color:#3d342d;margin-top:12px;word-break:break-word;-webkit-user-select:text;user-select:text}
+.den{font-size:12.5px;line-height:1.4;color:var(--muted);margin-top:12px}
+.dnote{font-size:13px;line-height:1.45;color:var(--muted);margin:12px 2px 0}
+.ddiv{height:1px;background:var(--line);margin:16px 0 14px}
+.dcopy{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.dcopy .dbtn:only-child{grid-column:1/-1}
+.dbtn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:52px;padding:10px 12px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;box-sizing:border-box;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .08s}
+.dbtn:active{transform:scale(.98)}
+.dcopy .dbtn:hover{background:#fbf6f0}
+.dbtn.done{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.dbtn.damap{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(181,80,47,.28)}
+.dbtn.damap:hover{filter:brightness(1.05)}
+.dtip{font-size:12.5px;line-height:1.45;color:var(--muted);text-align:center;margin:12px 4px 0}
 @media print{.cnav{display:none!important}}
 .x{border:0;background:#f3ece3;border-radius:50%;width:34px;height:34px;font-size:16px}
 
@@ -257,7 +274,7 @@ body:has(.sheet .driver) #chatFab{display:none}
 <div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
 
 <script>
-const BUILD={"id": "20261114230037", "at": "2026-11-14T23:00:37+08:00", "label": "14 Nov 2026, 23:00 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
+const BUILD={"id": "20261114231712", "at": "2026-11-14T23:17:12+08:00", "label": "14 Nov 2026, 23:17 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
 // ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
 // Text fields are [English, Thai]. Plain strings are used for both languages.
 const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
@@ -503,7 +520,7 @@ share:"📤 Share",undo:"↩️ Undo",undoShort:"Undo",download:"⬇️ Download
  loadH:"Load a plan",loadHint:"Open a plan file someone sent you, or paste a share link. This replaces what's on screen (you can Undo).",pick:"📂 Choose plan file…",pasteLink:"…or paste a share link",loadLink:"Load link",
  resetH:"Reset to original?",resetMsg:"This replaces the shared plan (for both of you) with Keith's original itinerary. You can undo straight after.",resetOk:"Reset",
  helpH:"How it works",helpBody:"✏️ <b>Edit:</b> tap any activity or day header.<br>↕️ <b>Move:</b> drag the ⠿ handle (or press &amp; hold a card on phones) and drop it anywhere – into another day or into 💡 Ideas. You can also open an activity and use ↑ / ↓ or change its Day.<br>➕ <b>Add:</b> “Add activity” under each day, “Add a day” at the end.<br>↩️ <b>Undo:</b> the Undo button reverses your last change.<br>🌐 <b>EN / ไทย:</b> switch language at the top. Edits are kept in the language you type them in.<br>💾 <b>Saving:</b> automatic. Changes go to one shared plan that both of you use (and a backup stays on this device).<br>🔄 <b>Refresh:</b> gets the latest changes from the other person. The newest change wins.<br>📤 <b>Share:</b> copy a link or send the plan file. 📂 <b>Load plan</b> opens one.<br>🖨️ <b>Print / Save PDF</b> for a tidy printable copy.<br>⌨️ Keyboard: focus ⠿ and use arrow keys.",
- navGo:"🧭 Amap",navGoAria:t=>`Open ${t} in Amap (Gaode Maps)`,navDriver:"🚕 Show driver",navDriverAria:t=>`Show ${t} in Chinese for a taxi or Didi driver`,navDriverH:"Show this to the driver",navCopy:"📋 Copy address",navCopyName:"📋 Copy name",navCopied:"Copied ✓ Paste it into Didi’s “Where to?”",navNoCopy:"Couldn’t copy. Press and hold the Chinese text instead",navAmap:"🧭 Open in Amap",navApple:" Apple Maps",navNoZh:"No Chinese name saved for this one yet. Open Amap and show the driver the place on the map.",navDidiHint:"Didi: tap “Where to?” (您要去哪儿) and paste.",zhSec:"📍 Chinese name & address (for maps and taxis)",fZh:"Chinese name",fZhAddr:"Chinese address",phZh:"e.g. 雍和宫",phZhAddr:"e.g. 北京市东城区雍和宫大街12号",
+ navDriver:"Go 🚕",navDriverAria:t=>`Show ${t} in Chinese for a taxi or Didi driver`,navDriverH:"Show this to the driver",navCopy:"📋 Copy address",navCopyName:"📋 Copy name",navCopied:"Copied ✓ Paste it into Didi’s “Where to?”",navCopiedBtn:"✓ Copied",navNoCopy:"Couldn’t copy. Press and hold the Chinese text instead",navAmap:"🧭 Open in Amap",navNoZh:"No Chinese name saved for this one yet. Open Amap and show the driver the place on the map.",navDidiHint:"Didi: tap “Where to?” (您要去哪儿) and paste.",zhSec:"📍 Chinese name & address (for maps and taxis)",fZh:"Chinese name",fZhAddr:"Chinese address",phZh:"e.g. 雍和宫",phZhAddr:"e.g. 北京市东城区雍和宫大街12号",
  itinerary:"Itinerary",tools:"Plan tools",jumpTo:"Jump to day",titleLbl:"Trip title",docTitle:" – Planner",defaultTitle:"Our Trip"},
 th:{refresh:"🔄 รีเฟรช",sAuto:"🔁 ซิงก์อัตโนมัติเปิดอยู่",sChecked:"ตรวจล่าสุด",tPartner:"อัปเดตตามที่แฟนแก้ไขแล้ว ✓",sSaved:"บันทึกแล้ว ✓",sSaving:"กำลังบันทึก…",sChecking:"กำลังตรวจสอบการเปลี่ยนแปลง…",sOffline:"ออฟไลน์ – บันทึกไว้ในเครื่องนี้",sLocal:"บันทึกไว้ในเครื่องนี้",sLast:"แก้ไขล่าสุด",
  tUpToDate:"เป็นแผนล่าสุดแล้ว ✓",tGotLatest:"อัปเดตเป็นแผนล่าสุดแล้ว ✓",tPushed:"บันทึกการแก้ไขของคุณลงแผนที่แชร์แล้ว ✓",
@@ -532,7 +549,7 @@ share:"📤 แชร์",undo:"↩️ เลิกทำ",undoShort:"เลิ�
  loadH:"เปิดแผน",loadHint:"เปิดไฟล์แผนที่มีคนส่งมา หรือวางลิงก์แชร์ แผนบนหน้าจอจะถูกแทนที่ (กดเลิกทำได้)",pick:"📂 เลือกไฟล์แผน…",pasteLink:"…หรือวางลิงก์แชร์",loadLink:"เปิดลิงก์",
  resetH:"กลับเป็นแผนเดิม?",resetMsg:"แผนที่แชร์ (ของทั้งสองคน) จะถูกแทนที่ด้วยแผนเดิมของ Keith กดเลิกทำได้ทันทีหลังจากนี้",resetOk:"กลับเป็นแผนเดิม",
  helpH:"วิธีใช้",helpBody:"✏️ <b>แก้ไข:</b> แตะที่กิจกรรมหรือหัวข้อของวัน<br>↕️ <b>ย้าย:</b> ลากที่ ⠿ (หรือกดค้างที่การ์ดบนมือถือ) แล้ววางที่ไหนก็ได้ – ในวันอื่นหรือใน 💡 ไอเดีย หรือเปิดกิจกรรมแล้วกด ↑ / ↓ หรือเปลี่ยน “วัน”<br>➕ <b>เพิ่ม:</b> “เพิ่มกิจกรรม” ใต้แต่ละวัน และ “เพิ่มวัน” ด้านท้าย<br>↩️ <b>เลิกทำ:</b> ปุ่มเลิกทำจะย้อนการเปลี่ยนแปลงล่าสุด<br>🌐 <b>EN / ไทย:</b> สลับภาษาได้ที่ด้านบน ข้อความที่แก้จะเก็บไว้ตามภาษาที่พิมพ์<br>💾 <b>บันทึก:</b> อัตโนมัติ การแก้ไขจะเข้าไปที่แผนที่แชร์ร่วมกันของทั้งสองคน (และสำรองไว้ในเครื่องนี้ด้วย)<br>🔄 <b>รีเฟรช:</b> ดึงการแก้ไขล่าสุดจากอีกคน การแก้ไขล่าสุดจะถูกใช้<br>📤 <b>แชร์:</b> คัดลอกลิงก์หรือส่งไฟล์แผน 📂 <b>เปิดแผน</b> เพื่อเปิดแผนที่ได้รับ<br>🖨️ <b>พิมพ์ / บันทึก PDF</b> สำหรับฉบับพิมพ์สวย ๆ<br>⌨️ คีย์บอร์ด: โฟกัสที่ ⠿ แล้วใช้ปุ่มลูกศร",
- navGo:"🧭 เปิด Amap",navGoAria:t=>`เปิด ${t} ใน Amap (แผนที่เกาเต๋อ)`,navDriver:"🚕 โชว์คนขับ",navDriverAria:t=>`โชว์ ${t} เป็นภาษาจีนให้คนขับแท็กซี่หรือ Didi ดู`,navDriverH:"ยื่นให้คนขับดูได้เลย",navCopy:"📋 ก๊อปที่อยู่",navCopyName:"📋 ก๊อปชื่อร้าน/ที่",navCopied:"ก๊อปแล้ว ✓ ไปวางในช่อง “Where to?” ของ Didi ได้เลย",navNoCopy:"ก๊อปไม่ได้ กดค้างที่ตัวหนังสือจีนแทนนะ",navAmap:"🧭 เปิดใน Amap",navApple:" Apple Maps",navNoZh:"ที่นี่ยังไม่มีชื่อภาษาจีนนะ เปิด Amap แล้วยื่นแผนที่ให้คนขับดูแทนได้เลย",navDidiHint:"Didi: แตะช่อง “Where to?” (您要去哪儿) แล้ววางได้เลย",zhSec:"📍 ชื่อ & ที่อยู่ภาษาจีน (ไว้เปิดแผนที่/เรียกรถ)",fZh:"ชื่อภาษาจีน",fZhAddr:"ที่อยู่ภาษาจีน",phZh:"เช่น 雍和宫",phZhAddr:"เช่น 北京市东城区雍和宫大街12号",
+ navDriver:"ไปกัน 🚕",navDriverAria:t=>`โชว์ ${t} เป็นภาษาจีนให้คนขับแท็กซี่หรือ Didi ดู`,navDriverH:"ยื่นให้คนขับดูได้เลย",navCopy:"📋 ก๊อปที่อยู่",navCopyName:"📋 ก๊อปชื่อร้าน/ที่",navCopied:"ก๊อปแล้ว ✓ ไปวางในช่อง “Where to?” ของ Didi ได้เลย",navCopiedBtn:"✓ ก๊อปแล้ว",navNoCopy:"ก๊อปไม่ได้ กดค้างที่ตัวหนังสือจีนแทนนะ",navAmap:"🧭 เปิดใน Amap",navNoZh:"ที่นี่ยังไม่มีชื่อภาษาจีนนะ เปิด Amap แล้วยื่นแผนที่ให้คนขับดูแทนได้เลย",navDidiHint:"Didi: แตะช่อง “Where to?” (您要去哪儿) แล้ววางได้เลย",zhSec:"📍 ชื่อ & ที่อยู่ภาษาจีน (ไว้เปิดแผนที่/เรียกรถ)",fZh:"ชื่อภาษาจีน",fZhAddr:"ที่อยู่ภาษาจีน",phZh:"เช่น 雍和宫",phZhAddr:"เช่น 北京市东城区雍和宫大街12号",
  itinerary:"แผนการเดินทาง",tools:"เครื่องมือ",jumpTo:"ไปยังวัน",titleLbl:"ชื่อทริป",docTitle:" – แผนเที่ยว",defaultTitle:"ทริปของเรา"}
 };
 let lang="en";
@@ -638,9 +655,6 @@ function navInfo(it,day){
 }
 // Amap URI API, search: https://lbs.amap.com/api/uri-api/guide/search/search (opens the Amap app when installed, else the web map)
 const amapUrl=n=>"https://uri.amap.com/search?keyword="+encodeURIComponent(n.kw)+(n.city?"&city="+encodeURIComponent(ADCODE[n.city]||n.city):"")+"&src=china-trip-planner&callnative=1";
-// Apple Maps link (q=), shown on iPhone/iPad only; in mainland China Apple Maps uses AutoNavi (Amap) data
-const appleUrl=n=>"https://maps.apple.com/?q="+encodeURIComponent(n.zh||n.kw);
-const isIOS=()=>/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
 // title edited: keep the Chinese name only if it's clearly still the same place
 const NAV_STOP=new Set(["lunch","dinner","breakfast","brunch","with","from","this","that","taxi","didi","walk","street"]);
 function samePlace(oldT,newT,zh){
@@ -652,32 +666,42 @@ function samePlace(oldT,newT,zh){
 }
 function navHTML(it,day,title){
   const n=navInfo(it,day); if(!n) return "";
-  return `<div class="cnav"><a class="nbtn" href="${esc(amapUrl(n))}" target="_blank" rel="noopener" aria-label="${esc(T("navGoAria")(n.zh||title))}">${T("navGo")}</a><button class="nbtn" type="button" data-driver="${esc(it.id)}" aria-label="${esc(T("navDriverAria")(title))}">${T("navDriver")}</button></div>`;
+  return `<div class="cnav"><button class="nbtn" type="button" data-driver="${esc(it.id)}" aria-label="${esc(T("navDriverAria")(title))}">${T("navDriver")}</button></div>`;
 }
 function showDriver(id){
   const f=findItem(id); if(!f) return;
   const day=f.lid==="ideas"?null:plan.days.find(d=>d.id===f.lid), it=f.item, n=navInfo(it,day); if(!n) return;
   const en=it.title_en||tx(it,"title");
-  openSheet(`<h2>${esc(T("navDriverH"))}${closeX()}</h2>
+  openSheet(`<div class="dgrab" aria-hidden="true"></div>
+   <div class="dhd"><h2>${esc(T("navDriverH"))}</h2>${closeX()}</div>
    <div class="driver">
-     <div class="dask" lang="zh-CN">请带我去这里</div>
+     <span class="dask" lang="zh-CN">请带我去这里</span>
      ${n.zh?`<div class="dzh" lang="zh-CN">${esc(n.zh)}</div>`:`<div class="dzh dkw">${esc(n.kw)}</div>`}
      ${n.addr?`<div class="daddr" lang="zh-CN">${esc(n.addr)}</div>`:""}
      <div class="den" lang="en">${esc(en)}</div>
    </div>
-   ${n.zh?"":`<p class="hint" style="margin-top:10px">${esc(T("navNoZh"))}</p>`}
-   <div class="actions">
-     ${n.addr?`<button class="btn primary" type="button" data-copy="addr">${T("navCopy")}</button>`:""}
-     ${n.zh?`<button class="btn${n.addr?"":" primary"}" type="button" data-copy="name">${T("navCopyName")}</button>`:""}
-   </div>
-   <div class="actions" style="margin-top:8px">
-     <a class="btn" href="${esc(amapUrl(n))}" target="_blank" rel="noopener" data-amap style="flex:1">${T("navAmap")}</a>
-     ${isIOS()?`<a class="btn" href="${esc(appleUrl(n))}" target="_blank" rel="noopener" data-apple>${T("navApple")}</a>`:""}
-   </div>
-   ${n.zh?`<p class="hint" style="margin-top:10px">${esc(T("navDidiHint"))}</p>`:""}`,
+   ${n.zh?"":`<p class="dnote">${esc(T("navNoZh"))}</p>`}
+   <div class="ddiv"></div>
+   ${n.zh?`<div class="dcopy">
+     ${n.addr?`<button class="dbtn" type="button" data-copy="addr">${T("navCopy")}</button>`:""}
+     <button class="dbtn" type="button" data-copy="name">${T("navCopyName")}</button>
+   </div>`:""}
+   <a class="dbtn damap" href="${esc(amapUrl(n))}" target="_blank" rel="noopener" data-amap>${T("navAmap")}</a>
+   ${n.zh?`<p class="dtip">${esc(T("navDidiHint"))}</p>`:""}`,
   s=>{
+    s.classList.add("drv");
     s.querySelector("[data-x]").onclick=closeSheet;
-    s.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{ const ok=await copyText(b.dataset.copy==="addr"?n.addr:n.zh); toast(ok?T("navCopied"):T("navNoCopy")); });
+    s.querySelectorAll("[data-copy]").forEach(b=>{ const label=b.innerHTML; let tm; b.onclick=async()=>{
+      const ok=await copyText(b.dataset.copy==="addr"?n.addr:n.zh);
+      if(!ok){ toast(T("navNoCopy")); return; }
+      clearTimeout(tm); b.classList.add("done"); b.textContent=T("navCopiedBtn"); tm=setTimeout(()=>{ b.classList.remove("done"); b.innerHTML=label; },1600);
+    }; });
+    // swipe down (from the top of the sheet) to close
+    let y0=null, dy=0;
+    s.addEventListener("touchstart",e=>{ if(s.scrollTop>0||e.touches.length>1){ y0=null; return; } y0=e.touches[0].clientY; dy=0; s.style.transition="none"; },{passive:true});
+    s.addEventListener("touchmove",e=>{ if(y0==null) return; dy=Math.max(0,e.touches[0].clientY-y0); s.style.transform=dy?`translateY(${dy}px)`:""; },{passive:true});
+    s.addEventListener("touchend",()=>{ if(y0==null) return; y0=null; s.style.transition="transform .18s ease-out";
+      if(dy>90){ s.style.transform="translateY(100%)"; setTimeout(closeSheet,160); } else s.style.transform=""; });
   });
 }
 
@@ -947,7 +971,7 @@ const board=$("#board");
 board.addEventListener("click",e=>{
   if(dragJustEnded) return;
   const t=e.target;
-  if(t.closest("a.clink")||t.closest(".cnav a")) return;
+  if(t.closest("a.clink")) return;
   const drv=t.closest("[data-driver]"); if(drv) return showDriver(drv.dataset.driver);
   const add=t.closest("[data-add]"); if(add) return editItem(null,true,add.dataset.add);
   if(t.closest("#bAddDay")) return editDay(null,true);
