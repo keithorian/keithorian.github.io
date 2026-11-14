@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b5502f">
-<meta name="app-build" content="20261115013026">
+<meta name="app-build" content="20261115062110">
 <title>Our China Trip • Trip Planner</title>
 <style>
 :root{
@@ -331,7 +331,7 @@ body:has(.sheet.mbsheet) #chatFab{display:none}
 <div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
 
 <script>
-const BUILD={"id": "20261115013026", "at": "2026-11-15T01:30:26+08:00", "label": "15 Nov 2026, 01:30 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
+const BUILD={"id": "20261115062110", "at": "2026-11-15T06:21:10+08:00", "label": "15 Nov 2026, 06:21 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
 // ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
 // Text fields are [English, Thai]. Plain strings are used for both languages.
 const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
@@ -1298,8 +1298,15 @@ function pickBadges(it){
   return L.length?`<span class="pbs" title="${esc(T("pickedBy"))}">${L.join("")}</span>`:"";
 }
 // place cards (the ones with Go 🚕) and every idea get the pick buttons
+// picks go on every real activity (places, meals, rides, shows, walks, incl. nav:false in-park items) and every idea;
+// not on logistics (travel legs, flights, trains, hotel check-in/out) or placeholders ("No plans", "free time")
+const PICK_SKIP=/\b(no plans?|free (time|day|afternoon|morning|evening)|tbd|to be planned|return to|back to (the )?(hotel|apartment)|packing|check-?(in|out)|drop bags)\b|ว่าง|ยังไม่มีแผน|เช็คอิน|เช็คเอาต์|เช็กอิน|เช็กเอาต์/i;
+function pickable(it){
+  if(it.cat==="travel"||it.cat==="hotel") return false;
+  return !PICK_SKIP.test(it.title_en||"")&&!PICK_SKIP.test(it.title_th||"");
+}
 function pickHTML(it,day,title,force,withBadges){
-  if(!force&&day&&!navInfo(it,day)) return "";
+  if(!force&&day&&!pickable(it)) return "";
   const mp=(it.picks||{})[whoAmI()]||{};
   const b=(k,on,off,lbl,aria)=>`<button class="pk${mp[k]?" on":""}" type="button" data-pick="${k}" data-id="${esc(it.id)}" aria-pressed="${mp[k]?"true":"false"}" aria-label="${esc(T(aria)(title))}" title="${esc(T(lbl))}">${mp[k]?on:off}</button>`;
   return `<div class="cpick">${b("h","❤️","🤍","pickH","pickHA")}${b("s","⭐","☆","pickS","pickSA")}${withBadges?pickBadges(it):""}</div>`;
