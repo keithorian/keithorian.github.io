@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#b5502f">
+<title>Our China Trip • Trip Planner</title>
+<style>
+:root{
+  --bg:#faf6f0;--card:#fff;--ink:#2d2722;--muted:#7a6e64;--line:#eadfd2;
+  --accent:#b5502f;--accent2:#e9a23b;--accent-soft:#fbe9df;
+  --ok:#2f8a57;--ok-soft:#e3f4ea;--warn:#b97400;--warn-soft:#fff2d6;--idea:#7a55b8;--idea-soft:#efe8fa;
+  --radius:14px;--shadow:0 1px 2px rgba(60,40,20,.08),0 2px 8px rgba(60,40,20,.06);
+  font-family:Roboto,-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,"Sukhumvit Set","Thonburi","Noto Sans Thai","Leelawadee UI","Leelawadee","Tahoma","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);-webkit-text-size-adjust:100%}
+body{min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* header */
+header{background:linear-gradient(135deg,#b5502f,#d9783e);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 0}
+.jump{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#a9472a,#cf6e38);padding:8px 14px 0;box-shadow:0 2px 10px rgba(120,50,20,.25)}
+.titlerow{display:flex;align-items:center;gap:8px}
+#title{flex:1;min-width:0;background:transparent;border:0;border-radius:8px;color:#fff;font-size:20px;font-weight:700;padding:6px 6px;
+  text-overflow:ellipsis}
+.lang{flex:none;display:flex;background:rgba(0,0,0,.18);border-radius:999px;padding:3px}
+.lang button{border:0;background:transparent;color:#fff;font-weight:700;font-size:14px;border-radius:999px;padding:6px 12px;min-height:36px;min-width:48px}
+.lang button[aria-pressed=true]{background:#fff;color:var(--accent)}
+:lang(th) .ctitle,:lang(th) .dtitle{line-height:1.4}
+#title:focus{background:rgba(255,255,255,.18);outline:none}
+.tools{display:flex;gap:6px;overflow-x:auto;padding:8px 0 10px;scrollbar-width:none}
+.tools::-webkit-scrollbar{display:none}
+.tbtn{flex:none;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;background:rgba(255,255,255,.18);
+  color:#fff;padding:8px 13px;font-size:14px;font-weight:500;min-height:38px;white-space:nowrap}
+.tbtn:hover{background:rgba(255,255,255,.28)}
+.tbtn.primary{background:#fff;color:var(--accent)}
+.tbtn:disabled{opacity:.45;cursor:default}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:0;border-radius:10px;background:rgba(0,0,0,.14);color:#fff;padding:5px 10px;font-size:12.5px;line-height:1.2;text-align:left}
+.chip b{display:block;font-size:13px}
+.chip:hover{background:rgba(0,0,0,.24)}
+
+@media (max-width:480px){#title{font-size:17px}.lang button{min-width:42px;padding:6px 10px}}
+/* board */
+#board{display:flex;flex-direction:column;gap:14px;padding:14px;max-width:640px;margin:0 auto}
+.day{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line);display:flex;flex-direction:column;scroll-margin-top:70px}
+.day.ideas{background:#fffdf8;border:2px dashed #e6cfa9}
+.dhead{padding:12px 12px 8px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:flex-start;cursor:pointer;border-radius:var(--radius) var(--radius) 0 0}
+.dhead:hover{background:#fdf9f4}
+.dnum{flex:none;width:46px;border-radius:10px;background:var(--accent-soft);color:var(--accent);text-align:center;padding:5px 0;line-height:1.1}
+.dnum small{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.dnum b{font-size:19px}
+.ideas .dnum{background:#fff1d6;color:#a26a00;font-size:22px;padding:8px 0}
+.dinfo{flex:1;min-width:0}
+.dinfo .date{font-size:12.5px;color:var(--muted);font-weight:500}
+.dinfo .dtitle{font-size:16px;font-weight:700;margin:1px 0 4px;line-height:1.25}
+.city{display:inline-block;font-size:11.5px;font-weight:600;background:#f3ece3;color:#6a5a4b;border-radius:999px;padding:2px 8px;margin-right:4px}
+.stay{display:inline-block;font-size:12px;color:var(--muted)}
+.ibtn{flex:none;border:0;background:transparent;border-radius:10px;width:38px;height:38px;font-size:18px;color:var(--muted);display:inline-flex;align-items:center;justify-content:center}
+.ibtn:hover{background:#f3ece3;color:var(--ink)}
+.tips{margin:8px 12px 0;background:#fff8e6;border-radius:10px;font-size:13px;color:#6b5320}
+.tips summary{cursor:pointer;padding:7px 10px;font-weight:600;list-style:none}
+.tips summary::-webkit-details-marker{display:none}
+.tips p{margin:0;padding:0 10px 9px;white-space:pre-wrap;line-height:1.4}
+.list{list-style:none;margin:0;padding:8px 10px 4px;min-height:56px;display:flex;flex-direction:column;gap:8px}
+.list:empty::before{content:attr(data-empty);display:block;text-align:center;color:#b8aa9b;font-size:13px;padding:14px;border:2px dashed var(--line);border-radius:10px}
+.addbtn{margin:2px 10px 10px;border:0;border-radius:10px;background:transparent;color:var(--accent);font-weight:600;padding:10px;text-align:left;min-height:44px;font-size:14.5px}
+.addbtn:hover{background:var(--accent-soft)}
+.addday{border:2px dashed #e3cdb8;background:transparent;border-radius:var(--radius);color:var(--accent);font-weight:700;padding:18px;font-size:15px;min-height:60px}
+.addday:hover{background:var(--accent-soft)}
+
+/* cards */
+.card{position:relative;display:flex;align-items:stretch;background:#fff;border:1px solid var(--line);border-left:4px solid var(--c,#ccc);
+  border-radius:11px;box-shadow:0 1px 2px rgba(0,0,0,.04);user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+.card:hover{border-color:#dccbb8;border-left-color:var(--c)}
+.card[data-cat=sightseeing]{--c:#d9783e}.card[data-cat=food]{--c:#d24d57}.card[data-cat=travel]{--c:#3a7bd5}
+.card[data-cat=hotel]{--c:#7a55b8}.card[data-cat=shopping]{--c:#2fa08a}.card[data-cat=other]{--c:#9a8f84}
+.handle{flex:none;width:30px;border:0;background:transparent;color:#c2b5a7;font-size:17px;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:center;border-radius:8px 0 0 8px;padding:0}
+.handle:hover,.handle:focus-visible{color:var(--accent);background:#fbf3ec}
+.cbody{flex:1;min-width:0;padding:9px 10px 9px 2px;cursor:pointer}
+.ctop{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:2px}
+.ctime{font-weight:600;color:#5c5047}
+.ctitle{font-size:14.5px;font-weight:600;line-height:1.3;word-wrap:break-word}
+.cemo{margin-right:4px}
+.cnotes{font-size:12.8px;color:var(--muted);line-height:1.35;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
+.clink{display:inline-block;margin-top:4px;font-size:12.5px;color:#3a7bd5;text-decoration:none;font-weight:500;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;border-radius:999px;padding:1px 7px;text-transform:uppercase;letter-spacing:.03em}
+.pill.booked{background:var(--ok-soft);color:var(--ok)}
+.pill.confirm{background:var(--warn-soft);color:var(--warn)}
+.pill.idea{background:var(--idea-soft);color:var(--idea)}
+.card.dragging-src{opacity:.35;border-style:dashed}
+.ghost{position:fixed;z-index:1000;pointer-events:none;box-shadow:0 12px 30px rgba(60,30,10,.28);transform:rotate(2deg) scale(1.02);opacity:.96;margin:0}
+body.dragging{cursor:grabbing;user-select:none;-webkit-user-select:none}
+body.dragging .card,body.dragging .cbody{cursor:grabbing}
+.list.over{background:#fff6ee;border-radius:10px}
+.card.lifting{transform:scale(1.02);box-shadow:0 6px 18px rgba(0,0,0,.15);transition:transform .15s}
+
+/* desktop columns */
+@media (min-width:900px){
+  #board{flex-direction:row;align-items:flex-start;max-width:none;overflow-x:auto;padding:16px 16px 28px;min-height:calc(100vh - 140px);scroll-snap-type:x proximity}
+  .day,.addday{flex:none;width:300px;scroll-snap-align:start;scroll-margin-left:16px}
+  .day{max-height:none}
+  .addday{height:120px}
+  header,.jump{padding-left:20px;padding-right:20px}
+  #title{font-size:22px}
+}
+
+/* sheet / modal */
+.backdrop{position:fixed;inset:0;z-index:50;background:rgba(40,25,15,.42);display:flex;align-items:flex-end;justify-content:center;animation:fade .15s}
+.sheet{background:#fff;width:100%;max-width:520px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));animation:up .2s ease-out}
+@media (min-width:600px){.backdrop{align-items:center}.sheet{border-radius:18px}}
+@keyframes up{from{transform:translateY(30px);opacity:.4}}@keyframes fade{from{opacity:0}}
+.sheet h2{margin:0 0 12px;font-size:18px;display:flex;align-items:center;justify-content:space-between}
+.field{display:block;margin-bottom:12px}
+.field>span{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.field input,.field textarea,.field select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 11px;font-size:16px;background:#fff}
+.field textarea{min-height:90px;resize:vertical;line-height:1.4}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:14px;min-height:40px}
+.seg button[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.btn{border:0;border-radius:11px;padding:11px 16px;font-weight:600;font-size:15px;min-height:46px;background:#f3ece3}
+.btn.primary{background:var(--accent);color:#fff;flex:1}
+.btn.danger{background:#fdeaea;color:#b3261e}
+.btn:hover{filter:brightness(.97)}
+.movebar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:#faf6f0;border-radius:12px;padding:8px}
+.movebar select{flex:1;min-width:140px;border:1.5px solid var(--line);border-radius:9px;padding:8px;font-size:15px;background:#fff}
+.movebar .btn{min-height:40px;padding:8px 12px}
+.hint{font-size:13px;color:var(--muted);line-height:1.45;margin:0 0 10px}
+.x{border:0;background:#f3ece3;border-radius:50%;width:34px;height:34px;font-size:16px}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(120px);z-index:80;
+  background:#2d2722;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;align-items:center;gap:12px;font-size:14px;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);transition:transform .25s;max-width:calc(100vw - 24px)}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast button{border:0;background:#e9a23b;color:#2d2722;font-weight:700;border-radius:8px;padding:7px 12px}
+.firsthelp{max-width:640px;margin:12px auto 0;padding:0 14px}
+.firsthelp div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13.5px;color:#5c5047;display:flex;gap:10px;align-items:center}
+.firsthelp button{margin-left:auto}
+@media (min-width:900px){.firsthelp{max-width:none;margin:12px 16px 0;padding:0}}
+
+/* print */
+@media print{
+  @page{margin:12mm}
+  header{position:static;background:none;color:#000;box-shadow:none;padding:0}
+  #title{color:#000;font-size:22px;padding:0}
+  .tools,.jump,.chips,.handle,.ibtn,.addbtn,.addday,#toast,.firsthelp,.backdrop{display:none!important}
+  body{background:#fff}
+  #board{display:block;padding:0;max-width:none;overflow:visible}
+  .day{box-shadow:none;margin:0 0 10px;border:1px solid #ccc;width:auto}
+  .dhead,.tips{break-after:avoid;page-break-after:avoid}
+  .day.ideas.empty{display:none}
+  .card{break-inside:avoid;box-shadow:none}
+  .cnotes{-webkit-line-clamp:unset;display:block}
+  .tips[open] p,.tips p{display:block}
+  .clink::after{content:" (" attr(href) ")";color:#555;white-space:normal}
+  .clink{white-space:normal}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="titlerow">
+    <label for="title" class="sr">Trip title</label>
+    <input id="title" type="text" autocomplete="off" spellcheck="false">
+    <div class="lang" role="group" aria-label="Language / ภาษา"><button type="button" data-lang="en" lang="en">EN</button><button type="button" data-lang="th" lang="th">ไทย</button></div>
+  </div>
+  <div class="tools" role="toolbar" aria-label="Plan tools">
+    <button class="tbtn primary" id="bShare" type="button" data-t="share"></button>
+    <button class="tbtn" id="bUndo" type="button" disabled data-t="undo"></button>
+    <button class="tbtn" id="bDownload" type="button" data-t="download"></button>
+    <button class="tbtn" id="bLoad" type="button" data-t="load"></button>
+    <button class="tbtn" id="bPrint" type="button" data-t="print"></button>
+    <button class="tbtn" id="bReset" type="button" data-t="reset"></button>
+    <button class="tbtn" id="bHelp" type="button" data-t="help"></button>
+  </div>
+</header>
+<div class="jump"><nav class="chips" id="chips" aria-label="Jump to day"></nav></div>
+<div class="firsthelp" id="firsthelp" hidden><div>👋 <span data-th="banner"></span><button class="btn" id="hideHelp" type="button" data-t="gotit"></button></div></div>
+<main id="board" aria-label="Itinerary"></main>
+<input type="file" id="fileIn" accept=".json,application/json" hidden>
+<div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
+
+<script>
+// ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
+// Text fields are [English, Thai]. Plain strings are used for both languages.
+const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
+const I=(time,cat,title,notes='',status='planned',link='')=>({time,cat,title,notes,status,link});
+const SLOT={Morning:"ช่วงเช้า","Early morning":"เช้าตรู่",Lunch:"มื้อกลางวัน",Afternoon:"ช่วงบ่าย",Evening:"ช่วงค่ำ",Dinner:"มื้อเย็น",Daytime:"ช่วงกลางวัน","All day":"ทั้งวัน","Full day":"ทั้งวัน",Midnight:"เที่ยงคืน",Later:"ช่วงหลัง"};
+const S=k=>SLOT[k]?[k,SLOT[k]]:k;
+const BJ=["Beijing","ปักกิ่ง"], SH=["Shanghai","เซี่ยงไฮ้"];
+const WFJ=["Wangfujing Serviced Apartment","Wangfujing Serviced Apartment (ย่านหวังฝูจิ่ง)"];
+const RIV=["Riverdale Residence Xintiandi","Riverdale Residence Xintiandi (ย่านซินเทียนตี้)"];
+const ORIGINAL_DATA={
+ title:["Our China Trip • Dec 2026 – Jan 2027","ทริปจีนของเรา • ธ.ค. 2026 – ม.ค. 2027"],
+ days:[
+ D("2026-12-24",BJ,["Arrival in Beijing & Chaoyang Festive Lights","ถึงปักกิ่ง & ชมไฟประดับเทศกาลย่านเฉาหยาง"],["Conrad Beijing (Chaoyang)","Conrad Beijing (ย่านเฉาหยาง)"],
+  ["Beijing is dry and freezing (-8°C to 3°C). Wear an insulated down parka, thermal base layers, windproof gloves, and boots with good traction.\nKeep the Shichahai stroll light after the early arrival; it is cold by the lakes at dusk.",
+   "ปักกิ่งอากาศแห้งและหนาวจัด (-8°C ถึง 3°C) ใส่เสื้อดาวน์กันหนาว เสื้อชั้นในกันหนาว ถุงมือกันลม และรองเท้าบูทพื้นกันลื่น\nเดินเล่นที่สือช่าไห่แบบสบาย ๆ เพราะเพิ่งมาถึงแต่เช้า ริมทะเลสาบช่วงพลบค่ำจะหนาวมาก"],[
+  I("01:05","travel",["Flight Bangkok → Beijing (HU7996)","เที่ยวบิน กรุงเทพฯ → ปักกิ่ง (HU7996)"],["Depart BKK 01:05 → arrive PEK 06:50","ออกจาก BKK 01:05 → ถึง PEK 06:50"]),
+  I(S("Morning"),"hotel",["Transfer to Conrad Beijing (Chaoyang District)","เดินทางไปโรงแรม Conrad Beijing (เขตเฉาหยาง)"]),
+  I(S("Lunch"),"food",["Lunch: Da Dong Roast Duck (Tuanjiehu Branch)","มื้อกลางวัน: เป็ดปักกิ่ง Da Dong (สาขาถวนเจี๋ยหู)"]),
+  I(S("Afternoon"),"sightseeing",["Shichahai stroll","เดินเล่นย่านสือช่าไห่ (Shichahai)"],
+   ["Houhai/Qianhai lakes, Yinding Bridge, Yandai Xiejie (old lane), Drum & Bell Towers (exterior or quick visit).\nLakes often frozen in late Dec with skating rinks; optional pedicab hutong ride. Taxi/Didi from the Conrad ~25–30 min.",
+    "ทะเลสาบโฮ่วไห่/เฉียนไห่ สะพานอิ๋นติ้ง ซอยเก่าเหยียนไต่เสียเจีย (Yandai Xiejie) หอกลองและหอระฆัง (ชมด้านนอกหรือแวะสั้น ๆ)\nปลายเดือนธันวาคมทะเลสาบมักกลายเป็นน้ำแข็งและมีลานสเก็ต นั่งสามล้อชมหูท่งได้ถ้าสนใจ นั่งแท็กซี่/Didi จาก Conrad ประมาณ 25–30 นาที"],"confirm"),
+  I(S("Afternoon"),"sightseeing",["Optional: Nanluoguxiang side hutongs","(ถ้าไหว) ตรอกหูท่งรอบหนานหลัวกู่เซี่ยง (Nanluoguxiang)"],
+   ["If energy allows: Mao'er / Fangzhuanchang hutongs, ~10 min walk from Shichahai (the Nanluoguxiang teahouse is already on Day 3).",
+    "ถ้ายังมีแรง: หูท่งเม่าเอ๋อร์ / ฟางจวนฉ่าง เดินจากสือช่าไห่ประมาณ 10 นาที (ร้านน้ำชาที่หนานหลัวกู่เซี่ยงอยู่ในวันที่ 3 แล้ว)"],"idea"),
+  I(S("Evening"),"sightseeing",["Sanlitun Taikoo Li & Solana Light Festival","ซานหลี่ถุน ไท่กู่หลี่ (Sanlitun Taikoo Li) & เทศกาลไฟ Solana"]),
+  I(S("Dinner"),"food",["Dinner: Jing Yaa Tang or Qianmen Quanjude","มื้อเย็น: Jing Yaa Tang หรือ Quanjude สาขาเฉียนเหมิน"])]),
+ D("2026-12-25",BJ,["Temple of Heaven & Forbidden City","หอฟ้าเทียนถาน & พระราชวังต้องห้าม"],WFJ,
+  ["Forbidden City tickets open 7 days in advance at 8:00 PM CST sharp. Book early.\nFor a Temple of Heaven morning, book a later Forbidden City slot (after ~10:00). Leave bags at the Conrad before heading out; checkout is by 12:00, and Wangfujing check-in is after 14:00.",
+   "ตั๋วพระราชวังต้องห้ามเปิดขายล่วงหน้า 7 วัน เวลา 20:00 น. ตรง (เวลาจีน) ควรจองให้เร็ว\nถ้าจะไปหอฟ้าเทียนถานช่วงเช้า ให้จองรอบพระราชวังต้องห้ามช่วงสาย (หลังประมาณ 10:00) ฝากกระเป๋าไว้ที่ Conrad ก่อนออกไป เช็กเอาต์ภายใน 12:00 และเช็กอินที่หวังฝูจิ่งได้หลัง 14:00"],[
+  I(S("Early morning"),"sightseeing",["Temple of Heaven","หอฟ้าเทียนถาน (Temple of Heaven)"],
+   ["Hall of Prayer for Good Harvests. Park opens ~06:00, halls ~08:00; allow ~1.5–2h.","ตำหนักฉีเหนียนเตี้ยน (หอบวงสรวงขอพืชผล) สวนเปิดประมาณ 06:00 ตัวอาคารเปิดประมาณ 08:00 ใช้เวลาประมาณ 1.5–2 ชม."],"confirm"),
+  I(S("Morning"),"travel",["Taxi to Forbidden City Meridian Gate","นั่งแท็กซี่ไปประตูอู่เหมิน (Meridian Gate) พระราชวังต้องห้าม"],["~15–20 min","ประมาณ 15–20 นาที"]),
+  I(S("Morning"),"sightseeing",["Tiananmen Square & Palace Museum (Forbidden City)","จัตุรัสเทียนอันเหมิน & พิพิธภัณฑ์พระราชวัง (พระราชวังต้องห้าม)"],
+   ["Book a later-morning timed entry, after the Temple of Heaven and the transfer.","จองรอบเข้าชมช่วงสาย ต่อจากหอฟ้าเทียนถานและการเดินทาง"],"confirm"),
+  I(S("Afternoon"),"hotel",["Check in: Wangfujing Serviced Apartment","เช็กอิน: Wangfujing Serviced Apartment"],["Base for Days 2–4. Check-in after 14:00.","ที่พักหลักของวันที่ 2–4 เช็กอินได้หลัง 14:00"]),
+  I(S("Lunch"),"food",["Lunch: Siji Minfu Roast Duck","มื้อกลางวัน: เป็ดปักกิ่ง Siji Minfu"]),
+  I(S("Afternoon"),"sightseeing",["Sunset at Jingshan Park & Longfusi Street cafés","ชมพระอาทิตย์ตกที่สวนจิ่งซาน & คาเฟ่ถนนหลงฝูซื่อ"]),
+  I(S("Dinner"),"food",["Dinner: Ju Qi (Wangfujing)","มื้อเย็น: Ju Qi (หวังฝูจิ่ง)"],["Courtyard cuisine","อาหารจีนในบ้านโบราณแบบซื่อเหอย่วน"])]),
+ D("2026-12-26",BJ,["Mutianyu Great Wall & Copper Pot Hotpot","กำแพงเมืองจีนมู่เถียนอวี้ & หม้อไฟหม้อทองแดง"],WFJ,
+  ["Mutianyu is often below 0°C in late December, with a strong wind on the wall. Dress in layers, and wear a windproof layer, gloves, and boots with good traction. The toboggan may be closed if conditions are icy.",
+   "ปลายเดือนธันวาคมที่มู่เถียนอวี้มักต่ำกว่า 0°C และบนกำแพงลมแรง แต่งตัวหลายชั้น ใส่เสื้อกันลม ถุงมือ และรองเท้าบูทพื้นกันลื่น สไลเดอร์ (toboggan) อาจปิดถ้ามีน้ำแข็ง"],[
+  I("07:30","travel",["Private driver to Mutianyu Great Wall","รถพร้อมคนขับไปกำแพงเมืองจีนมู่เถียนอวี้"],["Depart central Beijing; ~1.5h each way.","ออกจากใจกลางปักกิ่ง ประมาณ 1.5 ชม. ต่อเที่ยว"],"confirm"),
+  I(S("Morning"),"sightseeing",["Mutianyu Great Wall","กำแพงเมืองจีนมู่เถียนอวี้ (Mutianyu)"],
+   ["Cable car up; toboggan or cable car down (toboggan may close in icy weather). ~3 hours on the wall.","ขึ้นด้วยกระเช้า ลงด้วยสไลเดอร์ (toboggan) หรือกระเช้า (สไลเดอร์อาจปิดถ้ามีน้ำแข็ง) อยู่บนกำแพงประมาณ 3 ชม."]),
+  I(S("Lunch"),"food",["Lunch: The Schoolhouse at Mutianyu","มื้อกลางวัน: The Schoolhouse ที่มู่เถียนอวี้"],["Or nearby in Mutianyu village.","หรือร้านแถวหมู่บ้านมู่เถียนอวี้"]),
+  I(S("Afternoon"),"travel",["Return to Beijing","กลับเข้าเมืองปักกิ่ง"],["Arrive mid-afternoon.","ถึงช่วงกลางบ่าย"]),
+  I(S("Afternoon"),"food",["Hutong teahouse in Nanluoguxiang","ร้านน้ำชาในหูท่ง ย่านหนานหลัวกู่เซี่ยง"]),
+  I(S("Dinner"),"food",["Dinner: Nanmen Hotpot","มื้อเย็น: Nanmen Hotpot"],["Copper pot mutton hotpot","หม้อไฟเนื้อแกะแบบหม้อทองแดง (ชาบูปักกิ่ง)"])]),
+ D("2026-12-27",BJ,["Summer Palace","พระราชวังฤดูร้อน"],WFJ,"",[
+  I(S("Morning"),"other",["Free morning","เช้าว่าง (อิสระ)"],["Temple of Heaven moved to Day 2.","ย้ายหอฟ้าเทียนถานไปวันที่ 2 แล้ว"]),
+  I(S("Lunch"),"food",["Lunch: Fangzhuanchang No. 69 Zhajiangmian","มื้อกลางวัน: บะหมี่จ๋าเจี้ยงเมี่ยน Fangzhuanchang No. 69"]),
+  I(S("Afternoon"),"sightseeing",["Summer Palace & Kunming Lake","พระราชวังฤดูร้อน & ทะเลสาบคุนหมิง"]),
+  I(S("Evening"),"shopping",["Qianmen Street & Dashilan evening stroll","เดินเล่นยามค่ำถนนเฉียนเหมิน & ต้าจ้าล่าน (Dashilan)"],
+   ["Lit-up restored Qianmen pedestrian street; Dashilan old shops such as Ruifuxiang silks, Neiliansheng shoes and Zhang Yiyuan tea (shops close ~8–9pm); quieter Yangmeizhu Xiejie next door. An easy evening before the early 28 Dec train.",
+    "ถนนคนเดินเฉียนเหมินที่บูรณะใหม่และเปิดไฟสวยงาม ร้านเก่าแก่ในต้าจ้าล่าน เช่น ผ้าไหม Ruifuxiang รองเท้า Neiliansheng และชา Zhang Yiyuan (ร้านปิดประมาณ 20:00–21:00) ถัดไปเป็นซอยหยางเหมยจู๋เสียเจีย (Yangmeizhu Xiejie) ที่เงียบกว่า เป็นค่ำสบาย ๆ ก่อนขึ้นรถไฟเช้าตรู่วันที่ 28 ธ.ค."],"confirm"),
+  I(S("Dinner"),"food",["Dinner: TRB Hutong","มื้อเย็น: TRB Hutong"],["Fine dining","ร้านอาหารไฟน์ไดนิ่ง"])]),
+ D("2026-12-28",["Beijing → Shanghai","ปักกิ่ง → เซี่ยงไฮ้"],["High-Speed Rail to Shanghai & The Bund","นั่งรถไฟความเร็วสูงไปเซี่ยงไฮ้ & เดอะบันด์"],RIV,"",[
+  I("09:00","travel",["Train Beijing South → Shanghai Hongqiao","รถไฟ สถานีปักกิ่งใต้ → เซี่ยงไฮ้หงเฉียว"],
+   ["Fuxing high-speed rail, 09:00 → 13:28.\n(The price watch is also tracking the earlier G531 at 06:08. Tickets go on sale on Trip.com on 14 Dec at 12:45.)",
+    "รถไฟความเร็วสูงฟู่ซิง (Fuxing) 09:00 → 13:28\n(ระบบติดตามราคากำลังดูขบวน G531 เวลา 06:08 ที่ออกเช้ากว่าด้วย ตั๋วเปิดขายบน Trip.com วันที่ 14 ธ.ค. เวลา 12:45)"]),
+  I(S("Afternoon"),"hotel",["Check in: Riverdale Residence Xintiandi","เช็กอิน: Riverdale Residence Xintiandi"]),
+  I(S("Afternoon"),"shopping",["Stroll Xintiandi & Middle Huaihai Road","เดินเล่นซินเทียนตี้ & ถนนหวยไห่จง (Middle Huaihai Rd)"]),
+  I(S("Dinner"),"food",["Dinner: Ren He Guan","มื้อเย็น: Ren He Guan"],["Crab roe rice & live jazz","ข้าวคลุกมันปู & ดนตรีแจ๊สสด"]),
+  I(S("Evening"),"sightseeing",["East Nanjing Road to The Bund skyline view","เดินถนนหนานจิงตะวันออก ไปชมวิวเส้นขอบฟ้าที่เดอะบันด์"])]),
+ D("2026-12-29",SH,["Yu Garden & French Concession","สวนอวี้หยวน & ย่านเฟรนช์คอนเซสชัน"],RIV,"",[
+  I(S("Daytime"),"sightseeing",["Yu Garden (Yuyuan) & shengjianbao lunch","สวนอวี้หยวน (Yu Garden) & มื้อกลางวันเซิงเจียนเปา (ซาลาเปาทอด)"]),
+  I(S("Daytime"),"sightseeing",["Former French Concession: Wukang Rd & Anfu Rd","ย่านเฟรนช์คอนเซสชันเก่า: ถนนอู่คัง & ถนนอันฝู"]),
+  I(S("Evening"),"sightseeing",["Shanghai Tower 118th Floor Observation Deck","จุดชมวิวชั้น 118 ตึกเซี่ยงไฮ้ทาวเวอร์"]),
+  I(S("Dinner"),"food",["Dinner: Fu He Hui or Lao Zheng Xing","มื้อเย็น: Fu He Hui หรือ Lao Zheng Xing"])]),
+ D("2026-12-30",SH,["Jing'an Temple & West Bund","วัดจิ้งอัน & เวสต์บันด์"],RIV,"",[
+  I(S("Daytime"),"sightseeing",["Jing'an Temple & Zhangyuan complex","วัดจิ้งอัน & ย่านจางหยวน (Zhangyuan)"]),
+  I(S("Daytime"),"food",["Starbucks Reserve Roastery (HKRI Taikoo Hui)","Starbucks Reserve Roastery (ห้าง HKRI Taikoo Hui)"]),
+  I(S("Daytime"),"sightseeing",["Museum of Art Pudong / West Bund Museum","พิพิธภัณฑ์ศิลปะผู่ตง / พิพิธภัณฑ์เวสต์บันด์"]),
+  I(S("Dinner"),"food",["Dinner: Shouning Road Crawfish or Haidilao Xintiandi","มื้อเย็น: กุ้งเครย์ฟิชถนนโซ่วหนิง หรือ Haidilao สาขาซินเทียนตี้"])]),
+ D("2026-12-31",SH,["NYE Countdown at Shanghai Disneyland","เคานต์ดาวน์ปีใหม่ที่เซี่ยงไฮ้ดิสนีย์แลนด์"],RIV,"",[
+  I(S("All day"),"sightseeing",["Shanghai Disneyland","เซี่ยงไฮ้ดิสนีย์แลนด์"],["Zootopia, TRON, Pirates of the Caribbean","โซน Zootopia, TRON, Pirates of the Caribbean"]),
+  I(S("Evening"),"sightseeing",["NYE Fireworks & Castle Projection Show","ดอกไม้ไฟคืนส่งท้ายปี & โชว์ฉายภาพบนปราสาท"]),
+  I(S("Midnight"),"sightseeing",["Midnight Countdown in Disneytown","เคานต์ดาวน์เที่ยงคืนที่ Disneytown"])]),
+ D("2027-01-01",["Hangzhou → Singapore","หางโจว → สิงคโปร์"],["Return to Bangkok/Singapore","เดินทางกลับกรุงเทพฯ/สิงคโปร์"],"","",[
+  I(S("Morning"),"sightseeing",["Leisurely morning walk by West Lake / China National Tea Museum","เดินเล่นสบาย ๆ ยามเช้าริมทะเลสาบซีหู / พิพิธภัณฑ์ชาแห่งชาติจีน"]),
+  I(S("Later"),"travel",["Hangzhou Xiaoshan Airport (HGH) → flight to Singapore","สนามบินหางโจวเซียวซาน (HGH) → บินกลับสิงคโปร์"])])
+ ],
+ ideas:[
+  I(S("Full day"),"sightseeing",["Universal Beijing Resort","ยูนิเวอร์แซล ปักกิ่ง รีสอร์ท (Universal Beijing Resort)"],
+   ["Tongzhou, east Beijing. ~40–60 min by taxi, or Metro Line 7 / Batong Line to Universal Resort station. Christmas week can be busy, so an Express Pass helps.",
+    "อยู่เขตทงโจว ทางตะวันออกของปักกิ่ง นั่งแท็กซี่ประมาณ 40–60 นาที หรือรถไฟใต้ดินสาย 7 / สาย Batong ลงสถานี Universal Resort ช่วงสัปดาห์คริสต์มาสคนอาจเยอะ ซื้อ Express Pass จะช่วยได้มาก"],"idea"),
+  I(S("Afternoon"),"sightseeing",["Wudaoying Hutong & Lama Temple","หูท่งอู่เต้าอิ๋ง & วัดลามะ (ยงเหอกง)"],
+   ["Indie cafés and boutiques; Lama Temple open until ~4:30pm in winter.","คาเฟ่และร้านบูติกอินดี้ วัดลามะเปิดถึงประมาณ 16:30 ในฤดูหนาว"],"idea"),
+  I(S("Afternoon"),"sightseeing",["Guozijian Street, Confucius Temple & Imperial Academy","ถนนกั๋วจื่อเจียน วัดขงจื๊อ & ราชวิทยาลัยหลวง (กั๋วจื่อเจียน)"],
+   ["Quiet, tree-lined and atmospheric.","เงียบสงบ ร่มรื่นด้วยต้นไม้ บรรยากาศดี"],"idea")
+ ]
+};
+
+</script>
+<script>
+(function(){
+"use strict";
+const STORE_KEY="chinaTripPlanner.v1", HELP_KEY="chinaTripPlanner.helpSeen", LANG_KEY="chinaTripPlanner.lang";
+const LANGS=["en","th"];
+const ITEM_F=["time","title","notes"], DAY_F=["city","title","stay","tips"];
+const CAT_EMO={sightseeing:"📸",food:"🍜",travel:"🚆",hotel:"🏨",shopping:"🛍️",other:"⭐"};
+const STATUS_KEYS=["planned","booked","confirm","idea"];
+
+/* ---------- UI strings ---------- */
+const STR={
+en:{share:"📤 Share",undo:"↩️ Undo",undoShort:"Undo",download:"⬇️ Download plan",load:"📂 Load plan",print:"🖨️ Print / Save PDF",reset:"↺ Reset to original",help:"❔ Help",gotit:"Got it",
+ banner:"<b>Tap</b> any activity to edit. <b>Drag ⠿</b> (or press &amp; hold a card) to move it. Changes save automatically.",
+ cat:{sightseeing:"Sightseeing",food:"Food",travel:"Travel",hotel:"Hotel",shopping:"Shopping",other:"Other"},
+ status:{planned:"Planned",booked:"Booked",confirm:"To confirm",idea:"Idea"},
+ day:"Day",dayN:n=>`Day ${n}`,ideas:"💡 Ideas",ideasTitle:"Ideas & maybes",ideasSub:"Park things here, then drag them into a day",
+ untitledDay:"Untitled day",untitled:"Untitled",tips:"💡 Travel tips",addAct:"＋ Add activity",addIdea:"＋ Add idea",addDay:"＋ Add a day",dropHere:"Drop activities here",
+ editDayTip:"Tap to edit this day",editDayN:n=>`Edit day ${n}`,moveAria:t=>`Move ${t} (drag, or use arrow keys)`,moveTitle:"Drag to move · arrow keys also work",editAria:t=>`Edit ${t}`,
+ newAct:"New activity",editAct:"Edit activity",fWhat:"What",phWhat:"e.g. Dinner at…",fWhen:"When",phWhen:"Morning, 09:00…",fDay:"Day",fType:"Type",fStatus:"Status",fNotes:"Notes",phNotes:"Details, booking refs, tips…",
+ fLink:"Link (optional)",fMove:"Move",up:"↑ Up",down:"↓ Down",upAria:"Move up",downAria:"Move down",orPick:"or pick another day above",del:"🗑 Delete",add:"Add",save:"Save",close:"Close",cancel:"Cancel",
+ slots:["Morning","Lunch","Afternoon","Evening","Dinner","All day"],
+ newDay:"New day",editDayH:n=>`Edit Day ${n}`,fDayTitle:"Day title",phDayTitle:"e.g. Exploring the Bund",fDate:"Date",fCity:"City",phCity:"Shanghai",fStay:"Staying at (hotel)",phStay:"Hotel name",
+ fTips:"Travel tips",phTips:"Weather, tickets, reminders…",fOrder:"Order",earlier:"← Earlier",later:"Later →",swapHint:"swaps this day with its neighbour (dates stay as you set them)",delDay:"🗑 Delete day",addDayBtn:"Add day",
+ tUndone:"Undone",tAdded:"Added ✓",tSaved:"Saved ✓",tDayAdded:"Day added ✓",tTitle:"Title saved ✓",tDeleted:t=>`Deleted “${t}”`,tMoved:l=>`Moved to ${l}`,tNowDay:n=>`Now Day ${n}`,
+ tDeletedDay:(n,c)=>`Deleted Day ${n}${c?` (${c} activities)`:""}`,tDownloaded:"Plan downloaded ⬇️",tCopied:"Link copied – paste it in a message 💌",tNoCopy:"Couldn't copy – try Send plan file",
+ tLoaded:"Plan loaded ✓",tLoadedLink:"Plan loaded from link ✓",tOpened:"Opened the shared plan ✓",tReset:"Reset to original",tBadFile:"Couldn't read that file – is it a plan .json?",
+ tBadLink:"That doesn't look like a share link",tBadLink2:"Couldn't read that link",tNoDecomp:"This browser can't open compressed links – ask for the plan file instead.",tOpenFail:"Couldn't open that shared link",
+ shareH:"Share this plan",shareHint:"Send your current version so the other person sees exactly what you see. Opening the link (or loading the file) replaces their plan with yours – they can tap Undo if they change their mind.",
+ copyLink:"🔗 Copy share link",sendFile:"📎 Send plan file",shareTip:"Tip: the link works when this planner is opened from a web address. If you're using it as a file, send the plan file instead, and they can use <b>Load plan</b>.",
+ shareText:"Here's our trip plan – open it with Load plan in the planner.",
+ loadH:"Load a plan",loadHint:"Open a plan file someone sent you, or paste a share link. This replaces what's on screen (you can Undo).",pick:"📂 Choose plan file…",pasteLink:"…or paste a share link",loadLink:"Load link",
+ resetH:"Reset to original?",resetMsg:"This replaces the current plan with Keith's original itinerary. You can undo straight after.",resetOk:"Reset",
+ helpH:"How it works",helpBody:"✏️ <b>Edit:</b> tap any activity or day header.<br>↕️ <b>Move:</b> drag the ⠿ handle (or press &amp; hold a card on phones) and drop it anywhere – into another day or into 💡 Ideas. You can also open an activity and use ↑ / ↓ or change its Day.<br>➕ <b>Add:</b> “Add activity” under each day, “Add a day” at the end.<br>↩️ <b>Undo:</b> the Undo button reverses your last change.<br>🌐 <b>EN / ไทย:</b> switch language at the top. Edits are kept in the language you type them in.<br>💾 <b>Saving:</b> automatic, on this device.<br>📤 <b>Share:</b> copy a link or send the plan file. 📂 <b>Load plan</b> opens one.<br>🖨️ <b>Print / Save PDF</b> for a tidy printable copy.<br>⌨️ Keyboard: focus ⠿ and use arrow keys.",
+ itinerary:"Itinerary",tools:"Plan tools",jumpTo:"Jump to day",titleLbl:"Trip title",docTitle:" – Planner",defaultTitle:"Our Trip"},
+th:{share:"📤 แชร์",undo:"↩️ เลิกทำ",undoShort:"เลิกทำ",download:"⬇️ ดาวน์โหลดแผน",load:"📂 เปิดแผน",print:"🖨️ พิมพ์ / บันทึก PDF",reset:"↺ กลับเป็นแผนเดิม",help:"❔ วิธีใช้",gotit:"เข้าใจแล้ว",
+ banner:"<b>แตะ</b> กิจกรรมเพื่อแก้ไข <b>ลาก ⠿</b> (หรือกดค้างที่การ์ด) เพื่อย้าย ระบบบันทึกให้อัตโนมัติ",
+ cat:{sightseeing:"เที่ยวชม",food:"อาหาร",travel:"เดินทาง",hotel:"ที่พัก",shopping:"ช้อปปิ้ง",other:"อื่น ๆ"},
+ status:{planned:"วางแผนไว้",booked:"จองแล้ว",confirm:"รอยืนยัน",idea:"ไอเดีย"},
+ day:"วันที่",dayN:n=>`วันที่ ${n}`,ideas:"💡 ไอเดีย",ideasTitle:"ไอเดีย & อาจจะไป",ideasSub:"พักไอเดียไว้ตรงนี้ แล้วค่อยลากเข้าไปในวันที่ต้องการ",
+ untitledDay:"ยังไม่มีชื่อวัน",untitled:"ไม่มีชื่อ",tips:"💡 เคล็ดลับการเดินทาง",addAct:"＋ เพิ่มกิจกรรม",addIdea:"＋ เพิ่มไอเดีย",addDay:"＋ เพิ่มวัน",dropHere:"วางกิจกรรมที่นี่",
+ editDayTip:"แตะเพื่อแก้ไขวันนี้",editDayN:n=>`แก้ไขวันที่ ${n}`,moveAria:t=>`ย้าย ${t} (ลาก หรือใช้ปุ่มลูกศร)`,moveTitle:"ลากเพื่อย้าย · ใช้ปุ่มลูกศรได้",editAria:t=>`แก้ไข ${t}`,
+ newAct:"กิจกรรมใหม่",editAct:"แก้ไขกิจกรรม",fWhat:"ทำอะไร",phWhat:"เช่น มื้อเย็นที่…",fWhen:"เวลา",phWhen:"ช่วงเช้า, 09:00…",fDay:"วัน",fType:"ประเภท",fStatus:"สถานะ",fNotes:"รายละเอียด",phNotes:"รายละเอียด เลขที่การจอง เคล็ดลับ…",
+ fLink:"ลิงก์ (ไม่บังคับ)",fMove:"ย้าย",up:"↑ ขึ้น",down:"↓ ลง",upAria:"ย้ายขึ้น",downAria:"ย้ายลง",orPick:"หรือเลือกวันอื่นด้านบน",del:"🗑 ลบ",add:"เพิ่ม",save:"บันทึก",close:"ปิด",cancel:"ยกเลิก",
+ slots:["ช่วงเช้า","มื้อกลางวัน","ช่วงบ่าย","ช่วงค่ำ","มื้อเย็น","ทั้งวัน"],
+ newDay:"วันใหม่",editDayH:n=>`แก้ไขวันที่ ${n}`,fDayTitle:"ชื่อวัน",phDayTitle:"เช่น เที่ยวเดอะบันด์",fDate:"วันที่",fCity:"เมือง",phCity:"เซี่ยงไฮ้",fStay:"ที่พัก (โรงแรม)",phStay:"ชื่อโรงแรม",
+ fTips:"เคล็ดลับการเดินทาง",phTips:"สภาพอากาศ ตั๋ว สิ่งที่ต้องจำ…",fOrder:"ลำดับ",earlier:"← ก่อนหน้า",later:"ถัดไป →",swapHint:"สลับวันนี้กับวันข้าง ๆ (วันที่ยังคงตามที่ตั้งไว้)",delDay:"🗑 ลบวันนี้",addDayBtn:"เพิ่มวัน",
+ tUndone:"เลิกทำแล้ว",tAdded:"เพิ่มแล้ว ✓",tSaved:"บันทึกแล้ว ✓",tDayAdded:"เพิ่มวันแล้ว ✓",tTitle:"บันทึกชื่อทริปแล้ว ✓",tDeleted:t=>`ลบ “${t}” แล้ว`,tMoved:l=>`ย้ายไป ${l} แล้ว`,tNowDay:n=>`ตอนนี้เป็นวันที่ ${n}`,
+ tDeletedDay:(n,c)=>`ลบวันที่ ${n} แล้ว${c?` (${c} กิจกรรม)`:""}`,tDownloaded:"ดาวน์โหลดแผนแล้ว ⬇️",tCopied:"คัดลอกลิงก์แล้ว – วางในแชทได้เลย 💌",tNoCopy:"คัดลอกไม่สำเร็จ – ลองส่งไฟล์แผนแทน",
+ tLoaded:"เปิดแผนแล้ว ✓",tLoadedLink:"เปิดแผนจากลิงก์แล้ว ✓",tOpened:"เปิดแผนที่แชร์มาแล้ว ✓",tReset:"กลับเป็นแผนเดิมแล้ว",tBadFile:"อ่านไฟล์ไม่ได้ – ใช่ไฟล์แผน .json หรือเปล่า?",
+ tBadLink:"ลิงก์นี้ไม่ใช่ลิงก์แชร์แผน",tBadLink2:"อ่านลิงก์นี้ไม่ได้",tNoDecomp:"เบราว์เซอร์นี้เปิดลิงก์แบบบีบอัดไม่ได้ – ขอไฟล์แผนแทนนะ",tOpenFail:"เปิดลิงก์ที่แชร์มาไม่ได้",
+ shareH:"แชร์แผนนี้",shareHint:"ส่งแผนเวอร์ชันปัจจุบันให้อีกฝ่ายเห็นเหมือนกับที่เราเห็น เมื่อเปิดลิงก์ (หรือเปิดไฟล์) แผนของเขาจะถูกแทนที่ด้วยแผนนี้ – ถ้าเปลี่ยนใจกด “เลิกทำ” ได้",
+ copyLink:"🔗 คัดลอกลิงก์แชร์",sendFile:"📎 ส่งไฟล์แผน",shareTip:"เคล็ดลับ: ลิงก์ใช้ได้เมื่อเปิดแอปนี้จากเว็บ ถ้าเปิดจากไฟล์ในเครื่อง ให้ส่งไฟล์แผนแทน แล้วอีกฝ่ายกด <b>เปิดแผน</b>",
+ shareText:"แผนเที่ยวของเรา – เปิดด้วยปุ่ม “เปิดแผน” ในแอปวางแผนเที่ยว",
+ loadH:"เปิดแผน",loadHint:"เปิดไฟล์แผนที่มีคนส่งมา หรือวางลิงก์แชร์ แผนบนหน้าจอจะถูกแทนที่ (กดเลิกทำได้)",pick:"📂 เลือกไฟล์แผน…",pasteLink:"…หรือวางลิงก์แชร์",loadLink:"เปิดลิงก์",
+ resetH:"กลับเป็นแผนเดิม?",resetMsg:"แผนปัจจุบันจะถูกแทนที่ด้วยแผนเดิมของ Keith กดเลิกทำได้ทันทีหลังจากนี้",resetOk:"กลับเป็นแผนเดิม",
+ helpH:"วิธีใช้",helpBody:"✏️ <b>แก้ไข:</b> แตะที่กิจกรรมหรือหัวข้อของวัน<br>↕️ <b>ย้าย:</b> ลากที่ ⠿ (หรือกดค้างที่การ์ดบนมือถือ) แล้ววางที่ไหนก็ได้ – ในวันอื่นหรือใน 💡 ไอเดีย หรือเปิดกิจกรรมแล้วกด ↑ / ↓ หรือเปลี่ยน “วัน”<br>➕ <b>เพิ่ม:</b> “เพิ่มกิจกรรม” ใต้แต่ละวัน และ “เพิ่มวัน” ด้านท้าย<br>↩️ <b>เลิกทำ:</b> ปุ่มเลิกทำจะย้อนการเปลี่ยนแปลงล่าสุด<br>🌐 <b>EN / ไทย:</b> สลับภาษาได้ที่ด้านบน ข้อความที่แก้จะเก็บไว้ตามภาษาที่พิมพ์<br>💾 <b>บันทึก:</b> อัตโนมัติในเครื่องนี้<br>📤 <b>แชร์:</b> คัดลอกลิงก์หรือส่งไฟล์แผน 📂 <b>เปิดแผน</b> เพื่อเปิดแผนที่ได้รับ<br>🖨️ <b>พิมพ์ / บันทึก PDF</b> สำหรับฉบับพิมพ์สวย ๆ<br>⌨️ คีย์บอร์ด: โฟกัสที่ ⠿ แล้วใช้ปุ่มลูกศร",
+ itinerary:"แผนการเดินทาง",tools:"เครื่องมือ",jumpTo:"ไปยังวัน",titleLbl:"ชื่อทริป",docTitle:" – แผนเที่ยว",defaultTitle:"ทริปของเรา"}
+};
+let lang="en";
+try{ lang=localStorage.getItem(LANG_KEY)||((navigator.language||"").toLowerCase().startsWith("th")?"th":"en"); }catch(e){}
+if(!LANGS.includes(lang)) lang="en";
+const other=()=>lang==="en"?"th":"en";
+const T=k=>STR[lang][k];
+
+const $=s=>document.querySelector(s);
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-3);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const clone=o=>JSON.parse(JSON.stringify(o));
+
+/* ---------- bilingual fields ---------- */
+// Each text field f is stored as f_en and f_th; o.ed records which language fields the user typed in.
+// Reading: the current language, falling back to the other one. Writing: the current language;
+// the other language mirrors the edit unless the user has typed there too.
+const tx=(o,f)=>{const a=o[f+"_"+lang], b=o[f+"_"+other()]; return a!=null&&a!==""?a:(b||"");};
+function setTx(o,f,val){
+  if(val===tx(o,f)) return false;
+  o.ed=o.ed||{};
+  o[f+"_"+lang]=val; o.ed[f+"_"+lang]=1;
+  if(!o.ed[f+"_"+other()]) o[f+"_"+other()]=val;
+  return true;
+}
+function setBoth(o,f,val){ o[f+"_en"]=val; o[f+"_th"]=val; }
+// Build an English → Thai lookup from the original data so old saved plans (English-only) get Thai back.
+const pair=v=>Array.isArray(v)?[String(v[0]),String(v[1])]:[String(v==null?"":v),String(v==null?"":v)];
+const TH_LOOKUP={};
+(function(){
+  const add=(f,v)=>{const [en,th]=pair(v); (TH_LOOKUP[f]=TH_LOOKUP[f]||{})[en]=th;};
+  add("ptitle",ORIGINAL_DATA.title);
+  const doItem=it=>ITEM_F.forEach(f=>add("i_"+f,it[f]));
+  ORIGINAL_DATA.days.forEach(d=>{DAY_F.forEach(f=>add("d_"+f,d[f])); d.items.forEach(doItem);});
+  ORIGINAL_DATA.ideas.forEach(doItem);
+})();
+function normFields(src,fields,prefix){
+  const out={}; const ed={};
+  const srcEd=src.ed&&typeof src.ed==="object"?src.ed:{};
+  fields.forEach(f=>{
+    let en,th;
+    if(src[f+"_en"]!=null||src[f+"_th"]!=null){ en=String(src[f+"_en"]??""); th=String(src[f+"_th"]??""); if(!en) en=th; if(!th) th=en; }
+    else if(Array.isArray(src[f])){ [en,th]=pair(src[f]); }
+    else { en=String(src[f]??""); const lk=TH_LOOKUP[prefix+f]; th=lk&&Object.prototype.hasOwnProperty.call(lk,en)?lk[en]:en; }
+    out[f+"_en"]=en; out[f+"_th"]=th;
+    LANGS.forEach(l=>{ if(srcEd[f+"_"+l]) ed[f+"_"+l]=1; });
+  });
+  out.ed=ed; return out;
+}
+function normalize(p){
+  if(!p||typeof p!=="object"||!Array.isArray(p.days)) throw new Error("Not a trip plan file");
+  const ni=it=>Object.assign({id:it.id||uid(),cat:CAT_EMO[it.cat]?it.cat:"other",status:STATUS_KEYS.includes(it.status)?it.status:"planned",link:String(it.link||"")},normFields(it,ITEM_F,"i_"));
+  const pt=normFields(p,["title"],"p");
+  // plan title lookup key differs
+  if(p.title_en==null&&p.title_th==null&&!Array.isArray(p.title)){ const en=String(p.title||"Our Trip"); pt.title_en=en; pt.title_th=TH_LOOKUP.ptitle[en]||en; }
+  return Object.assign({app:"china-trip-planner",version:2},pt,{
+    days:p.days.map(d=>Object.assign({id:d.id||uid(),date:String(d.date||""),items:(d.items||[]).map(ni)},normFields(d,DAY_F,"d_"))),
+    ideas:(p.ideas||[]).map(ni),savedAt:p.savedAt||null});
+}
+const original=()=>normalize(clone(ORIGINAL_DATA));
+
+let plan, undoStack=[];
+function load(){
+  try{const s=localStorage.getItem(STORE_KEY); if(s) return normalize(JSON.parse(s));}catch(e){console.warn("load failed",e)}
+  return original();
+}
+function save(){
+  plan.savedAt=new Date().toISOString();
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(plan));}catch(e){console.warn("save failed",e)}
+}
+function snapshot(){undoStack.push(JSON.stringify(plan)); if(undoStack.length>40) undoStack.shift(); $("#bUndo").disabled=false;}
+function commit(){save();render();}
+function undo(){
+  if(!undoStack.length) return;
+  plan=normalize(JSON.parse(undoStack.pop())); $("#bUndo").disabled=!undoStack.length; commit(); toast(T("tUndone"));
+}
+
+/* ---------- lookup helpers ---------- */
+function listById(lid){ if(lid==="ideas") return plan.ideas; const d=plan.days.find(d=>d.id===lid); return d?d.items:null; }
+function findItem(id){
+  for(const d of plan.days){const i=d.items.findIndex(x=>x.id===id); if(i>=0) return {list:d.items,lid:d.id,idx:i,item:d.items[i]};}
+  const i=plan.ideas.findIndex(x=>x.id===id); if(i>=0) return {list:plan.ideas,lid:"ideas",idx:i,item:plan.ideas[i]};
+  return null;
+}
+function moveItem(id,toLid,toIdx){
+  const f=findItem(id), to=listById(toLid); if(!f||!to) return false;
+  f.list.splice(f.idx,1);
+  if(toIdx==null||toIdx>to.length) toIdx=to.length; if(toIdx<0) toIdx=0;
+  to.splice(toIdx,0,f.item); return true;
+}
+// style: "long" (Thursday, 24 Dec 2026 / วันพฤหัสบดีที่ 24 ธ.ค. 2026), "mid" (Thu 24 Dec / พฤ. 24 ธ.ค.), "short" (24 Dec / 24 ธ.ค.)
+function fmtDate(iso,style){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso||"";
+  const [y,m,d]=iso.split("-").map(Number); const dt=new Date(Date.UTC(y,m-1,d));
+  const f=(loc,o)=>dt.toLocaleDateString(loc,Object.assign({timeZone:"UTC"},o));
+  if(lang==="th"){
+    const L="th-TH-u-ca-gregory";
+    const wd=f(L,{weekday:style==="long"?"long":"short"}), mon=f(L,{month:"short"});
+    if(style==="long") return `${wd}ที่ ${d} ${mon} ${y}`;
+    if(style==="mid") return `${wd} ${d} ${mon}`;
+    return `${d} ${mon}`;
+  }
+  if(style==="long") return f("en-GB",{weekday:"long",day:"numeric",month:"short",year:"numeric"});
+  if(style==="mid") return f("en-GB",{weekday:"short",day:"numeric",month:"short"});
+  return f("en-GB",{day:"numeric",month:"short"});
+}
+function addDaysIso(iso,n){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return "";
+  const [y,m,d]=iso.split("-").map(Number); const dt=new Date(Date.UTC(y,m-1,d+n)); return dt.toISOString().slice(0,10);
+}
+function dayLabel(lid){ if(lid==="ideas") return T("ideas"); const i=plan.days.findIndex(d=>d.id===lid); const d=plan.days[i]; const c=tx(d,"city"); return `${T("dayN")(i+1)} · ${fmtDate(d.date,"mid")}${c?" · "+c:""}`; }
+
+/* ---------- render ---------- */
+function applyStatic(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-t]").forEach(el=>el.textContent=T(el.dataset.t));
+  document.querySelectorAll("[data-th]").forEach(el=>el.innerHTML=T(el.dataset.th));
+  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
+  $("#board").setAttribute("aria-label",T("itinerary")); $(".tools").setAttribute("aria-label",T("tools")); $("#chips").setAttribute("aria-label",T("jumpTo"));
+  $("label[for=title]").textContent=T("titleLbl");
+}
+function cardHTML(it){
+  let emo=CAT_EMO[it.cat]; const catName=T("cat")[it.cat]; const title=tx(it,"title"), notes=tx(it,"notes");
+  if(it.cat==="travel"){ const en=it.title_en+" "+it.title_th; if(/flight|airport|fly|✈|เที่ยวบิน|สนามบิน|บิน/i.test(en)) emo="✈️"; else if(/taxi|driver|car|didi|แท็กซี่|คนขับ/i.test(en)) emo="🚕"; }
+  const pill=it.status!=="planned"?`<span class="pill ${it.status}">${T("status")[it.status]}</span>`:"";
+  let link="";
+  if(it.link){const href=/^[a-z]+:/i.test(it.link)?it.link:"https://"+it.link; if(/^(https?|mailto|tel):/i.test(href)) link=`<a class="clink" href="${esc(href)}" target="_blank" rel="noopener">🔗 ${esc(it.link.replace(/^https?:\/\/(www\.)?/,""))}</a>`;}
+  return `<li class="card" data-id="${it.id}" data-cat="${it.cat}">
+    <button class="handle" type="button" aria-label="${esc(T("moveAria")(title))}" title="${esc(T("moveTitle"))}">⠿</button>
+    <div class="cbody" role="button" tabindex="0" aria-label="${esc(T("editAria")(title))}">
+      <div class="ctop"><span class="ctime">${esc(tx(it,"time"))}</span>${pill}<span class="sr">${catName}</span></div>
+      <div class="ctitle"><span class="cemo" aria-hidden="true">${emo}</span>${esc(title)}</div>
+      ${notes?`<div class="cnotes">${esc(notes)}</div>`:""}
+      ${link}
+    </div></li>`;
+}
+function render(){
+  applyStatic();
+  const ti=$("#title"); if(document.activeElement!==ti) ti.value=tx(plan,"title");
+  document.title=tx(plan,"title")+T("docTitle");
+  const b=$("#board"); const sx=b.scrollLeft;
+  let h="";
+  plan.days.forEach((d,i)=>{
+    const city=tx(d,"city"), stay=tx(d,"stay"), tips=tx(d,"tips");
+    h+=`<section class="day" id="day-${d.id}" data-lid="${d.id}" aria-label="${esc(T("dayN")(i+1))}">
+      <div class="dhead" data-editday="${d.id}" title="${esc(T("editDayTip"))}">
+        <div class="dnum"><small>${T("day")}</small><b>${i+1}</b></div>
+        <div class="dinfo"><div class="date">${esc(fmtDate(d.date,"long"))}</div>
+          <div class="dtitle">${esc(tx(d,"title")||T("untitledDay"))}</div>
+          ${city?`<span class="city">📍 ${esc(city)}</span>`:""}${stay?`<span class="stay">🏨 ${esc(stay)}</span>`:""}</div>
+        <button class="ibtn" type="button" data-editday="${d.id}" aria-label="${esc(T("editDayN")(i+1))}">✏️</button>
+      </div>
+      ${tips?`<details class="tips"><summary>${T("tips")}</summary><p>${esc(tips)}</p></details>`:""}
+      <ul class="list" data-lid="${d.id}" data-empty="${esc(T("dropHere"))}">${d.items.map(cardHTML).join("")}</ul>
+      <button class="addbtn" type="button" data-add="${d.id}">${T("addAct")}</button>
+    </section>`;
+  });
+  h+=`<button class="addday" type="button" id="bAddDay">${T("addDay")}</button>`;
+  h+=`<section class="day ideas${plan.ideas.length?"":" empty"}" id="day-ideas" data-lid="ideas" aria-label="${esc(T("ideasTitle"))}">
+      <div class="dhead" style="cursor:default"><div class="dnum">💡</div><div class="dinfo"><div class="dtitle">${esc(T("ideasTitle"))}</div><div class="date">${esc(T("ideasSub"))}</div></div></div>
+      <ul class="list" data-lid="ideas" data-empty="${esc(T("dropHere"))}">${plan.ideas.map(cardHTML).join("")}</ul>
+      <button class="addbtn" type="button" data-add="ideas">${T("addIdea")}</button></section>`;
+  b.innerHTML=h; b.scrollLeft=sx;
+  $("#chips").innerHTML=plan.days.map((d,i)=>`<button class="chip" type="button" data-jump="${d.id}"><b>${esc(T("dayN")(i+1))}</b>${esc(fmtDate(d.date,"short"))}</button>`).join("")+
+    `<button class="chip" type="button" data-jump="ideas"><b>${T("ideas")}</b>${plan.ideas.length}</button>`;
+}
+function setLang(l){
+  if(!LANGS.includes(l)||l===lang) return;
+  lang=l; try{localStorage.setItem(LANG_KEY,l)}catch(e){}
+  closeSheet(); render();
+}
+document.querySelector(".lang").addEventListener("click",e=>{const b=e.target.closest("[data-lang]"); if(b) setLang(b.dataset.lang);});
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(msg,undoable){
+  $("#toastMsg").textContent=msg; const tb=$("#toastBtn"); tb.hidden=!undoable;
+  $("#toast").classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>$("#toast").classList.remove("show"),undoable?6000:2600);
+}
+$("#toastBtn").onclick=()=>{undo();};
+
+/* ---------- sheets ---------- */
+function openSheet(html,onMount){
+  closeSheet();
+  const bd=document.createElement("div"); bd.className="backdrop"; bd.id="sheet";
+  bd.innerHTML=`<div class="sheet" role="dialog" aria-modal="true">${html}</div>`;
+  bd.addEventListener("pointerdown",e=>{ if(e.target===bd) bd._down=true; });
+  bd.addEventListener("click",e=>{ if(e.target===bd&&bd._down) closeSheet(); bd._down=false; });
+  document.body.appendChild(bd); onMount&&onMount(bd.firstElementChild);
+  const f=bd.querySelector("[autofocus]"); if(f&&matchMedia("(pointer:fine)").matches) f.focus();
+}
+function closeSheet(){const s=$("#sheet"); if(s) s.remove();}
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeSheet(); });
+const closeX=()=>`<button class="x" type="button" data-x aria-label="${esc(T("close"))}">✕</button>`;
+function confirmBox(title,msg,okLabel,cb,danger){
+  openSheet(`<h2>${esc(title)}</h2><p class="hint">${esc(msg)}</p><div class="actions"><button class="btn" data-x type="button">${esc(T("cancel"))}</button><button class="btn ${danger?"danger":"primary"}" data-ok type="button" style="flex:1">${esc(okLabel)}</button></div>`,
+  s=>{s.querySelector("[data-x]").onclick=closeSheet; s.querySelector("[data-ok]").onclick=()=>{closeSheet();cb();};});
+}
+
+function editItem(id,isNew,lidForNew){
+  let it, where;
+  if(isNew){ it={id:uid(),cat:"sightseeing",status:lidForNew==="ideas"?"idea":"planned",link:"",ed:{}}; ITEM_F.forEach(f=>setBoth(it,f,"")); where=lidForNew; }
+  else { const f=findItem(id); if(!f) return; it=f.item; where=f.lid; }
+  const opts=[...plan.days.map(d=>[d.id,dayLabel(d.id)]),["ideas",T("ideas")]].map(([v,l])=>`<option value="${v}"${v===where?" selected":""}>${esc(l)}</option>`).join("");
+  openSheet(`<h2>${isNew?T("newAct"):T("editAct")}${closeX()}</h2>
+   <label class="field"><span>${T("fWhat")}</span><input name="title" value="${esc(tx(it,"title"))}" placeholder="${esc(T("phWhat"))}" autofocus></label>
+   <div class="row2"><label class="field"><span>${T("fWhen")}</span><input name="time" value="${esc(tx(it,"time"))}" placeholder="${esc(T("phWhen"))}" list="timeSug"></label>
+   <label class="field"><span>${T("fDay")}</span><select name="where">${opts}</select></label></div>
+   <datalist id="timeSug">${T("slots").map(s=>`<option>${esc(s)}</option>`).join("")}</datalist>
+   <div class="field"><span>${T("fType")}</span><div class="seg" data-seg="cat">${Object.keys(CAT_EMO).map(k=>`<button type="button" data-v="${k}" aria-pressed="${k===it.cat}">${CAT_EMO[k]} ${T("cat")[k]}</button>`).join("")}</div></div>
+   <div class="field"><span>${T("fStatus")}</span><div class="seg" data-seg="status">${STATUS_KEYS.map(k=>`<button type="button" data-v="${k}" aria-pressed="${k===it.status}">${T("status")[k]}</button>`).join("")}</div></div>
+   <label class="field"><span>${T("fNotes")}</span><textarea name="notes" placeholder="${esc(T("phNotes"))}">${esc(tx(it,"notes"))}</textarea></label>
+   <label class="field"><span>${T("fLink")}</span><input name="link" type="url" inputmode="url" value="${esc(it.link)}" placeholder="https://…"></label>
+   ${isNew?"":`<div class="field"><span>${T("fMove")}</span><div class="movebar"><button class="btn" type="button" data-mv="-1" aria-label="${esc(T("upAria"))}">${T("up")}</button><button class="btn" type="button" data-mv="1" aria-label="${esc(T("downAria"))}">${T("down")}</button><span class="hint" style="margin:0 4px">${T("orPick")}</span></div></div>`}
+   <div class="actions">${isNew?"":`<button class="btn danger" type="button" data-del>${T("del")}</button>`}<button class="btn primary" type="button" data-save>${isNew?T("add"):T("save")}</button></div>`,
+  s=>{
+    const val={cat:it.cat,status:it.status};
+    s.querySelectorAll("[data-seg]").forEach(g=>g.addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return;
+      g.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)); val[g.dataset.seg]=b.dataset.v;}));
+    s.querySelector("[data-x]").onclick=closeSheet;
+    const doSave=()=>{
+      const g=n=>s.querySelector(`[name=${n}]`).value.trim();
+      const to=g("where");
+      snapshot();
+      const target=isNew?it:findItem(it.id).item;
+      const txt={time:g("time"),title:g("title")||T("untitled"),notes:s.querySelector("[name=notes]").value.replace(/\s+$/,"")};
+      if(isNew){ ITEM_F.forEach(f=>setBoth(target,f,txt[f])); }
+      else ITEM_F.forEach(f=>setTx(target,f,txt[f]));
+      Object.assign(target,{link:g("link"),cat:val.cat,status:val.status});
+      if(isNew) listById(to).push(target);
+      else if(to!==findItem(it.id).lid) moveItem(it.id,to,null);
+      closeSheet(); commit(); toast(isNew?T("tAdded"):T("tSaved"));
+      if(isNew||to!==where) flash(it.id);
+    };
+    s.querySelector("[data-save]").onclick=doSave;
+    s.querySelectorAll("input").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();doSave();}}));
+    const del=s.querySelector("[data-del]"); if(del) del.onclick=()=>{ deleteItem(it.id); closeSheet(); };
+    s.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{ nudge(it.id,+b.dataset.mv); });
+  });
+}
+function deleteItem(id){ const f=findItem(id); if(!f) return; snapshot(); f.list.splice(f.idx,1); commit(); toast(T("tDeleted")(tx(f.item,"title")),true); }
+function nudge(id,dir){
+  const f=findItem(id); if(!f) return; const ni=f.idx+dir;
+  snapshot();
+  if(ni>=0&&ni<f.list.length){ f.list.splice(f.idx,1); f.list.splice(ni,0,f.item); }
+  else {
+    const lids=[...plan.days.map(d=>d.id),"ideas"]; const li=lids.indexOf(f.lid)+dir;
+    if(li<0||li>=lids.length){undoStack.pop();return;}
+    moveItem(id,lids[li],dir>0?0:null);
+  }
+  commit(); flash(id); toast(T("tMoved")(dayLabel(findItem(id).lid)));
+}
+function hop(id,dir){
+  const f=findItem(id); if(!f) return; const lids=[...plan.days.map(d=>d.id),"ideas"]; const li=lids.indexOf(f.lid)+dir;
+  if(li<0||li>=lids.length) return; snapshot(); moveItem(id,lids[li],Math.min(f.idx,listById(lids[li]).length)); commit(); flash(id); toast(T("tMoved")(dayLabel(lids[li])));
+}
+function flash(id){ const el=document.querySelector(`.card[data-id="${id}"]`); if(!el) return;
+  el.scrollIntoView({block:"nearest",inline:"nearest",behavior:"smooth"}); el.animate&&el.animate([{background:"#ffe9c7"},{background:"#fff"}],{duration:900}); }
+
+function editDay(id,isNew){
+  const idx=plan.days.findIndex(d=>d.id===id);
+  const last=plan.days[plan.days.length-1];
+  let d;
+  if(isNew){ d={id:uid(),date:last?addDaysIso(last.date,1):"",items:[],ed:{}}; DAY_F.forEach(f=>setBoth(d,f,""));
+    if(last){ LANGS.forEach(l=>{ d["city_"+l]=String(last["city_"+l]||"").replace(/.*→\s*/,""); d["stay_"+l]=last["stay_"+l]||""; }); } }
+  else d=plan.days[idx];
+  openSheet(`<h2>${isNew?T("newDay"):T("editDayH")(idx+1)}${closeX()}</h2>
+   <label class="field"><span>${T("fDayTitle")}</span><input name="title" value="${esc(tx(d,"title"))}" placeholder="${esc(T("phDayTitle"))}" autofocus></label>
+   <div class="row2"><label class="field"><span>${T("fDate")}</span><input name="date" type="date" value="${esc(d.date)}"></label>
+   <label class="field"><span>${T("fCity")}</span><input name="city" value="${esc(tx(d,"city"))}" placeholder="${esc(T("phCity"))}"></label></div>
+   <label class="field"><span>${T("fStay")}</span><input name="stay" value="${esc(tx(d,"stay"))}" placeholder="${esc(T("phStay"))}"></label>
+   <label class="field"><span>${T("fTips")}</span><textarea name="tips" placeholder="${esc(T("phTips"))}">${esc(tx(d,"tips"))}</textarea></label>
+   ${isNew?"":`<div class="field"><span>${T("fOrder")}</span><div class="movebar"><button class="btn" type="button" data-dmv="-1">${T("earlier")}</button><button class="btn" type="button" data-dmv="1">${T("later")}</button><span class="hint" style="margin:0 4px">${T("swapHint")}</span></div></div>`}
+   <div class="actions">${isNew?"":`<button class="btn danger" type="button" data-del>${T("delDay")}</button>`}<button class="btn primary" type="button" data-save>${isNew?T("addDayBtn"):T("save")}</button></div>`,
+  s=>{
+    s.querySelector("[data-x]").onclick=closeSheet;
+    const doSave=()=>{
+      const g=n=>s.querySelector(`[name=${n}]`).value.trim();
+      const txt={title:g("title"),city:g("city"),stay:g("stay"),tips:s.querySelector("[name=tips]").value.trim()};
+      snapshot();
+      if(isNew){ DAY_F.forEach(f=>{ if(txt[f]!==tx(d,f)) setBoth(d,f,txt[f]); }); d.date=g("date"); plan.days.push(d); }
+      else { const t=plan.days[idx]; DAY_F.forEach(f=>setTx(t,f,txt[f])); t.date=g("date"); }
+      closeSheet(); commit(); toast(isNew?T("tDayAdded"):T("tSaved"));
+      if(isNew) jump(d.id);
+    };
+    s.querySelector("[data-save]").onclick=doSave;
+    s.querySelectorAll("input").forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();doSave();}}));
+    const del=s.querySelector("[data-del]"); if(del) del.onclick=()=>{closeSheet(); deleteDay(id);};
+    s.querySelectorAll("[data-dmv]").forEach(b=>b.onclick=()=>{ const i=plan.days.findIndex(x=>x.id===id), j=i+(+b.dataset.dmv);
+      if(j<0||j>=plan.days.length) return; snapshot(); const t=plan.days[i]; plan.days[i]=plan.days[j]; plan.days[j]=t; commit(); closeSheet(); toast(T("tNowDay")(j+1)); jump(id); });
+  });
+}
+function deleteDay(id){
+  const i=plan.days.findIndex(d=>d.id===id); if(i<0) return; const d=plan.days[i];
+  snapshot(); plan.days.splice(i,1); commit(); toast(T("tDeletedDay")(i+1,d.items.length),true);
+}
+function jump(lid){ const el=document.getElementById("day-"+lid); if(el) el.scrollIntoView({behavior:"smooth",block:"start",inline:"start"}); }
+
+/* ---------- board events ---------- */
+const board=$("#board");
+board.addEventListener("click",e=>{
+  if(dragJustEnded) return;
+  const t=e.target;
+  if(t.closest("a.clink")) return;
+  const add=t.closest("[data-add]"); if(add) return editItem(null,true,add.dataset.add);
+  if(t.closest("#bAddDay")) return editDay(null,true);
+  const ed=t.closest("[data-editday]"); if(ed) return editDay(ed.dataset.editday);
+  const cb=t.closest(".cbody"); if(cb) return editItem(cb.closest(".card").dataset.id);
+});
+board.addEventListener("keydown",e=>{
+  const cb=e.target.closest&&e.target.closest(".cbody");
+  if(cb&&(e.key==="Enter"||e.key===" ")){e.preventDefault(); editItem(cb.closest(".card").dataset.id); return;}
+  const h=e.target.closest&&e.target.closest(".handle"); if(!h) return;
+  const id=h.closest(".card").dataset.id; const map={ArrowUp:()=>nudge(id,-1),ArrowDown:()=>nudge(id,1),ArrowLeft:()=>hop(id,-1),ArrowRight:()=>hop(id,1)};
+  if(map[e.key]){ e.preventDefault(); map[e.key](); const nh=document.querySelector(`.card[data-id="${id}"] .handle`); nh&&nh.focus(); }
+});
+$("#chips").addEventListener("click",e=>{const c=e.target.closest("[data-jump]"); if(c) jump(c.dataset.jump);});
+
+/* ---------- pointer drag & drop (mouse + touch + pen) ---------- */
+let drag=null, pending=null, dragJustEnded=false, raf=0;
+board.addEventListener("pointerdown",e=>{
+  if(e.button>0) return;
+  const card=e.target.closest(".card"); if(!card||e.target.closest("a")) return;
+  const onHandle=!!e.target.closest(".handle");
+  pending={card,id:card.dataset.id,x:e.clientX,y:e.clientY,pid:e.pointerId,type:e.pointerType,onHandle,timer:0};
+  if(e.pointerType!=="mouse"&&!onHandle){
+    pending.timer=setTimeout(()=>{ if(pending){ if(navigator.vibrate) try{navigator.vibrate(15)}catch(_){} startDrag(pending.x,pending.y); } },380);
+  }
+  if(onHandle) e.preventDefault();
+});
+window.addEventListener("pointermove",e=>{
+  if(drag){ if(e.pointerId!==drag.pid) return; e.preventDefault(); drag.x=e.clientX; drag.y=e.clientY; positionGhost(); hitTest(); return; }
+  if(!pending||e.pointerId!==pending.pid) return;
+  const dist=Math.hypot(e.clientX-pending.x,e.clientY-pending.y);
+  if(pending.type==="mouse"||pending.onHandle){ if(dist>4) startDrag(e.clientX,e.clientY); }
+  else if(dist>10){ clearTimeout(pending.timer); pending=null; }
+  if(pending){pending.x=e.clientX;pending.y=e.clientY;}
+},{passive:false});
+document.addEventListener("touchmove",e=>{ if(drag) e.preventDefault(); },{passive:false});
+document.addEventListener("contextmenu",e=>{ if(drag||(pending&&pending.type!=="mouse")) e.preventDefault(); });
+window.addEventListener("pointerup",e=>endPointer(e,false));
+window.addEventListener("pointercancel",e=>endPointer(e,true));
+function endPointer(e,cancel){
+  if(pending){ clearTimeout(pending.timer); pending=null; }
+  if(!drag||e.pointerId!==drag.pid) return;
+  finishDrag(cancel);
+}
+function startDrag(x,y){
+  const p=pending; pending=null; clearTimeout(p.timer);
+  const card=p.card, r=card.getBoundingClientRect();
+  const ghost=card.cloneNode(true); ghost.classList.add("ghost"); ghost.style.width=r.width+"px"; ghost.removeAttribute("data-id");
+  document.body.appendChild(ghost);
+  card.classList.add("dragging-src"); document.body.classList.add("dragging");
+  drag={id:p.id,card,ghost,pid:p.pid,x,y,offX:x-r.left,offY:y-r.top,fromLid:card.parentElement.dataset.lid,fromIdx:[...card.parentElement.children].indexOf(card)};
+  positionGhost(); raf=requestAnimationFrame(autoScroll);
+}
+function positionGhost(){ drag.ghost.style.left=(drag.x-drag.offX)+"px"; drag.ghost.style.top=(drag.y-drag.offY)+"px"; }
+function hitTest(){
+  const el=document.elementFromPoint(drag.x,drag.y); if(!el) return;
+  let list=el.closest(".list");
+  if(!list){ const day=el.closest(".day"); if(day) list=day.querySelector(".list"); }
+  if(!list) return;
+  document.querySelectorAll(".list.over").forEach(l=>l!==list&&l.classList.remove("over")); list.classList.add("over");
+  const siblings=[...list.children].filter(c=>c!==drag.card);
+  let before=null;
+  for(const c of siblings){ const r=c.getBoundingClientRect(); if(drag.y<r.top+r.height/2){before=c;break;} }
+  if(before){ if(drag.card.nextElementSibling!==before||drag.card.parentElement!==list) list.insertBefore(drag.card,before); }
+  else if(list.lastElementChild!==drag.card) list.appendChild(drag.card);
+}
+function autoScroll(){
+  if(!drag) return;
+  const edge=60, vh=window.innerHeight, vw=window.innerWidth, sp=(d)=>Math.ceil((edge-d)/edge*18);
+  const hdr=Math.max(0,document.querySelector(".jump").getBoundingClientRect().bottom);
+  let moved=false;
+  if(drag.y<hdr+edge&&window.scrollY>0){ window.scrollBy(0,-sp(drag.y-hdr)); moved=true; }
+  else if(drag.y>vh-edge){ window.scrollBy(0,sp(vh-drag.y)); moved=true; }
+  if(board.scrollWidth>board.clientWidth){
+    if(drag.x<edge){ board.scrollLeft-=sp(drag.x); moved=true; } else if(drag.x>vw-edge){ board.scrollLeft+=sp(vw-drag.x); moved=true; }
+  }
+  if(moved) hitTest();
+  raf=requestAnimationFrame(autoScroll);
+}
+function finishDrag(cancel){
+  cancelAnimationFrame(raf);
+  const d=drag; drag=null;
+  d.ghost.remove(); d.card.classList.remove("dragging-src"); document.body.classList.remove("dragging");
+  document.querySelectorAll(".list.over").forEach(l=>l.classList.remove("over"));
+  dragJustEnded=true; setTimeout(()=>dragJustEnded=false,50);
+  const list=d.card.parentElement; const toLid=list&&list.dataset.lid; const toIdx=list?[...list.children].indexOf(d.card):-1;
+  if(cancel||!toLid||(toLid===d.fromLid&&toIdx===d.fromIdx)){ render(); return; }
+  snapshot(); moveItem(d.id,toLid,toIdx); commit();
+  if(toLid!==d.fromLid) toast(T("tMoved")(dayLabel(toLid)),true);
+}
+
+/* ---------- title ---------- */
+$("#title").addEventListener("change",e=>{ const v=e.target.value.trim()||T("defaultTitle"); if(v===tx(plan,"title")) return; snapshot(); setTx(plan,"title",v); commit(); toast(T("tTitle")); });
+$("#title").addEventListener("keydown",e=>{ if(e.key==="Enter") e.target.blur(); });
+
+/* ---------- share / export / import ---------- */
+const b64u={enc:bytes=>{let s="";for(let i=0;i<bytes.length;i+=0x8000) s+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");},
+  dec:str=>{str=str.replace(/-/g,"+").replace(/_/g,"/"); while(str.length%4) str+="="; const bin=atob(str); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return u;}};
+async function streamBytes(bytes,ts){ const s=new Blob([bytes]).stream().pipeThrough(ts); return new Uint8Array(await new Response(s).arrayBuffer()); }
+const shareable=()=>{const p=clone(plan); delete p.savedAt; return p;};
+async function encodePlan(p){
+  const bytes=new TextEncoder().encode(JSON.stringify(p));
+  if(typeof CompressionStream==="function"){ try{ return "z="+b64u.enc(await streamBytes(bytes,new CompressionStream("deflate-raw"))); }catch(e){} }
+  return "j="+b64u.enc(bytes);
+}
+async function decodePlan(hash){
+  const m=String(hash).replace(/^.*#/,"").match(/(?:^|&)([zj])=([A-Za-z0-9_-]+)/); if(!m) return null;
+  let bytes=b64u.dec(m[2]);
+  if(m[1]==="z"){ if(typeof DecompressionStream!=="function") throw new Error(T("tNoDecomp")); bytes=await streamBytes(bytes,new DecompressionStream("deflate-raw")); }
+  return normalize(JSON.parse(new TextDecoder().decode(bytes)));
+}
+async function shareLink(){ return location.href.split("#")[0]+"#"+await encodePlan(shareable()); }
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }catch(e){}
+  const ta=document.createElement("textarea"); ta.value=t; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select();
+  let ok=false; try{ok=document.execCommand("copy");}catch(e){} ta.remove(); return ok;
+}
+function planBlob(){ return new Blob([JSON.stringify(shareable(),null,2)],{type:"application/json"}); }
+function fileName(){ const d=new Date(); const p=n=>String(n).padStart(2,"0"); return `china-trip-plan-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.json`; }
+function download(){ const a=document.createElement("a"); a.href=URL.createObjectURL(planBlob()); a.download=fileName(); document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500); toast(T("tDownloaded")); }
+$("#bDownload").onclick=download;
+$("#bShare").onclick=()=>{
+  openSheet(`<h2>${T("shareH")}${closeX()}</h2>
+    <p class="hint">${T("shareHint")}</p>
+    <div class="actions" style="flex-direction:column">
+      <button class="btn primary" type="button" data-copy>${T("copyLink")}</button>
+      <button class="btn" type="button" data-file>${T("sendFile")}</button>
+    </div>
+    <p class="hint" style="margin-top:12px">${T("shareTip")}</p>`,
+  s=>{
+    s.querySelector("[data-x]").onclick=closeSheet;
+    s.querySelector("[data-copy]").onclick=async()=>{ const l=await shareLink(); const ok=await copyText(l); closeSheet(); toast(ok?T("tCopied"):T("tNoCopy")); window.__lastShareLink=l; };
+    s.querySelector("[data-file]").onclick=async()=>{
+      const f=new File([planBlob()],fileName(),{type:"application/json"});
+      if(navigator.canShare&&navigator.canShare({files:[f]})){ try{ await navigator.share({files:[f],title:tx(plan,"title"),text:T("shareText")}); closeSheet(); return; }catch(e){ if(e.name==="AbortError") return; } }
+      closeSheet(); download();
+    };
+  });
+};
+$("#bLoad").onclick=()=>{
+  openSheet(`<h2>${T("loadH")}${closeX()}</h2>
+   <p class="hint">${T("loadHint")}</p>
+   <div class="actions" style="margin-top:0"><button class="btn primary" type="button" data-pick>${T("pick")}</button></div>
+   <label class="field" style="margin-top:14px"><span>${T("pasteLink")}</span><input name="link" placeholder="https://…#z=…"></label>
+   <div class="actions"><button class="btn" type="button" data-go>${T("loadLink")}</button></div>`,
+  s=>{
+    s.querySelector("[data-x]").onclick=closeSheet;
+    s.querySelector("[data-pick]").onclick=()=>$("#fileIn").click();
+    s.querySelector("[data-go]").onclick=async()=>{ try{ const p=await decodePlan(s.querySelector("[name=link]").value.trim()); if(!p) throw new Error(T("tBadLink")); closeSheet(); replacePlan(p,T("tLoadedLink")); }catch(e){ toast(e.message||T("tBadLink2")); } };
+  });
+};
+$("#fileIn").addEventListener("change",async e=>{
+  const f=e.target.files[0]; e.target.value=""; if(!f) return;
+  try{ const p=normalize(JSON.parse(await f.text())); closeSheet(); replacePlan(p,T("tLoaded")); }catch(err){ toast(T("tBadFile")); }
+});
+function replacePlan(p,msg){ snapshot(); plan=p; commit(); toast(msg,true); }
+$("#bPrint").onclick=()=>{ document.querySelectorAll(".tips").forEach(t=>t.open=true); setTimeout(()=>window.print(),50); };
+$("#bReset").onclick=()=>confirmBox(T("resetH"),T("resetMsg"),T("resetOk"),()=>{replacePlan(original(),T("tReset"));},true);
+$("#bUndo").onclick=undo;
+$("#bHelp").onclick=()=>openSheet(`<h2>${T("helpH")}${closeX()}</h2>
+  <p class="hint">${T("helpBody")}</p>
+  <div class="actions"><button class="btn primary" type="button" data-x>${T("gotit")}</button></div>`,s=>s.querySelectorAll("[data-x]").forEach(b=>b.onclick=closeSheet));
+$("#hideHelp").onclick=()=>{ $("#firsthelp").hidden=true; try{localStorage.setItem(HELP_KEY,"1")}catch(e){} };
+window.addEventListener("beforeprint",()=>document.querySelectorAll(".tips").forEach(t=>t.open=true));
+window.addEventListener("storage",e=>{ if(e.key===STORE_KEY&&e.newValue){ try{plan=normalize(JSON.parse(e.newValue)); render();}catch(_){} } });
+
+/* ---------- boot ---------- */
+async function boot(){
+  plan=load(); render();
+  try{ if(!localStorage.getItem(HELP_KEY)) $("#firsthelp").hidden=false; }catch(e){}
+  if(/#.*\b[zj]=/.test(location.hash)){
+    try{ const p=await decodePlan(location.hash); if(p){ replacePlan(p,T("tOpened")); } }
+    catch(e){ toast(e.message||T("tOpenFail")); }
+    window.history.replaceState(null,"",location.href.split("#")[0]);
+  }
+  window.__planner={get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,ready:true};
+}
+boot();
+})();
+
+</script>
+</body>
+</html>
