@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b5502f">
-<meta name="app-build" content="20261114205414">
+<meta name="app-build" content="20261114230037">
 <title>Our China Trip • Trip Planner</title>
 <style>
 :root{
@@ -153,6 +153,21 @@ body.dragging .card,body.dragging .cbody{cursor:grabbing}
 .movebar select{flex:1;min-width:140px;border:1.5px solid var(--line);border-radius:9px;padding:8px;font-size:15px;background:#fff}
 .movebar .btn{min-height:40px;padding:8px 12px}
 .hint{font-size:13px;color:var(--muted);line-height:1.45;margin:0 0 10px}
+/* tap-to-navigate */
+.cnav{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.nbtn{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:4px 11px;min-height:32px;font:inherit;font-size:12.5px;font-weight:600;text-decoration:none;cursor:pointer;white-space:nowrap}
+.nbtn:hover,.nbtn:focus-visible{background:var(--accent-soft);border-color:#e3cdb8;color:var(--accent)}
+a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--ink)}
+.driver{border:2px solid var(--ink);border-radius:16px;padding:18px 14px 14px;text-align:center;background:#fffdf8}
+.dask{font-size:20px;color:var(--muted);margin-bottom:10px;letter-spacing:.05em}
+.dzh{font-size:clamp(30px,9.5vw,46px);font-weight:800;line-height:1.2;word-break:break-word;-webkit-user-select:text;user-select:text}
+.dzh.dkw{font-size:clamp(22px,7vw,32px)}
+.daddr{font-size:clamp(20px,6.2vw,30px);font-weight:600;line-height:1.35;margin-top:12px;word-break:break-word;-webkit-user-select:text;user-select:text}
+.den{font-size:13px;color:var(--muted);margin-top:14px}
+.zhsec{margin:4px 0 2px}
+.zhsec summary{cursor:pointer;font-size:12.5px;font-weight:600;color:var(--muted);padding:8px 0;min-height:32px}
+body:has(.sheet .driver) #chatFab{display:none}
+@media print{.cnav{display:none!important}}
 .x{border:0;background:#f3ece3;border-radius:50%;width:34px;height:34px;font-size:16px}
 
 /* toast */
@@ -242,7 +257,7 @@ body.dragging .card,body.dragging .cbody{cursor:grabbing}
 <div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
 
 <script>
-const BUILD={"id": "20261114205414", "at": "2026-11-14T20:54:14+08:00", "label": "14 Nov 2026, 20:54 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
+const BUILD={"id": "20261114230037", "at": "2026-11-14T23:00:37+08:00", "label": "14 Nov 2026, 23:00 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
 // ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
 // Text fields are [English, Thai]. Plain strings are used for both languages.
 const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
@@ -444,6 +459,11 @@ const ORIGINAL_DATA={
  ]
 };
 
+// Tap-to-navigate: researched Chinese name + address per place (keyed by English title; nav:false = not a place).
+// Used to seed the plan and as a fallback if an older app copy drops these fields.
+const NAV_SEED={"Flight Bangkok → Beijing (HU7996)":{"nav":false},"Transfer to Conrad Beijing (Chaoyang District)":{"zh":"北京康莱德酒店","zh_addr":"北京市朝阳区东三环北路29号","zh_city":"北京"},"Lunch: Huajia Yiyuan (花家怡园), courtyard Beijing cuisine":{"zh":"花家怡园(四合院总店)","zh_addr":"北京市东城区东直门内大街235号","zh_city":"北京"},"Lama Temple (Yonghegong)":{"zh":"雍和宫","zh_addr":"北京市东城区雍和宫大街12号","zh_city":"北京"},"Wudaoying Hutong: Coffee & Snacks":{"zh":"五道营胡同","zh_addr":"北京市东城区五道营胡同","zh_city":"北京"},"Guozijian Street":{"zh":"国子监街","zh_addr":"北京市东城区国子监街","zh_city":"北京"},"Nanluoguxiang Hutongs":{"zh":"南锣鼓巷","zh_addr":"北京市东城区南锣鼓巷","zh_city":"北京"},"Dinner: In & Out Yunnan, Sanlitun (一坐一忘云南菜 三里屯店)":{"zh":"一坐一忘云南菜(三里屯店)","zh_addr":"北京市朝阳区幸福三村北街1号（三里屯北小街1号）","zh_city":"北京"},"Sanlitun Taikoo Li & Solana Light Festival":{"zh":"三里屯太古里","zh_addr":"北京市朝阳区三里屯路19号","zh_city":"北京"},"Drop bags at Wangfujing Serviced Apartment":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Temple of Heaven":{"zh":"天坛公园(东门)","zh_addr":"北京市东城区天坛路甲1号（天坛公园东门）","zh_city":"北京"},"Taxi to Tiananmen East (for the Forbidden City)":{"zh":"天安门东地铁站","zh_addr":"北京市东城区东长安街（天安门东）","zh_city":"北京"},"Tiananmen Square & Palace Museum (Forbidden City)":{"zh":"故宫博物院","zh_addr":"北京市东城区景山前街4号（午门进）","zh_city":"北京"},"Jingshan Park (short visit)":{"zh":"景山公园","zh_addr":"北京市西城区景山西街44号","zh_city":"北京"},"Lunch: Fangzhuanchang No. 69 Zhajiangmian (方砖厂69号炸酱面)":{"zh":"方砖厂69号炸酱面","zh_addr":"北京市东城区方砖厂胡同1号","zh_city":"北京"},"Early check-in & rest at Wangfujing Serviced Apartment":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Didi to Bianyifang (Chongwenmen)":{"zh":"便宜坊烤鸭(哈德门店)","zh_addr":"北京市东城区崇文门外大街16号便宜坊大厦4层","zh_city":"北京"},"Dinner: Bianyifang Roast Duck (Hademen branch)":{"zh":"便宜坊烤鸭(哈德门店)","zh_addr":"北京市东城区崇文门外大街16号便宜坊大厦4层","zh_city":"北京"},"Taxi/Didi to Universal Beijing Resort (Tongzhou)":{"zh":"北京环球影城主题公园","zh_addr":"北京市通州区北京环球度假区（地铁环球度假区站旁）","zh_city":"北京"},"Universal Studios Beijing":{"zh":"北京环球影城主题公园","zh_addr":"北京市通州区北京环球度假区（地铁环球度假区站旁）","zh_city":"北京"},"Lunch inside the park":{"nav":false},"More rides & winter shows":{"nav":false},"Taxi/Didi back to Wangfujing":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Dinner: Guijie (簋街, Ghost Street)":{"zh":"胡大饭馆(簋街总店)","zh_addr":"北京市东城区东直门内大街233号（簋街）","zh_city":"北京"},"Wangfujing Street lights":{"zh":"王府井步行街","zh_addr":"北京市东城区王府井大街","zh_city":"北京"},"Private driver to Mutianyu Great Wall":{"zh":"慕田峪长城","zh_addr":"北京市怀柔区渤海镇慕田峪村","zh_city":"北京"},"Mutianyu Great Wall":{"zh":"慕田峪长城","zh_addr":"北京市怀柔区渤海镇慕田峪村","zh_city":"北京"},"Lunch: Jingbei Yujia'ao (京北渔家傲), charcoal-grilled rainbow trout":{"zh":"京北渔家傲","zh_addr":"北京市怀柔区渤海镇苇店村北100米","zh_city":"北京"},"Return to central Beijing":{"nav":false},"Nanmen Hotpot":{"zh":"南门铜锅涮肉(大栅栏前门旗舰店6店)","zh_addr":"北京市西城区大栅栏西街36号","zh_city":"北京"},"Qianmen Street (前门大街) & Dashilan":{"zh":"前门大街","zh_addr":"北京市东城区前门大街","zh_city":"北京"},"Slow morning & check-out: Wangfujing Serviced Apartment":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Didi to Beijing South Railway Station (北京南站)":{"zh":"北京南站","zh_addr":"北京市丰台区永外大街车站路12号","zh_city":"北京"},"Train Beijing South → Shanghai Hongqiao":{"zh":"北京南站","zh_addr":"北京市丰台区永外大街车站路12号","zh_city":"北京"},"Check in: Riverdale Residence Xintiandi":{"zh":"长河国际公寓·新天地","zh_addr":"上海市黄浦区寿宁路98号","zh_city":"上海"},"LV Ship \"The Louis\" HKRI Taikoo Hui":{"zh":"兴业太古汇","zh_addr":"上海市静安区南京西路789号兴业太古汇","zh_city":"上海"},"Dinner: Long Time Ago Mutton Skewers 很久以前羊肉串":{"zh":"很久以前羊肉串","zh_addr":"","zh_city":"上海"},"Morning jog: Taipingqiao Park & Fuxing Park loop":{"zh":"太平桥公园","zh_addr":"上海市黄浦区自忠路170号","zh_city":"上海"},"Yu Garden (Yuyuan) & shengjianbao lunch":{"zh":"豫园","zh_addr":"上海市黄浦区福佑路168号（豫园北门）","zh_city":"上海"},"Former French Concession: Wukang Rd & Anfu Rd":{"zh":"武康路","zh_addr":"上海市徐汇区武康路（近安福路）","zh_city":"上海"},"Fuxing Road (复兴路) walk: Wukang Mansion → Fuxing Park → Xintiandi":{"zh":"武康大楼","zh_addr":"上海市徐汇区淮海中路1842-1858号","zh_city":"上海"},"Dinner: 重庆高老九 Chongqing Gaolaojiu Hot Pot (Shanghai Flagship Store)":{"zh":"重庆高老九火锅(上海旗舰店)","zh_addr":"上海市黄浦区九江路399号华盛大厦2楼","zh_city":"上海"},"Morning jog: The Bund to North Bund riverside":{"zh":"外滩","zh_addr":"上海市黄浦区中山东一路（延安东路口）","zh_city":"上海"},"Jing'an Temple & Zhangyuan complex":{"zh":"静安寺","zh_addr":"上海市静安区南京西路1686号","zh_city":"上海"},"No plans":{"nav":false},"Dinner: Shanghai Gong Yan (宫宴)":{"zh":"宫宴(上海店)","zh_addr":"上海市静安区北京西路1485号1幢","zh_city":"上海"},"Didi from Xintiandi to Shanghai Disney Resort":{"zh":"上海迪士尼乐园","zh_addr":"上海市浦东新区川沙新镇黄赵路310号","zh_city":"上海"},"Shanghai Disneyland":{"zh":"上海迪士尼乐园","zh_addr":"上海市浦东新区川沙新镇黄赵路310号","zh_city":"上海"},"Rope drop → Zootopia: Hot Pursuit (疯狂动物城：热力追踪)":{"nav":false},"Pirates of the Caribbean: Battle for the Sunken Treasure":{"nav":false},"Soaring Over the Horizon (Adventure Isle)":{"nav":false},"Early lunch (mobile order in the app)":{"nav":false},"Fantasyland: Seven Dwarfs Mine Train, Peter Pan's Flight, Winnie the Pooh":{"nav":false},"Tomorrowland: TRON Lightcycle Power Run & Buzz Lightyear Planet Rescue":{"nav":false},"Toy Story Land: Rex's Racer & Slinky Dog Spin":{"nav":false},"Early dinner & warm up indoors":{"nav":false},"NYE Fireworks & Castle Projection Show":{"nav":false},"New Year Countdown at Shanghai Disneyland (castle fireworks)":{"nav":false},"Metro Line 11 back to Xintiandi":{"zh":"迪士尼地铁站","zh_addr":"上海市浦东新区上海迪士尼度假区（地铁11号线迪士尼站）","zh_city":"上海"},"China Eastern MU543, Shanghai Pudong (PVG) 23:35 → Singapore Changi (SIN) 05:25 on 2 Jan, nonstop":{"zh":"上海浦东国际机场T1航站楼","zh_addr":"上海市浦东新区上海浦东国际机场T1航站楼","zh_city":"上海"},"(Beijing) SKP & SKP-S (华贸SKP), Guomao":{"zh":"北京SKP","zh_addr":"北京市朝阳区建国路87号","zh_city":"北京"},"(Beijing) Forbidden City Corner Tower at sunset (故宫角楼)":{"zh":"故宫角楼","zh_addr":"北京市东城区景山前街（故宫东北角楼）","zh_city":"北京"},"(Beijing) Hanfu / Qing-style costume photoshoot (汉服旅拍)":{"nav":false},"(Beijing) 798 Art District (798艺术区)":{"zh":"798艺术区","zh_addr":"北京市朝阳区酒仙桥路2号","zh_city":"北京"},"(Beijing) The Place sky screen (世贸天阶)":{"zh":"世贸天阶","zh_addr":"北京市朝阳区光华路甲9号","zh_city":"北京"},"(Shanghai) Columbia Circle (上生·新所)":{"zh":"上生·新所","zh_addr":"上海市长宁区延安西路1262号","zh_city":"上海"},"(Shanghai) IFC Mall & Lujiazui Circular Skywalk (国金中心 · 陆家嘴环形天桥)":{"zh":"上海国金中心商场","zh_addr":"上海市浦东新区世纪大道8号","zh_city":"上海"},"(Shanghai) Tianzifang lanes (田子坊)":{"zh":"田子坊","zh_addr":"上海市黄浦区泰康路210弄","zh_city":"上海"},"(Shanghai) 1933 Old Millfun (1933老场坊)":{"zh":"1933老场坊","zh_addr":"上海市虹口区沙泾路10号","zh_city":"上海"},"(Shanghai) TX Huaihai youth mall & Huaihai Rd (TX淮海 · 淮海中路)":{"zh":"TX淮海","zh_addr":"上海市黄浦区淮海中路523号","zh_city":"上海"},"(Shanghai) The Lujiazui 'skyline reveal' escalator, Metro Exit 6 (陆家嘴站6号口)":{"zh":"陆家嘴地铁站6号口","zh_addr":"上海市浦东新区（陆家嘴地铁站6号口，近国金中心）","zh_city":"上海"},"(Shanghai) Lujiazui Central Green (陆家嘴中心绿地)":{"zh":"陆家嘴中心绿地","zh_addr":"上海市浦东新区陆家嘴环路717号","zh_city":"上海"}};
+(function(){const t=v=>Array.isArray(v)?String(v[0]):String(v);const ap=it=>{const s=NAV_SEED[t(it.title)];if(s)Object.assign(it,s);};ORIGINAL_DATA.days.forEach(d=>d.items.forEach(ap));ORIGINAL_DATA.ideas.forEach(ap);})();
+
 </script>
 <script>
 (function(){
@@ -483,6 +503,7 @@ share:"📤 Share",undo:"↩️ Undo",undoShort:"Undo",download:"⬇️ Download
  loadH:"Load a plan",loadHint:"Open a plan file someone sent you, or paste a share link. This replaces what's on screen (you can Undo).",pick:"📂 Choose plan file…",pasteLink:"…or paste a share link",loadLink:"Load link",
  resetH:"Reset to original?",resetMsg:"This replaces the shared plan (for both of you) with Keith's original itinerary. You can undo straight after.",resetOk:"Reset",
  helpH:"How it works",helpBody:"✏️ <b>Edit:</b> tap any activity or day header.<br>↕️ <b>Move:</b> drag the ⠿ handle (or press &amp; hold a card on phones) and drop it anywhere – into another day or into 💡 Ideas. You can also open an activity and use ↑ / ↓ or change its Day.<br>➕ <b>Add:</b> “Add activity” under each day, “Add a day” at the end.<br>↩️ <b>Undo:</b> the Undo button reverses your last change.<br>🌐 <b>EN / ไทย:</b> switch language at the top. Edits are kept in the language you type them in.<br>💾 <b>Saving:</b> automatic. Changes go to one shared plan that both of you use (and a backup stays on this device).<br>🔄 <b>Refresh:</b> gets the latest changes from the other person. The newest change wins.<br>📤 <b>Share:</b> copy a link or send the plan file. 📂 <b>Load plan</b> opens one.<br>🖨️ <b>Print / Save PDF</b> for a tidy printable copy.<br>⌨️ Keyboard: focus ⠿ and use arrow keys.",
+ navGo:"🧭 Amap",navGoAria:t=>`Open ${t} in Amap (Gaode Maps)`,navDriver:"🚕 Show driver",navDriverAria:t=>`Show ${t} in Chinese for a taxi or Didi driver`,navDriverH:"Show this to the driver",navCopy:"📋 Copy address",navCopyName:"📋 Copy name",navCopied:"Copied ✓ Paste it into Didi’s “Where to?”",navNoCopy:"Couldn’t copy. Press and hold the Chinese text instead",navAmap:"🧭 Open in Amap",navApple:" Apple Maps",navNoZh:"No Chinese name saved for this one yet. Open Amap and show the driver the place on the map.",navDidiHint:"Didi: tap “Where to?” (您要去哪儿) and paste.",zhSec:"📍 Chinese name & address (for maps and taxis)",fZh:"Chinese name",fZhAddr:"Chinese address",phZh:"e.g. 雍和宫",phZhAddr:"e.g. 北京市东城区雍和宫大街12号",
  itinerary:"Itinerary",tools:"Plan tools",jumpTo:"Jump to day",titleLbl:"Trip title",docTitle:" – Planner",defaultTitle:"Our Trip"},
 th:{refresh:"🔄 รีเฟรช",sAuto:"🔁 ซิงก์อัตโนมัติเปิดอยู่",sChecked:"ตรวจล่าสุด",tPartner:"อัปเดตตามที่แฟนแก้ไขแล้ว ✓",sSaved:"บันทึกแล้ว ✓",sSaving:"กำลังบันทึก…",sChecking:"กำลังตรวจสอบการเปลี่ยนแปลง…",sOffline:"ออฟไลน์ – บันทึกไว้ในเครื่องนี้",sLocal:"บันทึกไว้ในเครื่องนี้",sLast:"แก้ไขล่าสุด",
  tUpToDate:"เป็นแผนล่าสุดแล้ว ✓",tGotLatest:"อัปเดตเป็นแผนล่าสุดแล้ว ✓",tPushed:"บันทึกการแก้ไขของคุณลงแผนที่แชร์แล้ว ✓",
@@ -511,6 +532,7 @@ share:"📤 แชร์",undo:"↩️ เลิกทำ",undoShort:"เลิ�
  loadH:"เปิดแผน",loadHint:"เปิดไฟล์แผนที่มีคนส่งมา หรือวางลิงก์แชร์ แผนบนหน้าจอจะถูกแทนที่ (กดเลิกทำได้)",pick:"📂 เลือกไฟล์แผน…",pasteLink:"…หรือวางลิงก์แชร์",loadLink:"เปิดลิงก์",
  resetH:"กลับเป็นแผนเดิม?",resetMsg:"แผนที่แชร์ (ของทั้งสองคน) จะถูกแทนที่ด้วยแผนเดิมของ Keith กดเลิกทำได้ทันทีหลังจากนี้",resetOk:"กลับเป็นแผนเดิม",
  helpH:"วิธีใช้",helpBody:"✏️ <b>แก้ไข:</b> แตะที่กิจกรรมหรือหัวข้อของวัน<br>↕️ <b>ย้าย:</b> ลากที่ ⠿ (หรือกดค้างที่การ์ดบนมือถือ) แล้ววางที่ไหนก็ได้ – ในวันอื่นหรือใน 💡 ไอเดีย หรือเปิดกิจกรรมแล้วกด ↑ / ↓ หรือเปลี่ยน “วัน”<br>➕ <b>เพิ่ม:</b> “เพิ่มกิจกรรม” ใต้แต่ละวัน และ “เพิ่มวัน” ด้านท้าย<br>↩️ <b>เลิกทำ:</b> ปุ่มเลิกทำจะย้อนการเปลี่ยนแปลงล่าสุด<br>🌐 <b>EN / ไทย:</b> สลับภาษาได้ที่ด้านบน ข้อความที่แก้จะเก็บไว้ตามภาษาที่พิมพ์<br>💾 <b>บันทึก:</b> อัตโนมัติ การแก้ไขจะเข้าไปที่แผนที่แชร์ร่วมกันของทั้งสองคน (และสำรองไว้ในเครื่องนี้ด้วย)<br>🔄 <b>รีเฟรช:</b> ดึงการแก้ไขล่าสุดจากอีกคน การแก้ไขล่าสุดจะถูกใช้<br>📤 <b>แชร์:</b> คัดลอกลิงก์หรือส่งไฟล์แผน 📂 <b>เปิดแผน</b> เพื่อเปิดแผนที่ได้รับ<br>🖨️ <b>พิมพ์ / บันทึก PDF</b> สำหรับฉบับพิมพ์สวย ๆ<br>⌨️ คีย์บอร์ด: โฟกัสที่ ⠿ แล้วใช้ปุ่มลูกศร",
+ navGo:"🧭 เปิด Amap",navGoAria:t=>`เปิด ${t} ใน Amap (แผนที่เกาเต๋อ)`,navDriver:"🚕 โชว์คนขับ",navDriverAria:t=>`โชว์ ${t} เป็นภาษาจีนให้คนขับแท็กซี่หรือ Didi ดู`,navDriverH:"ยื่นให้คนขับดูได้เลย",navCopy:"📋 ก๊อปที่อยู่",navCopyName:"📋 ก๊อปชื่อร้าน/ที่",navCopied:"ก๊อปแล้ว ✓ ไปวางในช่อง “Where to?” ของ Didi ได้เลย",navNoCopy:"ก๊อปไม่ได้ กดค้างที่ตัวหนังสือจีนแทนนะ",navAmap:"🧭 เปิดใน Amap",navApple:" Apple Maps",navNoZh:"ที่นี่ยังไม่มีชื่อภาษาจีนนะ เปิด Amap แล้วยื่นแผนที่ให้คนขับดูแทนได้เลย",navDidiHint:"Didi: แตะช่อง “Where to?” (您要去哪儿) แล้ววางได้เลย",zhSec:"📍 ชื่อ & ที่อยู่ภาษาจีน (ไว้เปิดแผนที่/เรียกรถ)",fZh:"ชื่อภาษาจีน",fZhAddr:"ที่อยู่ภาษาจีน",phZh:"เช่น 雍和宫",phZhAddr:"เช่น 北京市东城区雍和宫大街12号",
  itinerary:"แผนการเดินทาง",tools:"เครื่องมือ",jumpTo:"ไปยังวัน",titleLbl:"ชื่อทริป",docTitle:" – แผนเที่ยว",defaultTitle:"ทริปของเรา"}
 };
 let lang="en";
@@ -571,7 +593,7 @@ function normWx(w){
 }
 function normalize(p){
   if(!p||typeof p!=="object"||!Array.isArray(p.days)) throw new Error("Not a trip plan file");
-  const ni=it=>Object.assign({id:it.id||uid(),cat:CAT_EMO[it.cat]?it.cat:"other",status:STATUS_KEYS.includes(it.status)?it.status:"planned",link:String(it.link||"")},normFields(it,ITEM_F,"i_"));
+  const ni=it=>navFields(it,Object.assign({id:it.id||uid(),cat:CAT_EMO[it.cat]?it.cat:"other",status:STATUS_KEYS.includes(it.status)?it.status:"planned",link:String(it.link||"")},normFields(it,ITEM_F,"i_")));
   const pt=normFields(p,["title"],"p");
   // plan title lookup key differs
   if(p.title_en==null&&p.title_th==null&&!Array.isArray(p.title)){ const en=String(p.title||"Our Trip"); pt.title_en=en; pt.title_th=TH_LOOKUP.ptitle[en]||en; }
@@ -580,6 +602,84 @@ function normalize(p){
     ideas:(p.ideas||[]).map(ni),savedAt:p.savedAt||null});
 }
 const original=()=>normalize(clone(ORIGINAL_DATA));
+
+/* ---------- tap-to-navigate (Amap + show-the-driver card) ---------- */
+// Per item (all optional): zh (Chinese name, used as the Amap search keyword), zh_addr (Chinese address),
+// zh_city ("北京"/"上海"), nav:false (not a place). Items without these fall back to the title.
+const NAV_F=["zh","zh_addr","zh_city"];
+const SEED=typeof NAV_SEED!=="undefined"?NAV_SEED:{};
+// copies the nav fields onto o, always at the end and in this order (sync compares plans as JSON)
+function navFields(src,o){ NAV_F.forEach(f=>{ delete o[f]; if(src[f]!=null) o[f]=String(src[f]); }); delete o.nav; if(src.nav===false) o.nav=false; return o; }
+const ADCODE={"北京":"110000","上海":"310000"};
+const NAV_CATS=["sightseeing","food","shopping","hotel"];
+const GENERIC=/\b(no plans?|free (time|day|afternoon|morning|evening)|tbd|to be planned|rest|relax|chill|inside the park|in the park|early (lunch|dinner)|warm up|return to|back to (the )?(hotel|apartment)|packing|check-?out)\b|ว่าง|ยังไม่มีแผน|พักผ่อน/i;
+function navCity(it,day){
+  const c=day?(day.city_en||"")+" "+(day.city_th||""):(it.title_en||"")+" "+(it.title_th||"");
+  const bj=/beijing|ปักกิ่ง|北京/i.test(c), sh=/shanghai|เซี่ยงไฮ้|上海/i.test(c);
+  return bj&&!sh?"北京":sh&&!bj?"上海":"";
+}
+// search keyword for a place with no Chinese name: the Chinese part of the title if any, else the title without "Lunch:" etc.
+function navKeyword(t){
+  t=String(t||"").replace(/^\s*\((beijing|shanghai|ปักกิ่ง|เซี่ยงไฮ้)\)\s*/i,"").trim();
+  const runs=(t.match(/[0-9A-Za-z·]*[\u3400-\u9fff][\u3400-\u9fff0-9A-Za-z·]*/g)||[]).filter(r=>/[\u3400-\u9fff].*[\u3400-\u9fff]/.test(r));
+  if(runs.length) return runs.sort((a,b)=>b.length-a.length)[0];
+  return t.replace(/^(breakfast|brunch|lunch|dinner|supper|coffee|drinks|snacks?|dessert|visit|stay|check[- ]?in)\s*[:\-–]\s*/i,"").trim()||t;
+}
+function navInfo(it,day){
+  let src=it;
+  if(!("zh" in it)&&it.nav!==false&&SEED[it.title_en]) src=SEED[it.title_en]; // an older app copy may have dropped the fields
+  if(src.nav===false) return null;
+  const zh=String(src.zh||"").trim(), city=String(src.zh_city||"").trim()||navCity(it,day);
+  if(zh) return {zh,addr:String(src.zh_addr||"").trim(),city,kw:zh,fallback:false};
+  if(!NAV_CATS.includes(it.cat)) return null;
+  const t=String(it.title_en||it.title_th||"").trim();
+  if(!t||GENERIC.test(t)||GENERIC.test(it.title_th||"")) return null;
+  return {zh:"",addr:"",city,kw:navKeyword(t),fallback:true};
+}
+// Amap URI API, search: https://lbs.amap.com/api/uri-api/guide/search/search (opens the Amap app when installed, else the web map)
+const amapUrl=n=>"https://uri.amap.com/search?keyword="+encodeURIComponent(n.kw)+(n.city?"&city="+encodeURIComponent(ADCODE[n.city]||n.city):"")+"&src=china-trip-planner&callnative=1";
+// Apple Maps link (q=), shown on iPhone/iPad only; in mainland China Apple Maps uses AutoNavi (Amap) data
+const appleUrl=n=>"https://maps.apple.com/?q="+encodeURIComponent(n.zh||n.kw);
+const isIOS=()=>/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+// title edited: keep the Chinese name only if it's clearly still the same place
+const NAV_STOP=new Set(["lunch","dinner","breakfast","brunch","with","from","this","that","taxi","didi","walk","street"]);
+function samePlace(oldT,newT,zh){
+  const core=String(zh||"").replace(/[(（].*$/,"").trim();
+  if(core&&String(newT).includes(core)) return true;
+  const w=s=>(String(s).toLowerCase().match(/[a-z]{4,}/g)||[]).filter(x=>!NAV_STOP.has(x));
+  const a=w(oldT); if(!a.length) return false; const b=new Set(w(newT));
+  return a.filter(x=>b.has(x)).length/a.length>=0.5;
+}
+function navHTML(it,day,title){
+  const n=navInfo(it,day); if(!n) return "";
+  return `<div class="cnav"><a class="nbtn" href="${esc(amapUrl(n))}" target="_blank" rel="noopener" aria-label="${esc(T("navGoAria")(n.zh||title))}">${T("navGo")}</a><button class="nbtn" type="button" data-driver="${esc(it.id)}" aria-label="${esc(T("navDriverAria")(title))}">${T("navDriver")}</button></div>`;
+}
+function showDriver(id){
+  const f=findItem(id); if(!f) return;
+  const day=f.lid==="ideas"?null:plan.days.find(d=>d.id===f.lid), it=f.item, n=navInfo(it,day); if(!n) return;
+  const en=it.title_en||tx(it,"title");
+  openSheet(`<h2>${esc(T("navDriverH"))}${closeX()}</h2>
+   <div class="driver">
+     <div class="dask" lang="zh-CN">请带我去这里</div>
+     ${n.zh?`<div class="dzh" lang="zh-CN">${esc(n.zh)}</div>`:`<div class="dzh dkw">${esc(n.kw)}</div>`}
+     ${n.addr?`<div class="daddr" lang="zh-CN">${esc(n.addr)}</div>`:""}
+     <div class="den" lang="en">${esc(en)}</div>
+   </div>
+   ${n.zh?"":`<p class="hint" style="margin-top:10px">${esc(T("navNoZh"))}</p>`}
+   <div class="actions">
+     ${n.addr?`<button class="btn primary" type="button" data-copy="addr">${T("navCopy")}</button>`:""}
+     ${n.zh?`<button class="btn${n.addr?"":" primary"}" type="button" data-copy="name">${T("navCopyName")}</button>`:""}
+   </div>
+   <div class="actions" style="margin-top:8px">
+     <a class="btn" href="${esc(amapUrl(n))}" target="_blank" rel="noopener" data-amap style="flex:1">${T("navAmap")}</a>
+     ${isIOS()?`<a class="btn" href="${esc(appleUrl(n))}" target="_blank" rel="noopener" data-apple>${T("navApple")}</a>`:""}
+   </div>
+   ${n.zh?`<p class="hint" style="margin-top:10px">${esc(T("navDidiHint"))}</p>`:""}`,
+  s=>{
+    s.querySelector("[data-x]").onclick=closeSheet;
+    s.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{ const ok=await copyText(b.dataset.copy==="addr"?n.addr:n.zh); toast(ok?T("navCopied"):T("navNoCopy")); });
+  });
+}
 
 let plan, undoStack=[];
 function load(){
@@ -641,7 +741,7 @@ function applyStatic(){
   $("#board").setAttribute("aria-label",T("itinerary")); $(".tools").setAttribute("aria-label",T("tools")); $("#chips").setAttribute("aria-label",T("jumpTo"));
   $("label[for=title]").textContent=T("titleLbl");
 }
-function cardHTML(it){
+function cardHTML(it,day){
   let emo=CAT_EMO[it.cat]; const catName=T("cat")[it.cat]; const title=tx(it,"title"), notes=tx(it,"notes");
   if(it.cat==="travel"){ const en=it.title_en+" "+it.title_th; if(/flight|airport|fly|✈|เที่ยวบิน|สนามบิน|บิน/i.test(en)) emo="✈️"; else if(/taxi|driver|car|didi|แท็กซี่|คนขับ/i.test(en)) emo="🚕"; }
   const pill=it.status!=="planned"?`<span class="pill ${it.status}">${T("status")[it.status]}</span>`:"";
@@ -654,6 +754,7 @@ function cardHTML(it){
       <div class="ctitle"><span class="cemo" aria-hidden="true">${emo}</span>${esc(title)}</div>
       ${notes?`<div class="cnotes">${esc(notes)}</div>`:""}
       ${link}
+      ${navHTML(it,day,title)}
     </div></li>`;
 }
 const tdeg=v=>v==null?"–":String(v).replace("-","−")+"°";
@@ -683,14 +784,14 @@ function render(){
         <button class="ibtn" type="button" data-editday="${d.id}" aria-label="${esc(T("editDayN")(i+1))}">✏️</button>
       </div>
       ${tips?`<details class="tips"><summary>${T("tips")}</summary><p>${esc(tips)}</p></details>`:""}
-      <ul class="list" data-lid="${d.id}" data-empty="${esc(T("dropHere"))}">${d.items.map(cardHTML).join("")}</ul>
+      <ul class="list" data-lid="${d.id}" data-empty="${esc(T("dropHere"))}">${d.items.map(it=>cardHTML(it,d)).join("")}</ul>
       <button class="addbtn" type="button" data-add="${d.id}">${T("addAct")}</button>
     </section>`;
   });
   h+=`<button class="addday" type="button" id="bAddDay">${T("addDay")}</button>`;
   h+=`<section class="day ideas${plan.ideas.length?"":" empty"}" id="day-ideas" data-lid="ideas" aria-label="${esc(T("ideasTitle"))}">
       <div class="dhead" style="cursor:default"><div class="dnum">💡</div><div class="dinfo"><div class="dtitle">${esc(T("ideasTitle"))}</div><div class="date">${esc(T("ideasSub"))}</div></div></div>
-      <ul class="list" data-lid="ideas" data-empty="${esc(T("dropHere"))}">${plan.ideas.map(cardHTML).join("")}</ul>
+      <ul class="list" data-lid="ideas" data-empty="${esc(T("dropHere"))}">${plan.ideas.map(it=>cardHTML(it,null)).join("")}</ul>
       <button class="addbtn" type="button" data-add="ideas">${T("addIdea")}</button></section>`;
   b.innerHTML=h; b.scrollLeft=sx;
   $("#chips").innerHTML=plan.days.map((d,i)=>`<button class="chip" type="button" data-jump="${d.id}"><b>${esc(T("dayN")(i+1))}</b>${esc(fmtDate(d.date,"short"))}</button>`).join("")+
@@ -743,6 +844,9 @@ function editItem(id,isNew,lidForNew){
    <div class="field"><span>${T("fStatus")}</span><div class="seg" data-seg="status">${STATUS_KEYS.map(k=>`<button type="button" data-v="${k}" aria-pressed="${k===it.status}">${T("status")[k]}</button>`).join("")}</div></div>
    <label class="field"><span>${T("fNotes")}</span><textarea name="notes" placeholder="${esc(T("phNotes"))}">${esc(tx(it,"notes"))}</textarea></label>
    <label class="field"><span>${T("fLink")}</span><input name="link" type="url" inputmode="url" value="${esc(it.link)}" placeholder="https://…"></label>
+   <details class="zhsec"><summary>${T("zhSec")}</summary>
+    <label class="field"><span>${T("fZh")}</span><input name="zh" lang="zh-CN" value="${esc(it.zh||"")}" placeholder="${esc(T("phZh"))}"></label>
+    <label class="field"><span>${T("fZhAddr")}</span><input name="zh_addr" lang="zh-CN" value="${esc(it.zh_addr||"")}" placeholder="${esc(T("phZhAddr"))}"></label></details>
    ${isNew?"":`<div class="field"><span>${T("fMove")}</span><div class="movebar"><button class="btn" type="button" data-mv="-1" aria-label="${esc(T("upAria"))}">${T("up")}</button><button class="btn" type="button" data-mv="1" aria-label="${esc(T("downAria"))}">${T("down")}</button><span class="hint" style="margin:0 4px">${T("orPick")}</span></div></div>`}
    <div class="actions">${isNew?"":`<button class="btn danger" type="button" data-del>${T("del")}</button>`}<button class="btn primary" type="button" data-save>${isNew?T("add"):T("save")}</button></div>`,
   s=>{
@@ -755,10 +859,20 @@ function editItem(id,isNew,lidForNew){
       const to=g("where");
       snapshot();
       const target=isNew?it:findItem(it.id).item;
+      const oldTitleEn=target.title_en||"", zhIn=g("zh"), adIn=g("zh_addr");
       const txt={time:g("time"),title:g("title")||T("untitled"),notes:s.querySelector("[name=notes]").value.replace(/\s+$/,"")};
       if(isNew){ ITEM_F.forEach(f=>setBoth(target,f,txt[f])); }
       else ITEM_F.forEach(f=>setTx(target,f,txt[f]));
       Object.assign(target,{link:g("link"),cat:val.cat,status:val.status});
+      // Chinese name/address: typed values win; a renamed item drops a Chinese name that no longer matches
+      const hadZh="zh" in target, curZh=String(target.zh||""), curAd=String(target.zh_addr||"");
+      if(zhIn!==curZh||adIn!==curAd){ if(zhIn||adIn||hadZh){ target.zh=zhIn; target.zh_addr=adIn; } if(zhIn) delete target.nav; }
+      else if(!isNew&&target.title_en!==oldTitleEn){
+        const seed=!hadZh&&SEED[oldTitleEn]; const was=hadZh?target:seed;
+        if(was&&!samePlace(oldTitleEn,target.title_en,was.zh)){ target.zh=""; target.zh_addr=""; delete target.zh_city; delete target.nav; }
+        else if(seed) NAV_F.concat("nav").forEach(f=>{ if(seed[f]!=null) target[f]=seed[f]; });
+      }
+      navFields(Object.assign({},target),target);
       if(isNew) listById(to).push(target);
       else if(to!==findItem(it.id).lid) moveItem(it.id,to,null);
       closeSheet(); commit(); toast(isNew?T("tAdded"):T("tSaved"));
@@ -833,7 +947,8 @@ const board=$("#board");
 board.addEventListener("click",e=>{
   if(dragJustEnded) return;
   const t=e.target;
-  if(t.closest("a.clink")) return;
+  if(t.closest("a.clink")||t.closest(".cnav a")) return;
+  const drv=t.closest("[data-driver]"); if(drv) return showDriver(drv.dataset.driver);
   const add=t.closest("[data-add]"); if(add) return editItem(null,true,add.dataset.add);
   if(t.closest("#bAddDay")) return editDay(null,true);
   const ed=t.closest("[data-editday]"); if(ed) return editDay(ed.dataset.editday);
@@ -841,6 +956,7 @@ board.addEventListener("click",e=>{
 });
 board.addEventListener("keydown",e=>{
   const cb=e.target.closest&&e.target.closest(".cbody");
+  if(cb&&e.target.closest("a,.cnav")) return;
   if(cb&&(e.key==="Enter"||e.key===" ")){e.preventDefault(); editItem(cb.closest(".card").dataset.id); return;}
   const h=e.target.closest&&e.target.closest(".handle"); if(!h) return;
   const id=h.closest(".card").dataset.id; const map={ArrowUp:()=>nudge(id,-1),ArrowDown:()=>nudge(id,1),ArrowLeft:()=>hop(id,-1),ArrowRight:()=>hop(id,1)};
@@ -852,7 +968,7 @@ $("#chips").addEventListener("click",e=>{const c=e.target.closest("[data-jump]")
 let drag=null, pending=null, dragJustEnded=false, raf=0;
 board.addEventListener("pointerdown",e=>{
   if(e.button>0) return;
-  const card=e.target.closest(".card"); if(!card||e.target.closest("a")) return;
+  const card=e.target.closest(".card"); if(!card||e.target.closest("a,.cnav")) return;
   const onHandle=!!e.target.closest(".handle");
   pending={card,id:card.dataset.id,x:e.clientX,y:e.clientY,pid:e.pointerId,type:e.pointerType,onHandle,timer:0};
   if(e.pointerType!=="mouse"&&!onHandle){
