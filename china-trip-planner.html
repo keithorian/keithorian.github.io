@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b5502f">
-<meta name="app-build" content="20261114144935">
+<meta name="app-build" content="20261114150117">
 <title>Our China Trip • Trip Planner</title>
 <style>
 :root{
@@ -40,11 +40,12 @@ header{background:linear-gradient(135deg,#b5502f,#d9783e);color:#fff;padding:cal
 .tbtn.primary{background:#fff;color:var(--accent)}
 .tbtn:disabled{opacity:.45;cursor:default}
 .tbtn.spin::first-letter{display:inline-block}
-.sync{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.92);padding:0 2px 8px;min-height:18px}
+.sync{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;font-size:12px;color:rgba(255,255,255,.92);padding:0 2px 8px;min-height:18px}
 .sdot{width:8px;height:8px;border-radius:50%;background:#9be3b4;flex:none}
 .sync[data-s=saving] .sdot,.sync[data-s=checking] .sdot{background:#ffd27a}
 .sync[data-s=offline] .sdot{background:#ff9d8a}
-#stime{opacity:.8}
+#stime,#sauto{opacity:.8}
+#sauto{flex-basis:100%;padding-left:14px}
 #stime:not(:empty)::before{content:"· "}
 .ver{margin-top:12px;font-size:12px;color:var(--muted)}
 .foot{text-align:center;margin:0 0 18px;padding:0 14px}
@@ -192,7 +193,7 @@ body.dragging .card,body.dragging .cbody{cursor:grabbing}
     <button class="tbtn" id="bReset" type="button" data-t="reset"></button>
     <button class="tbtn" id="bHelp" type="button" data-t="help"></button>
   </div>
-  <div class="sync" id="sync" role="status" aria-live="polite"><span class="sdot" id="sdot"></span><span id="stxt"></span><span id="stime"></span></div>
+  <div class="sync" id="sync" role="status" aria-live="polite"><span class="sdot" id="sdot"></span><span id="stxt"></span><span id="stime"></span><span id="sauto"></span></div>
 </header>
 <div class="jump"><nav class="chips" id="chips" aria-label="Jump to day"></nav></div>
 <div class="firsthelp" id="firsthelp" hidden><div>👋 <span data-th="banner"></span><button class="btn" id="hideHelp" type="button" data-t="gotit"></button></div></div>
@@ -202,7 +203,7 @@ body.dragging .card,body.dragging .cbody{cursor:grabbing}
 <div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
 
 <script>
-const BUILD={"id": "20261114144935", "at": "2026-11-14T14:49:35+08:00", "label": "14 Nov 2026, 14:49 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
+const BUILD={"id": "20261114150117", "at": "2026-11-14T15:01:17+08:00", "label": "14 Nov 2026, 15:01 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
 // ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
 // Text fields are [English, Thai]. Plain strings are used for both languages.
 const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
@@ -314,7 +315,7 @@ const STATUS_KEYS=["planned","booked","confirm","idea"];
 
 /* ---------- UI strings ---------- */
 const STR={
-en:{refresh:"🔄 Refresh",sSaved:"Saved ✓",sSaving:"Saving…",sChecking:"Checking for changes…",sOffline:"Offline – saved on this device",sLocal:"Saved on this device",sLast:"last change",
+en:{refresh:"🔄 Refresh",sAuto:"🔁 Auto-sync on",sChecked:"checked",tPartner:"Updated from your partner ✓",sSaved:"Saved ✓",sSaving:"Saving…",sChecking:"Checking for changes…",sOffline:"Offline – saved on this device",sLocal:"Saved on this device",sLast:"last change",
  tUpToDate:"Up to date ✓",tGotLatest:"Updated with the latest changes ✓",tPushed:"Your changes are saved to the shared plan ✓",
  tOffline:"Can't reach the internet – your plan is saved on this device and will sync when you're back online.",tNewApp:"App updated to the latest version ✓",
  conflictH:"The shared plan changed",conflictMsg:t=>`The shared plan was changed on another phone (${t}), and this device also has changes that aren't synced yet. Which one should we keep?`,
@@ -342,7 +343,7 @@ share:"📤 Share",undo:"↩️ Undo",undoShort:"Undo",download:"⬇️ Download
  resetH:"Reset to original?",resetMsg:"This replaces the shared plan (for both of you) with Keith's original itinerary. You can undo straight after.",resetOk:"Reset",
  helpH:"How it works",helpBody:"✏️ <b>Edit:</b> tap any activity or day header.<br>↕️ <b>Move:</b> drag the ⠿ handle (or press &amp; hold a card on phones) and drop it anywhere – into another day or into 💡 Ideas. You can also open an activity and use ↑ / ↓ or change its Day.<br>➕ <b>Add:</b> “Add activity” under each day, “Add a day” at the end.<br>↩️ <b>Undo:</b> the Undo button reverses your last change.<br>🌐 <b>EN / ไทย:</b> switch language at the top. Edits are kept in the language you type them in.<br>💾 <b>Saving:</b> automatic. Changes go to one shared plan that both of you use (and a backup stays on this device).<br>🔄 <b>Refresh:</b> gets the latest changes from the other person. The newest change wins.<br>📤 <b>Share:</b> copy a link or send the plan file. 📂 <b>Load plan</b> opens one.<br>🖨️ <b>Print / Save PDF</b> for a tidy printable copy.<br>⌨️ Keyboard: focus ⠿ and use arrow keys.",
  itinerary:"Itinerary",tools:"Plan tools",jumpTo:"Jump to day",titleLbl:"Trip title",docTitle:" – Planner",defaultTitle:"Our Trip"},
-th:{refresh:"🔄 รีเฟรช",sSaved:"บันทึกแล้ว ✓",sSaving:"กำลังบันทึก…",sChecking:"กำลังตรวจสอบการเปลี่ยนแปลง…",sOffline:"ออฟไลน์ – บันทึกไว้ในเครื่องนี้",sLocal:"บันทึกไว้ในเครื่องนี้",sLast:"แก้ไขล่าสุด",
+th:{refresh:"🔄 รีเฟรช",sAuto:"🔁 ซิงก์อัตโนมัติเปิดอยู่",sChecked:"ตรวจล่าสุด",tPartner:"อัปเดตตามที่แฟนแก้ไขแล้ว ✓",sSaved:"บันทึกแล้ว ✓",sSaving:"กำลังบันทึก…",sChecking:"กำลังตรวจสอบการเปลี่ยนแปลง…",sOffline:"ออฟไลน์ – บันทึกไว้ในเครื่องนี้",sLocal:"บันทึกไว้ในเครื่องนี้",sLast:"แก้ไขล่าสุด",
  tUpToDate:"เป็นแผนล่าสุดแล้ว ✓",tGotLatest:"อัปเดตเป็นแผนล่าสุดแล้ว ✓",tPushed:"บันทึกการแก้ไขของคุณลงแผนที่แชร์แล้ว ✓",
  tOffline:"เชื่อมต่ออินเทอร์เน็ตไม่ได้ – แผนบันทึกไว้ในเครื่องนี้ และจะซิงก์เมื่อกลับมาออนไลน์",tNewApp:"อัปเดตแอปเป็นเวอร์ชันล่าสุดแล้ว ✓",
  conflictH:"แผนที่แชร์มีการเปลี่ยนแปลง",conflictMsg:t=>`มีการแก้ไขแผนที่แชร์จากอีกเครื่อง (${t}) และเครื่องนี้ก็มีการแก้ไขที่ยังไม่ได้ซิงก์ จะเก็บแบบไหนดี?`,
@@ -547,7 +548,7 @@ document.querySelector(".lang").addEventListener("click",e=>{const b=e.target.cl
 let toastT;
 function toast(msg,undoable){
   $("#toastMsg").textContent=msg; const tb=$("#toastBtn"); tb.hidden=!undoable;
-  $("#toast").classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>$("#toast").classList.remove("show"),undoable?6000:2600);
+  $("#toast").classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>$("#toast").classList.remove("show"),3000);
 }
 $("#toastBtn").onclick=()=>{undo();};
 
@@ -856,7 +857,10 @@ const Sync=(function(){
     else { const s=localStorage.getItem(STORE_KEY); // plan saved by an older (offline-only) version: treat as unsynced edits, so they're never lost silently
       if(s){ meta.dirty=true; meta.editedAt=Date.parse(JSON.parse(s).savedAt||"")||1; } } }catch(e){}
   const saveMeta=()=>{ try{localStorage.setItem(META_KEY,JSON.stringify(meta));}catch(e){} };
-  let state="saved", timer=null, chain=Promise.resolve();
+  let state="saved", timer=null, chain=Promise.resolve(), lastChecked=0, deferred=false;
+  const POLL_MS=window.__pollMs||30000;
+  // she's in the middle of something: an open sheet/dialog, a drag (or long-press about to become one), or typing the title
+  const busy=()=>!!$("#sheet")||!!drag||!!pending||document.body.classList.contains("dragging")||document.activeElement===$("#title");
   const queue=fn=>(chain=chain.then(fn,fn));
   const fmt=ms=>{ if(!ms) return ""; const d=new Date(ms), now=new Date(); const loc=lang==="th"?"th-TH-u-ca-gregory":"en-GB";
     const o=d.toDateString()===now.toDateString()?{hour:"2-digit",minute:"2-digit"}:{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"};
@@ -866,6 +870,7 @@ const Sync=(function(){
     $("#stxt").textContent=T({saved:"sSaved",saving:"sSaving",checking:"sChecking",offline:"sOffline"}[state]);
     const last=Math.max(meta.rev||0,meta.dirty?meta.editedAt:0);
     $("#stime").textContent=last?T("sLast")+" "+fmt(last):"";
+    $("#sauto").textContent=T("sAuto")+(lastChecked?" · "+T("sChecked")+" "+new Date(lastChecked).toLocaleTimeString(lang==="th"?"th-TH-u-ca-gregory":"en-GB",{hour:"2-digit",minute:"2-digit"}):"");
     const f=$("#footVer"); if(f) f.textContent=T("verLbl")+": "+BUILD.label;
   }
   // content comparison that ignores ids, edit flags and save times
@@ -873,6 +878,7 @@ const Sync=(function(){
   async function get(){
     const r=await fetch(url()+"?_="+Date.now(),{cache:"no-store"});
     if(!r.ok) throw new Error("HTTP "+r.status);
+    lastChecked=Date.now();
     const t=(await r.text()).trim(); if(!t) return null;
     const d=JSON.parse(t); if(!d||!d.plan) return null; return d;
   }
@@ -892,7 +898,7 @@ const Sync=(function(){
   // push local edits (debounced)
   function edited(){
     meta.dirty=true; meta.editedAt=Date.now(); saveMeta(); state="saving"; paint();
-    clearTimeout(timer); timer=setTimeout(()=>queue(pushNow),2000);
+    clearTimeout(timer); timer=setTimeout(()=>pull("save"),2000);
   }
   async function pushNow(){
     clearTimeout(timer); if(!meta.dirty) { state="saved"; paint(); return true; }
@@ -901,9 +907,11 @@ const Sync=(function(){
     catch(e){ state="offline"; paint(); return false; }
   }
   // pull: mode "open" (quiet), "refresh" (always reports), "auto" (tab became visible)
+  // mode: "refresh" (button, always reports), "open", "auto" (foreground/online), "poll" (timer), "save" (debounced autosave)
   function pull(mode){ return queue(async()=>{
     clearTimeout(timer);
-    state="checking"; paint();
+    const quiet=mode!=="refresh";
+    state=meta.dirty?"saving":"checking"; paint();
     let d;
     try{ d=await get(); }
     catch(e){ state="offline"; paint(); if(mode==="refresh") toast(T("tOffline")); return "offline"; }
@@ -914,14 +922,20 @@ const Sync=(function(){
       return res;
     }
     const same=key(normalize(d.plan))===key(plan);
-    if(meta.dirty){
-      if(same){ meta.dirty=false; meta.rev=d.rev; saveMeta(); res="same"; }
-      else if(meta.editedAt>=d.rev){ res=(await pushNow())?"pushed":"offline"; if(mode==="refresh") toast(res==="offline"?T("tOffline"):T("tPushed")); }
-      else { state="saved"; paint(); res=await conflict(d); }
-    } else if(same){ meta.rev=d.rev; saveMeta(); res="same"; }
-    else { takeRemote(d,true); res="taken"; toast(T("tGotLatest"),true); }
+    if(same){ if(meta.dirty||meta.rev!==d.rev){ meta.dirty=false; meta.rev=d.rev; saveMeta(); } res="same"; }
+    else if(meta.dirty&&d.rev===meta.rev){ // only this device changed since the last sync: save it (no conflict)
+      res=(await pushNow())?"pushed":"offline"; if(mode==="refresh") toast(res==="offline"?T("tOffline"):T("tPushed"));
+    }
+    else { // the shared copy changed on the other phone
+      if(quiet&&busy()){ deferred=true; state=meta.dirty?"saving":"saved"; paint(); return "deferred"; }
+      deferred=false;
+      if(meta.dirty){ state="saved"; paint(); res=await conflict(d); }
+      else { takeRemote(d,true); res="taken"; toast(quiet?T("tPartner"):T("tGotLatest"),true); }
+    }
     if(res==="same"&&mode==="refresh") toast(T("tUpToDate"));
-    if(state==="checking"){ state="saved"; } paint();
+    if(res==="same"||res==="taken") deferred=false;
+    if(state==="checking"||(state==="saving"&&!meta.dirty)) state="saved";
+    paint();
     return res;
   });}
   function conflict(d){ return new Promise(resolve=>{
@@ -945,6 +959,15 @@ const Sync=(function(){
     }catch(e){}
     return false;
   }
+  // auto-sync: GET every POLL_MS while visible; deferred checks retry once she's done editing/dragging
+  let polls=0;
+  function tick(){
+    if(document.visibilityState!=="visible") return;
+    if(busy()){ deferred=true; return; }
+    polls++; pull("poll");
+  }
+  setInterval(tick,POLL_MS);
+  setInterval(()=>{ if(deferred&&!busy()&&document.visibilityState==="visible"){ deferred=false; pull("poll"); } },1000);
   async function refresh(){
     const b=$("#bRefresh"); b.disabled=true;
     try{ const res=await pull("refresh"); if(res!=="offline") await checkApp(); }
@@ -955,12 +978,11 @@ const Sync=(function(){
       if(f){ if(f.undo){ undoStack.push(f.undo); $("#bUndo").disabled=false; } setTimeout(()=>toast(T(f.msg),!!f.undo),400); } }catch(e){}
     if(/[?&]v=\d/.test(location.search)) history.replaceState(null,"",location.pathname+location.hash);
     state=meta.dirty?"saving":"saved"; paint();
-    window.addEventListener("online",()=>pull("auto"));
-    document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") pull("auto"); });
-    window.addEventListener("pagehide",()=>{ if(meta.dirty){ try{ fetch(url(),{method:"POST",keepalive:true,headers:{"content-type":"application/json"},body:JSON.stringify({app:"china-trip-planner",rev:meta.editedAt,by:dev,plan})}); }catch(e){} } });
+    window.addEventListener("online",()=>{ if(busy()) deferred=true; else pull("auto"); });
+    document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ if(busy()) deferred=true; else pull("auto"); } });
     return pull("open");
   }
-  return {edited,pull,refresh,boot,paint,pushNow,get id(){return id},get meta(){return meta},get state(){return state},whenIdle:()=>chain};
+  return {edited,pull,refresh,boot,paint,pushNow,get id(){return id},get meta(){return meta},get state(){return state},get polls(){return polls},get deferred(){return deferred},POLL_MS,whenIdle:()=>chain};
 })();
 $("#bRefresh").onclick=()=>Sync.refresh();
 
