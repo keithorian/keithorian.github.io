@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b5502f">
+<meta name="app-build" content="20261114144935">
 <title>Our China Trip • Trip Planner</title>
 <style>
 :root{
@@ -38,6 +39,15 @@ header{background:linear-gradient(135deg,#b5502f,#d9783e);color:#fff;padding:cal
 .tbtn:hover{background:rgba(255,255,255,.28)}
 .tbtn.primary{background:#fff;color:var(--accent)}
 .tbtn:disabled{opacity:.45;cursor:default}
+.tbtn.spin::first-letter{display:inline-block}
+.sync{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.92);padding:0 2px 8px;min-height:18px}
+.sdot{width:8px;height:8px;border-radius:50%;background:#9be3b4;flex:none}
+.sync[data-s=saving] .sdot,.sync[data-s=checking] .sdot{background:#ffd27a}
+.sync[data-s=offline] .sdot{background:#ff9d8a}
+#stime{opacity:.8}
+#stime:not(:empty)::before{content:"· "}
+.ver{margin-top:12px;font-size:12px;color:var(--muted)}
+.foot{text-align:center;margin:0 0 18px;padding:0 14px}
 .chips{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;border:0;border-radius:10px;background:rgba(0,0,0,.14);color:#fff;padding:5px 10px;font-size:12.5px;line-height:1.2;text-align:left}
@@ -151,7 +161,7 @@ body.dragging .card,body.dragging .cbody{cursor:grabbing}
   @page{margin:12mm}
   header{position:static;background:none;color:#000;box-shadow:none;padding:0}
   #title{color:#000;font-size:22px;padding:0}
-  .tools,.jump,.chips,.handle,.ibtn,.addbtn,.addday,#toast,.firsthelp,.backdrop{display:none!important}
+  .tools,.sync,.jump,.chips,.handle,.ibtn,.addbtn,.addday,#toast,.firsthelp,.backdrop{display:none!important}
   body{background:#fff}
   #board{display:block;padding:0;max-width:none;overflow:visible}
   .day{box-shadow:none;margin:0 0 10px;border:1px solid #ccc;width:auto}
@@ -174,6 +184,7 @@ body.dragging .card,body.dragging .cbody{cursor:grabbing}
   </div>
   <div class="tools" role="toolbar" aria-label="Plan tools">
     <button class="tbtn primary" id="bShare" type="button" data-t="share"></button>
+    <button class="tbtn" id="bRefresh" type="button" data-t="refresh"></button>
     <button class="tbtn" id="bUndo" type="button" disabled data-t="undo"></button>
     <button class="tbtn" id="bDownload" type="button" data-t="download"></button>
     <button class="tbtn" id="bLoad" type="button" data-t="load"></button>
@@ -181,14 +192,17 @@ body.dragging .card,body.dragging .cbody{cursor:grabbing}
     <button class="tbtn" id="bReset" type="button" data-t="reset"></button>
     <button class="tbtn" id="bHelp" type="button" data-t="help"></button>
   </div>
+  <div class="sync" id="sync" role="status" aria-live="polite"><span class="sdot" id="sdot"></span><span id="stxt"></span><span id="stime"></span></div>
 </header>
 <div class="jump"><nav class="chips" id="chips" aria-label="Jump to day"></nav></div>
 <div class="firsthelp" id="firsthelp" hidden><div>👋 <span data-th="banner"></span><button class="btn" id="hideHelp" type="button" data-t="gotit"></button></div></div>
 <main id="board" aria-label="Itinerary"></main>
+<footer class="ver foot" id="footVer"></footer>
 <input type="file" id="fileIn" accept=".json,application/json" hidden>
 <div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
 
 <script>
+const BUILD={"id": "20261114144935", "at": "2026-11-14T14:49:35+08:00", "label": "14 Nov 2026, 14:49 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
 // ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
 // Text fields are [English, Thai]. Plain strings are used for both languages.
 const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
@@ -300,7 +314,12 @@ const STATUS_KEYS=["planned","booked","confirm","idea"];
 
 /* ---------- UI strings ---------- */
 const STR={
-en:{share:"📤 Share",undo:"↩️ Undo",undoShort:"Undo",download:"⬇️ Download plan",load:"📂 Load plan",print:"🖨️ Print / Save PDF",reset:"↺ Reset to original",help:"❔ Help",gotit:"Got it",
+en:{refresh:"🔄 Refresh",sSaved:"Saved ✓",sSaving:"Saving…",sChecking:"Checking for changes…",sOffline:"Offline – saved on this device",sLocal:"Saved on this device",sLast:"last change",
+ tUpToDate:"Up to date ✓",tGotLatest:"Updated with the latest changes ✓",tPushed:"Your changes are saved to the shared plan ✓",
+ tOffline:"Can't reach the internet – your plan is saved on this device and will sync when you're back online.",tNewApp:"App updated to the latest version ✓",
+ conflictH:"The shared plan changed",conflictMsg:t=>`The shared plan was changed on another phone (${t}), and this device also has changes that aren't synced yet. Which one should we keep?`,
+ getLatest:"Get latest plan",keepMine:"Keep my changes",verLbl:"App version",syncLbl:"Shared plan",
+share:"📤 Share",undo:"↩️ Undo",undoShort:"Undo",download:"⬇️ Download plan",load:"📂 Load plan",print:"🖨️ Print / Save PDF",reset:"↺ Reset to original",help:"❔ Help",gotit:"Got it",
  banner:"<b>Tap</b> any activity to edit. <b>Drag ⠿</b> (or press &amp; hold a card) to move it. Changes save automatically.",
  cat:{sightseeing:"Sightseeing",food:"Food",travel:"Travel",hotel:"Hotel",shopping:"Shopping",other:"Other"},
  status:{planned:"Planned",booked:"Booked",confirm:"To confirm",idea:"Idea"},
@@ -320,10 +339,15 @@ en:{share:"📤 Share",undo:"↩️ Undo",undoShort:"Undo",download:"⬇️ Down
  copyLink:"🔗 Copy share link",sendFile:"📎 Send plan file",shareTip:"Tip: the link works when this planner is opened from a web address. If you're using it as a file, send the plan file instead, and they can use <b>Load plan</b>.",
  shareText:"Here's our trip plan – open it with Load plan in the planner.",
  loadH:"Load a plan",loadHint:"Open a plan file someone sent you, or paste a share link. This replaces what's on screen (you can Undo).",pick:"📂 Choose plan file…",pasteLink:"…or paste a share link",loadLink:"Load link",
- resetH:"Reset to original?",resetMsg:"This replaces the current plan with Keith's original itinerary. You can undo straight after.",resetOk:"Reset",
- helpH:"How it works",helpBody:"✏️ <b>Edit:</b> tap any activity or day header.<br>↕️ <b>Move:</b> drag the ⠿ handle (or press &amp; hold a card on phones) and drop it anywhere – into another day or into 💡 Ideas. You can also open an activity and use ↑ / ↓ or change its Day.<br>➕ <b>Add:</b> “Add activity” under each day, “Add a day” at the end.<br>↩️ <b>Undo:</b> the Undo button reverses your last change.<br>🌐 <b>EN / ไทย:</b> switch language at the top. Edits are kept in the language you type them in.<br>💾 <b>Saving:</b> automatic, on this device.<br>📤 <b>Share:</b> copy a link or send the plan file. 📂 <b>Load plan</b> opens one.<br>🖨️ <b>Print / Save PDF</b> for a tidy printable copy.<br>⌨️ Keyboard: focus ⠿ and use arrow keys.",
+ resetH:"Reset to original?",resetMsg:"This replaces the shared plan (for both of you) with Keith's original itinerary. You can undo straight after.",resetOk:"Reset",
+ helpH:"How it works",helpBody:"✏️ <b>Edit:</b> tap any activity or day header.<br>↕️ <b>Move:</b> drag the ⠿ handle (or press &amp; hold a card on phones) and drop it anywhere – into another day or into 💡 Ideas. You can also open an activity and use ↑ / ↓ or change its Day.<br>➕ <b>Add:</b> “Add activity” under each day, “Add a day” at the end.<br>↩️ <b>Undo:</b> the Undo button reverses your last change.<br>🌐 <b>EN / ไทย:</b> switch language at the top. Edits are kept in the language you type them in.<br>💾 <b>Saving:</b> automatic. Changes go to one shared plan that both of you use (and a backup stays on this device).<br>🔄 <b>Refresh:</b> gets the latest changes from the other person. The newest change wins.<br>📤 <b>Share:</b> copy a link or send the plan file. 📂 <b>Load plan</b> opens one.<br>🖨️ <b>Print / Save PDF</b> for a tidy printable copy.<br>⌨️ Keyboard: focus ⠿ and use arrow keys.",
  itinerary:"Itinerary",tools:"Plan tools",jumpTo:"Jump to day",titleLbl:"Trip title",docTitle:" – Planner",defaultTitle:"Our Trip"},
-th:{share:"📤 แชร์",undo:"↩️ เลิกทำ",undoShort:"เลิกทำ",download:"⬇️ ดาวน์โหลดแผน",load:"📂 เปิดแผน",print:"🖨️ พิมพ์ / บันทึก PDF",reset:"↺ กลับเป็นแผนเดิม",help:"❔ วิธีใช้",gotit:"เข้าใจแล้ว",
+th:{refresh:"🔄 รีเฟรช",sSaved:"บันทึกแล้ว ✓",sSaving:"กำลังบันทึก…",sChecking:"กำลังตรวจสอบการเปลี่ยนแปลง…",sOffline:"ออฟไลน์ – บันทึกไว้ในเครื่องนี้",sLocal:"บันทึกไว้ในเครื่องนี้",sLast:"แก้ไขล่าสุด",
+ tUpToDate:"เป็นแผนล่าสุดแล้ว ✓",tGotLatest:"อัปเดตเป็นแผนล่าสุดแล้ว ✓",tPushed:"บันทึกการแก้ไขของคุณลงแผนที่แชร์แล้ว ✓",
+ tOffline:"เชื่อมต่ออินเทอร์เน็ตไม่ได้ – แผนบันทึกไว้ในเครื่องนี้ และจะซิงก์เมื่อกลับมาออนไลน์",tNewApp:"อัปเดตแอปเป็นเวอร์ชันล่าสุดแล้ว ✓",
+ conflictH:"แผนที่แชร์มีการเปลี่ยนแปลง",conflictMsg:t=>`มีการแก้ไขแผนที่แชร์จากอีกเครื่อง (${t}) และเครื่องนี้ก็มีการแก้ไขที่ยังไม่ได้ซิงก์ จะเก็บแบบไหนดี?`,
+ getLatest:"ใช้แผนล่าสุด",keepMine:"เก็บการแก้ไขของฉัน",verLbl:"เวอร์ชันแอป",syncLbl:"แผนที่แชร์",
+share:"📤 แชร์",undo:"↩️ เลิกทำ",undoShort:"เลิกทำ",download:"⬇️ ดาวน์โหลดแผน",load:"📂 เปิดแผน",print:"🖨️ พิมพ์ / บันทึก PDF",reset:"↺ กลับเป็นแผนเดิม",help:"❔ วิธีใช้",gotit:"เข้าใจแล้ว",
  banner:"<b>แตะ</b> กิจกรรมเพื่อแก้ไข <b>ลาก ⠿</b> (หรือกดค้างที่การ์ด) เพื่อย้าย ระบบบันทึกให้อัตโนมัติ",
  cat:{sightseeing:"เที่ยวชม",food:"อาหาร",travel:"เดินทาง",hotel:"ที่พัก",shopping:"ช้อปปิ้ง",other:"อื่น ๆ"},
  status:{planned:"วางแผนไว้",booked:"จองแล้ว",confirm:"รอยืนยัน",idea:"ไอเดีย"},
@@ -343,8 +367,8 @@ th:{share:"📤 แชร์",undo:"↩️ เลิกทำ",undoShort:"เล
  copyLink:"🔗 คัดลอกลิงก์แชร์",sendFile:"📎 ส่งไฟล์แผน",shareTip:"เคล็ดลับ: ลิงก์ใช้ได้เมื่อเปิดแอปนี้จากเว็บ ถ้าเปิดจากไฟล์ในเครื่อง ให้ส่งไฟล์แผนแทน แล้วอีกฝ่ายกด <b>เปิดแผน</b>",
  shareText:"แผนเที่ยวของเรา – เปิดด้วยปุ่ม “เปิดแผน” ในแอปวางแผนเที่ยว",
  loadH:"เปิดแผน",loadHint:"เปิดไฟล์แผนที่มีคนส่งมา หรือวางลิงก์แชร์ แผนบนหน้าจอจะถูกแทนที่ (กดเลิกทำได้)",pick:"📂 เลือกไฟล์แผน…",pasteLink:"…หรือวางลิงก์แชร์",loadLink:"เปิดลิงก์",
- resetH:"กลับเป็นแผนเดิม?",resetMsg:"แผนปัจจุบันจะถูกแทนที่ด้วยแผนเดิมของ Keith กดเลิกทำได้ทันทีหลังจากนี้",resetOk:"กลับเป็นแผนเดิม",
- helpH:"วิธีใช้",helpBody:"✏️ <b>แก้ไข:</b> แตะที่กิจกรรมหรือหัวข้อของวัน<br>↕️ <b>ย้าย:</b> ลากที่ ⠿ (หรือกดค้างที่การ์ดบนมือถือ) แล้ววางที่ไหนก็ได้ – ในวันอื่นหรือใน 💡 ไอเดีย หรือเปิดกิจกรรมแล้วกด ↑ / ↓ หรือเปลี่ยน “วัน”<br>➕ <b>เพิ่ม:</b> “เพิ่มกิจกรรม” ใต้แต่ละวัน และ “เพิ่มวัน” ด้านท้าย<br>↩️ <b>เลิกทำ:</b> ปุ่มเลิกทำจะย้อนการเปลี่ยนแปลงล่าสุด<br>🌐 <b>EN / ไทย:</b> สลับภาษาได้ที่ด้านบน ข้อความที่แก้จะเก็บไว้ตามภาษาที่พิมพ์<br>💾 <b>บันทึก:</b> อัตโนมัติในเครื่องนี้<br>📤 <b>แชร์:</b> คัดลอกลิงก์หรือส่งไฟล์แผน 📂 <b>เปิดแผน</b> เพื่อเปิดแผนที่ได้รับ<br>🖨️ <b>พิมพ์ / บันทึก PDF</b> สำหรับฉบับพิมพ์สวย ๆ<br>⌨️ คีย์บอร์ด: โฟกัสที่ ⠿ แล้วใช้ปุ่มลูกศร",
+ resetH:"กลับเป็นแผนเดิม?",resetMsg:"แผนที่แชร์ (ของทั้งสองคน) จะถูกแทนที่ด้วยแผนเดิมของ Keith กดเลิกทำได้ทันทีหลังจากนี้",resetOk:"กลับเป็นแผนเดิม",
+ helpH:"วิธีใช้",helpBody:"✏️ <b>แก้ไข:</b> แตะที่กิจกรรมหรือหัวข้อของวัน<br>↕️ <b>ย้าย:</b> ลากที่ ⠿ (หรือกดค้างที่การ์ดบนมือถือ) แล้ววางที่ไหนก็ได้ – ในวันอื่นหรือใน 💡 ไอเดีย หรือเปิดกิจกรรมแล้วกด ↑ / ↓ หรือเปลี่ยน “วัน”<br>➕ <b>เพิ่ม:</b> “เพิ่มกิจกรรม” ใต้แต่ละวัน และ “เพิ่มวัน” ด้านท้าย<br>↩️ <b>เลิกทำ:</b> ปุ่มเลิกทำจะย้อนการเปลี่ยนแปลงล่าสุด<br>🌐 <b>EN / ไทย:</b> สลับภาษาได้ที่ด้านบน ข้อความที่แก้จะเก็บไว้ตามภาษาที่พิมพ์<br>💾 <b>บันทึก:</b> อัตโนมัติ การแก้ไขจะเข้าไปที่แผนที่แชร์ร่วมกันของทั้งสองคน (และสำรองไว้ในเครื่องนี้ด้วย)<br>🔄 <b>รีเฟรช:</b> ดึงการแก้ไขล่าสุดจากอีกคน การแก้ไขล่าสุดจะถูกใช้<br>📤 <b>แชร์:</b> คัดลอกลิงก์หรือส่งไฟล์แผน 📂 <b>เปิดแผน</b> เพื่อเปิดแผนที่ได้รับ<br>🖨️ <b>พิมพ์ / บันทึก PDF</b> สำหรับฉบับพิมพ์สวย ๆ<br>⌨️ คีย์บอร์ด: โฟกัสที่ ⠿ แล้วใช้ปุ่มลูกศร",
  itinerary:"แผนการเดินทาง",tools:"เครื่องมือ",jumpTo:"ไปยังวัน",titleLbl:"ชื่อทริป",docTitle:" – แผนเที่ยว",defaultTitle:"ทริปของเรา"}
 };
 let lang="en";
@@ -416,7 +440,7 @@ function save(){
   try{localStorage.setItem(STORE_KEY,JSON.stringify(plan));}catch(e){console.warn("save failed",e)}
 }
 function snapshot(){undoStack.push(JSON.stringify(plan)); if(undoStack.length>40) undoStack.shift(); $("#bUndo").disabled=false;}
-function commit(){save();render();}
+function commit(){save();render();Sync.edited();}
 function undo(){
   if(!undoStack.length) return;
   plan=normalize(JSON.parse(undoStack.pop())); $("#bUndo").disabled=!undoStack.length; commit(); toast(T("tUndone"));
@@ -482,6 +506,7 @@ function cardHTML(it){
     </div></li>`;
 }
 function render(){
+  try{Sync.paint()}catch(e){}
   applyStatic();
   const ti=$("#title"); if(document.activeElement!==ti) ti.value=tx(plan,"title");
   document.title=tx(plan,"title")+T("docTitle");
@@ -809,21 +834,148 @@ $("#bReset").onclick=()=>confirmBox(T("resetH"),T("resetMsg"),T("resetOk"),()=>{
 $("#bUndo").onclick=undo;
 $("#bHelp").onclick=()=>openSheet(`<h2>${T("helpH")}${closeX()}</h2>
   <p class="hint">${T("helpBody")}</p>
+  <p class="ver" id="verInfo">${T("verLbl")}: ${esc(BUILD.label)}</p>
   <div class="actions"><button class="btn primary" type="button" data-x>${T("gotit")}</button></div>`,s=>s.querySelectorAll("[data-x]").forEach(b=>b.onclick=closeSheet));
 $("#hideHelp").onclick=()=>{ $("#firsthelp").hidden=true; try{localStorage.setItem(HELP_KEY,"1")}catch(e){} };
 window.addEventListener("beforeprint",()=>document.querySelectorAll(".tips").forEach(t=>t.open=true));
 window.addEventListener("storage",e=>{ if(e.key===STORE_KEY&&e.newValue){ try{plan=normalize(JSON.parse(e.newValue)); render();}catch(_){} } });
 
+/* ---------- shared online copy (sync) ---------- */
+// One shared JSON document on textdb.dev, keyed by an unguessable id. Last write wins.
+// Shared doc: {app,rev,by,plan}. rev = time (ms) of the edit it contains.
+// Local meta: {rev: rev of the shared copy this device last synced with, dirty: unsynced local edits, editedAt}.
+const Sync=(function(){
+  const META_KEY="chinaTripPlanner.sync", ID_KEY="chinaTripPlanner.syncId", DEV_KEY="chinaTripPlanner.device", FLASH_KEY="chinaTripPlanner.flash";
+  let id=BUILD.syncId;
+  try{ const m=location.hash.match(/[#&]s=([A-Za-z0-9_-]{8,80})/); if(m){ id=m[1]; localStorage.setItem(ID_KEY,id); } else id=localStorage.getItem(ID_KEY)||id; }catch(e){}
+  const url=()=>BUILD.endpoint+encodeURIComponent(id);
+  let dev; try{ dev=localStorage.getItem(DEV_KEY); if(!dev){ dev=uid(); localStorage.setItem(DEV_KEY,dev);} }catch(e){ dev=uid(); }
+  let meta={rev:0,dirty:false,editedAt:0};
+  try{ const m=localStorage.getItem(META_KEY);
+    if(m) Object.assign(meta,JSON.parse(m));
+    else { const s=localStorage.getItem(STORE_KEY); // plan saved by an older (offline-only) version: treat as unsynced edits, so they're never lost silently
+      if(s){ meta.dirty=true; meta.editedAt=Date.parse(JSON.parse(s).savedAt||"")||1; } } }catch(e){}
+  const saveMeta=()=>{ try{localStorage.setItem(META_KEY,JSON.stringify(meta));}catch(e){} };
+  let state="saved", timer=null, chain=Promise.resolve();
+  const queue=fn=>(chain=chain.then(fn,fn));
+  const fmt=ms=>{ if(!ms) return ""; const d=new Date(ms), now=new Date(); const loc=lang==="th"?"th-TH-u-ca-gregory":"en-GB";
+    const o=d.toDateString()===now.toDateString()?{hour:"2-digit",minute:"2-digit"}:{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"};
+    return d.toLocaleString(loc,o); };
+  function paint(){
+    const el=$("#sync"); if(!el) return; el.dataset.s=state;
+    $("#stxt").textContent=T({saved:"sSaved",saving:"sSaving",checking:"sChecking",offline:"sOffline"}[state]);
+    const last=Math.max(meta.rev||0,meta.dirty?meta.editedAt:0);
+    $("#stime").textContent=last?T("sLast")+" "+fmt(last):"";
+    const f=$("#footVer"); if(f) f.textContent=T("verLbl")+": "+BUILD.label;
+  }
+  // content comparison that ignores ids, edit flags and save times
+  const key=p=>JSON.stringify(p,(k,v)=>k==="id"||k==="ed"||k==="savedAt"?undefined:v);
+  async function get(){
+    const r=await fetch(url()+"?_="+Date.now(),{cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const t=(await r.text()).trim(); if(!t) return null;
+    const d=JSON.parse(t); if(!d||!d.plan) return null; return d;
+  }
+  async function put(){
+    const rev=meta.dirty?meta.editedAt:(meta.rev||Date.now());
+    const body=JSON.stringify({app:"china-trip-planner",rev,by:dev,plan});
+    const r=await fetch(url(),{method:"POST",headers:{"content-type":"application/json"},body});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    if(meta.editedAt===rev||!meta.dirty){ meta.dirty=false; }
+    meta.rev=rev; saveMeta();
+  }
+  function takeRemote(d,undoable){
+    if(undoable) snapshot();
+    plan=normalize(d.plan); save(); render();
+    meta.rev=d.rev; meta.dirty=false; saveMeta();
+  }
+  // push local edits (debounced)
+  function edited(){
+    meta.dirty=true; meta.editedAt=Date.now(); saveMeta(); state="saving"; paint();
+    clearTimeout(timer); timer=setTimeout(()=>queue(pushNow),2000);
+  }
+  async function pushNow(){
+    clearTimeout(timer); if(!meta.dirty) { state="saved"; paint(); return true; }
+    state="saving"; paint();
+    try{ await put(); state=meta.dirty?"saving":"saved"; paint(); return true; }
+    catch(e){ state="offline"; paint(); return false; }
+  }
+  // pull: mode "open" (quiet), "refresh" (always reports), "auto" (tab became visible)
+  function pull(mode){ return queue(async()=>{
+    clearTimeout(timer);
+    state="checking"; paint();
+    let d;
+    try{ d=await get(); }
+    catch(e){ state="offline"; paint(); if(mode==="refresh") toast(T("tOffline")); return "offline"; }
+    let res;
+    if(!d){ // nothing shared yet: seed it with this device's plan
+      meta.dirty=true; meta.editedAt=meta.editedAt||Date.now(); res=(await pushNow())?"seeded":"offline";
+      if(mode==="refresh") toast(res==="offline"?T("tOffline"):T("tPushed"));
+      return res;
+    }
+    const same=key(normalize(d.plan))===key(plan);
+    if(meta.dirty){
+      if(same){ meta.dirty=false; meta.rev=d.rev; saveMeta(); res="same"; }
+      else if(meta.editedAt>=d.rev){ res=(await pushNow())?"pushed":"offline"; if(mode==="refresh") toast(res==="offline"?T("tOffline"):T("tPushed")); }
+      else { state="saved"; paint(); res=await conflict(d); }
+    } else if(same){ meta.rev=d.rev; saveMeta(); res="same"; }
+    else { takeRemote(d,true); res="taken"; toast(T("tGotLatest"),true); }
+    if(res==="same"&&mode==="refresh") toast(T("tUpToDate"));
+    if(state==="checking"){ state="saved"; } paint();
+    return res;
+  });}
+  function conflict(d){ return new Promise(resolve=>{
+    openSheet(`<h2>${esc(T("conflictH"))}</h2><p class="hint">${esc(T("conflictMsg")(fmt(d.rev)))}</p>
+     <div class="actions"><button class="btn" data-keep type="button">${esc(T("keepMine"))}</button><button class="btn primary" data-latest type="button" style="flex:1">${esc(T("getLatest"))}</button></div>`,
+     s=>{
+       s.querySelector("[data-latest]").onclick=()=>{ closeSheet(); takeRemote(d,true); toast(T("tGotLatest"),true); resolve("taken"); };
+       s.querySelector("[data-keep]").onclick=async()=>{ closeSheet(); meta.editedAt=Math.max(Date.now(),d.rev+1); saveMeta(); const ok=await pushNow(); toast(ok?T("tPushed"):T("tOffline")); resolve(ok?"pushed":"offline"); };
+     });
+  });}
+  // newer app code on GitHub Pages? reload with a cache-busting query (keeps local plan + undo point)
+  async function checkApp(){
+    if(location.protocol==="file:") return false;
+    try{
+      const r=await fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}); if(!r.ok) return false;
+      const m=(await r.text()).match(/<meta name="app-build" content="([^"]+)"/);
+      if(m&&m[1]!==BUILD.id){
+        try{ sessionStorage.setItem(FLASH_KEY,JSON.stringify({msg:"tNewApp",undo:undoStack.length?undoStack[undoStack.length-1]:null})); }catch(e){}
+        location.replace(location.pathname+"?v="+Date.now()+location.hash); return true;
+      }
+    }catch(e){}
+    return false;
+  }
+  async function refresh(){
+    const b=$("#bRefresh"); b.disabled=true;
+    try{ const res=await pull("refresh"); if(res!=="offline") await checkApp(); }
+    finally{ b.disabled=false; }
+  }
+  function boot(){
+    try{ const f=JSON.parse(sessionStorage.getItem(FLASH_KEY)||"null"); sessionStorage.removeItem(FLASH_KEY);
+      if(f){ if(f.undo){ undoStack.push(f.undo); $("#bUndo").disabled=false; } setTimeout(()=>toast(T(f.msg),!!f.undo),400); } }catch(e){}
+    if(/[?&]v=\d/.test(location.search)) history.replaceState(null,"",location.pathname+location.hash);
+    state=meta.dirty?"saving":"saved"; paint();
+    window.addEventListener("online",()=>pull("auto"));
+    document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") pull("auto"); });
+    window.addEventListener("pagehide",()=>{ if(meta.dirty){ try{ fetch(url(),{method:"POST",keepalive:true,headers:{"content-type":"application/json"},body:JSON.stringify({app:"china-trip-planner",rev:meta.editedAt,by:dev,plan})}); }catch(e){} } });
+    return pull("open");
+  }
+  return {edited,pull,refresh,boot,paint,pushNow,get id(){return id},get meta(){return meta},get state(){return state},whenIdle:()=>chain};
+})();
+$("#bRefresh").onclick=()=>Sync.refresh();
+
 /* ---------- boot ---------- */
 async function boot(){
   plan=load(); render();
+  const synced=Sync.boot();
   try{ if(!localStorage.getItem(HELP_KEY)) $("#firsthelp").hidden=false; }catch(e){}
   if(/#.*\b[zj]=/.test(location.hash)){
+    await synced; // a shared link opened on purpose wins over the shared copy
     try{ const p=await decodePlan(location.hash); if(p){ replacePlan(p,T("tOpened")); } }
     catch(e){ toast(e.message||T("tOpenFail")); }
     window.history.replaceState(null,"",location.href.split("#")[0]);
   }
-  window.__planner={get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,ready:true};
+  window.__planner={get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,Sync,BUILD,ready:true};
 }
 boot();
 })();
