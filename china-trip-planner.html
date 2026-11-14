@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b5502f">
-<meta name="app-build" content="20261114231712">
+<meta name="app-build" content="20261114232722">
 <title>Our China Trip • Trip Planner</title>
 <style>
 :root{
@@ -274,7 +274,7 @@ body:has(.sheet .driver) #chatFab{display:none}
 <div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
 
 <script>
-const BUILD={"id": "20261114231712", "at": "2026-11-14T23:17:12+08:00", "label": "14 Nov 2026, 23:17 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
+const BUILD={"id": "20261114232722", "at": "2026-11-14T23:27:22+08:00", "label": "14 Nov 2026, 23:27 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
 // ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
 // Text fields are [English, Thai]. Plain strings are used for both languages.
 const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
@@ -655,6 +655,51 @@ function navInfo(it,day){
 }
 // Amap URI API, search: https://lbs.amap.com/api/uri-api/guide/search/search (opens the Amap app when installed, else the web map)
 const amapUrl=n=>"https://uri.amap.com/search?keyword="+encodeURIComponent(n.kw)+(n.city?"&city="+encodeURIComponent(ADCODE[n.city]||n.city):"")+"&src=china-trip-planner&callnative=1";
+// Native Amap app links (高德地图手机版 URI docs):
+//  iOS (iPhone + iPad):  iosamap://poi?sourceApplication=..&name=..[&lat1&lon1&lat2&lon2]&dev=0   https://lbs.amap.com/api/amap-mobile/guide/ios/search
+//  Android:              androidamap://poi?sourceApplication=..&keywords=..[&lat1..]&dev=0, pkg com.autonavi.minimap
+//                        https://lbs.amap.com/api/amap-mobile/guide/android/search ; sent as a Chrome intent:// URL with the web link as browser_fallback_url
+// The bounds (top-left lat1/lon1, bottom-right lat2/lon2) keep the search inside the trip city.
+const AMAP_SRC="china-trip-planner";
+const AMAP_BOX={"北京":[41.06,115.42,39.44,117.51],"上海":[31.87,120.85,30.68,122.12]};
+// "ios" | "android" | "inapp" (WeChat, LINE, Instagram…: schemes are blocked there, use the web link) | "desktop"
+function navPlatform(ua,touch){
+  ua=String(ua||""); touch=Number(touch)||0;
+  if(/MicroMessenger|WeChat|\bLine\/|Instagram|FBAN|FBAV|FB_IAB|Messenger|Twitter|TikTok|musical_ly|Bytedance|Weibo|QQ\/|DingTalk|AlipayClient|XiaoHongShu|discover\//i.test(ua)) return "inapp";
+  if(/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&touch>1)) return "ios"; // iPadOS 13+ Safari reports a Mac user agent
+  if(/Android/i.test(ua)) return "android";
+  return "desktop";
+}
+function amapNativeUrl(n,plat){
+  const box=AMAP_BOX[n.city], b=box?`&lat1=${box[0]}&lon1=${box[1]}&lat2=${box[2]}&lon2=${box[3]}`:"";
+  if(plat==="ios") return `iosamap://poi?sourceApplication=${AMAP_SRC}&name=${encodeURIComponent(n.kw)}${b}&dev=0`;
+  if(plat==="android") return `intent://poi?sourceApplication=${AMAP_SRC}&keywords=${encodeURIComponent(n.kw)}${b}&dev=0#Intent;scheme=androidamap;package=com.autonavi.minimap;S.browser_fallback_url=${encodeURIComponent(amapUrl(n))};end`;
+  return null;
+}
+// opens the Amap app; if the page is still on screen (and focused) after ~1.5 s (app not installed / blocked), opens the web map instead
+let amapTimer=0;
+function openAmap(n,env){
+  env=env||{};
+  const plat=navPlatform(env.ua!=null?env.ua:navigator.userAgent,env.touch!=null?env.touch:navigator.maxTouchPoints);
+  const go=env.go||(u=>{ location.href=u; });
+  const web=amapUrl(n), nat=amapNativeUrl(n,plat);
+  if(!nat){ (env.openWeb||(u=>{ const w=window.open(u,"_blank"); if(w){ try{ w.opener=null; }catch(e){} } else location.href=u; }))(web); return {plat,url:web}; }
+  clearTimeout(amapTimer);
+  const cancel=()=>{ clearTimeout(amapTimer); amapTimer=0; off(); };
+  const onVis=()=>{ if(document.hidden) cancel(); };
+  const off=()=>{ document.removeEventListener("visibilitychange",onVis); window.removeEventListener("pagehide",cancel); };
+  document.addEventListener("visibilitychange",onVis); window.addEventListener("pagehide",cancel);
+  // a blur alone doesn't cancel: iOS blurs the page for its "Open in 高德地图?" / "address invalid" dialogs.
+  // While the page has no focus we wait (up to ~10 s); if the app opened the page goes hidden and we stop.
+  const focused=env.hasFocus||(()=>document.hasFocus());
+  let tries=0;
+  const fire=()=>{ if(document.hidden){ cancel(); return; }
+    if(!focused()&&tries++<20){ amapTimer=setTimeout(fire,500); return; }
+    off(); amapTimer=0; go(web); };
+  amapTimer=setTimeout(fire,env.wait!=null?env.wait:1500);
+  go(nat);
+  return {plat,url:nat,fallback:web};
+}
 // title edited: keep the Chinese name only if it's clearly still the same place
 const NAV_STOP=new Set(["lunch","dinner","breakfast","brunch","with","from","this","that","taxi","didi","walk","street"]);
 function samePlace(oldT,newT,zh){
@@ -683,14 +728,15 @@ function showDriver(id){
    ${n.zh?"":`<p class="dnote">${esc(T("navNoZh"))}</p>`}
    <div class="ddiv"></div>
    ${n.zh?`<div class="dcopy">
-     ${n.addr?`<button class="dbtn" type="button" data-copy="addr">${T("navCopy")}</button>`:""}
      <button class="dbtn" type="button" data-copy="name">${T("navCopyName")}</button>
+     ${n.addr?`<button class="dbtn" type="button" data-copy="addr">${T("navCopy")}</button>`:""}
    </div>`:""}
    <a class="dbtn damap" href="${esc(amapUrl(n))}" target="_blank" rel="noopener" data-amap>${T("navAmap")}</a>
    ${n.zh?`<p class="dtip">${esc(T("navDidiHint"))}</p>`:""}`,
   s=>{
     s.classList.add("drv");
     s.querySelector("[data-x]").onclick=closeSheet;
+    s.querySelector("[data-amap]").addEventListener("click",e=>{ if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.shiftKey) return; e.preventDefault(); openAmap(n); });
     s.querySelectorAll("[data-copy]").forEach(b=>{ const label=b.innerHTML; let tm; b.onclick=async()=>{
       const ok=await copyText(b.dataset.copy==="addr"?n.addr:n.zh);
       if(!ok){ toast(T("navNoCopy")); return; }
@@ -1462,7 +1508,7 @@ async function boot(){
     catch(e){ toast(e.message||T("tOpenFail")); }
     window.history.replaceState(null,"",location.href.split("#")[0]);
   }
-  window.__planner={get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,Sync,Chat,Wx,BUILD,ready:true};
+  window.__planner={nav:{navPlatform,amapNativeUrl,amapUrl,openAmap,get timer(){return amapTimer}},get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,Sync,Chat,Wx,BUILD,ready:true};
 }
 boot();
 })();
