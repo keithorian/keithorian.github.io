@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b5502f">
-<meta name="app-build" content="20261115092803">
+<meta name="app-build" content="20261115093847">
 <title>Our China Trip • Trip Planner</title>
 <style>
 :root{
@@ -45,6 +45,7 @@ header{background:linear-gradient(135deg,#b5502f,#d9783e);color:#fff;padding:cal
 .tbtn:disabled{opacity:.45;cursor:default;transform:none}
 .tbtn.more{background:rgba(0,0,0,.16)}
 .tbtn .mbn{position:absolute;top:4px;right:6px;min-width:20px;height:20px;line-height:20px;padding:0 5px;border-radius:999px;background:#fff;color:var(--accent);font-size:11.5px;font-weight:700;margin:0}
+.tbtn .tddot{display:none} /* in the bar the red badge says "due soon" */
 .tbtn.hot .mbn{background:#e5322d;color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
 @media (min-width:760px){
   .tools{display:flex;flex-wrap:wrap;gap:8px}
@@ -440,7 +441,7 @@ body:has(.sheet.mbsheet) #chatFab{display:none}
 <div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
 
 <script>
-const BUILD={"id": "20261115092803", "at": "2026-11-15T09:28:03+08:00", "label": "15 Nov 2026, 09:28 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
+const BUILD={"id": "20261115093847", "at": "2026-11-15T09:38:47+08:00", "label": "15 Nov 2026, 09:38 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
 // ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
 // Text fields are [English, Thai]. Plain strings are used for both languages.
 const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
