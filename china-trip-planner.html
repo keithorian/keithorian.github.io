@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b5502f">
-<meta name="app-build" content="20261115080251">
+<meta name="app-build" content="20261115081840">
 <title>Our China Trip • Trip Planner</title>
 <style>
 :root{
@@ -97,6 +97,39 @@ header{background:linear-gradient(135deg,#b5502f,#d9783e);color:#fff;padding:cal
 .tipsfoot{margin-top:12px}
 .tipsfoot .btn{width:100%}
 body:has(.sheet.tipsheet) #chatFab{display:none}
+/* ✅ To-Do */
+#bTodo{position:relative}
+#bTodo .mbn{display:inline-block;min-width:18px;padding:0 5px;border-radius:999px;background:rgba(255,255,255,.3);font-size:11.5px;text-align:center;margin-left:2px}
+.tddot{position:absolute;top:3px;right:3px;width:9px;height:9px;border-radius:50%;background:#e5322d;box-shadow:0 0 0 2px #fff}
+.sheet.tdsheet{max-width:600px}
+.tdsub{margin:0 0 8px}
+.tdlegend{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tdlist{list-style:none;margin:0;padding:0 2px 2px;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:grid;gap:10px;align-content:start}
+.tdi{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-left:5px solid #ccc;border-radius:14px;padding:10px 12px;background:#fff}
+.tdi.r-h{border-left-color:#d93a2b}.tdi.r-m{border-left-color:#e3a21a}.tdi.r-l{border-left-color:#3a9a5b}
+.tdi.done{opacity:.62;border-left-color:#bdb3a8}
+.tdi.walk{border-left-color:#c9bfb4;background:#fcfaf7}
+.tdbox{flex:none;width:28px;height:28px;margin-top:1px;border-radius:8px;border:2px solid #cdbfb0;background:#fff;color:#fff;font-size:16px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-appearance:none;appearance:none;padding:0}
+.tdbox[aria-checked=true]{background:var(--ok);border-color:var(--ok)}
+.tdbox:disabled{cursor:default}
+.tdbox.walkic{border:0;background:none;font-size:18px;cursor:default}
+.tdmain{flex:1;min-width:0}
+.tdtop{display:flex;gap:8px;align-items:flex-start}
+.tdt{flex:1;text-align:left;border:0;background:none;padding:0;font:inherit;font-size:14.5px;font-weight:700;line-height:1.3;color:var(--ink);cursor:pointer}
+.tdi.done .tdt{text-decoration:line-through;text-decoration-color:#a99}
+.tdrisk{flex:none;font-size:11px;font-weight:700;border-radius:999px;padding:3px 8px;white-space:nowrap}
+.tdrisk.r-h{background:#fde7e4;color:#b42318}.tdrisk.r-m{background:#fff1d6;color:#9a6200}.tdrisk.r-l{background:#e3f4e8;color:#23703f}
+.tdmeta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.tdwhere{border:0;background:#f6efe8;border-radius:999px;padding:3px 9px;font:inherit;font-size:12px;font-weight:600;color:#6b5a4c;cursor:pointer}
+.tdst{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px}
+.st-opens{background:#e8f0fb;color:#2f5f8f}.st-due{background:#fff1d6;color:#9a6200}.st-today,.st-overdue{background:#d93a2b;color:#fff}.st-done{background:#e3f4e8;color:#23703f}
+.tdby{font-size:12px;color:var(--muted)}
+.tddates{display:flex;gap:4px 12px;flex-wrap:wrap;font-size:12.5px;color:#5c5047;margin-top:6px}
+.tdhow{font-size:13px;line-height:1.45;color:#4a3f36;margin-top:6px}
+.tdif{font-size:12.5px;line-height:1.4;color:#8a2c1f;margin-top:4px}
+.tdconf{font-size:11.5px;color:var(--muted);margin-top:4px;font-style:italic}
+.tdi.done .tdhow,.tdi.done .tdif,.tdi.done .tddates,.tdi.done .tdconf{display:none}
+.tdsec{list-style:none;font-size:12.5px;font-weight:700;color:var(--muted);padding:6px 2px 0;text-transform:uppercase;letter-spacing:.04em}
 .list{list-style:none;margin:0;padding:8px 10px 4px;min-height:56px;display:flex;flex-direction:column;gap:8px}
 .list:empty::before{content:attr(data-empty);display:block;text-align:center;color:#b8aa9b;font-size:13px;padding:14px;border:2px dashed var(--line);border-radius:10px}
 .addbtn{margin:2px 10px 10px;border:0;border-radius:10px;background:transparent;color:var(--accent);font-weight:600;padding:10px;text-align:left;min-height:44px;font-size:14.5px}
@@ -330,6 +363,7 @@ body:has(.sheet.mbsheet) #chatFab{display:none}
     <button class="tbtn primary" id="bShare" type="button" data-t="share"></button>
     <button class="tbtn" id="bRefresh" type="button" data-t="refresh"></button>
     <button class="tbtn" id="bMaybe" type="button"></button>
+    <button class="tbtn" id="bTodo" type="button"></button>
     <button class="tbtn" id="bUndo" type="button" disabled data-t="undo"></button>
     <button class="tbtn" id="bDownload" type="button" data-t="download"></button>
     <button class="tbtn" id="bLoad" type="button" data-t="load"></button>
@@ -348,7 +382,7 @@ body:has(.sheet.mbsheet) #chatFab{display:none}
 <div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
 
 <script>
-const BUILD={"id": "20261115080251", "at": "2026-11-15T08:02:51+08:00", "label": "15 Nov 2026, 08:02 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
+const BUILD={"id": "20261115081840", "at": "2026-11-15T08:18:40+08:00", "label": "15 Nov 2026, 08:18 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
 // ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
 // Text fields are [English, Thai]. Plain strings are used for both languages.
 const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
@@ -413,7 +447,7 @@ const ORIGINAL_DATA={
    I("08:00","travel",["Taxi/Didi to Universal Beijing Resort (Tongzhou)","แท็กซี่/Didi ไปยูนิเวอร์แซล ปักกิ่ง (ทงโจว)"],
     ["~45–60 min from Wangfujing by car, or Metro Line 7 to Universal Resort station (~1h). Aim to arrive for park opening (recently 09:00).","จากหวังฟูจิ่งนั่งรถราว 45–60 นาที หรือรถไฟใต้ดินสาย 7 ลงสถานี Universal Resort (ราว 1 ชม.) ไปให้ทันตอนสวนเปิด (ช่วงนี้เปิด 09:00)"],"planned",""),
    I(["Morning","ช่วงเช้า"],"sightseeing",["Universal Studios Beijing","ยูนิเวอร์แซล สตูดิโอ ปักกิ่ง"],
-    ["Harry Potter, Transformers, Kung Fu Panda, Jurassic World & Minion Land, plus the Winter Holiday event (20 Nov – 3 Jan) with Christmas in the Wizarding World. Buy tickets & Express passes in advance.","มีโซน Harry Potter, Transformers, Kung Fu Panda, Jurassic World และ Minion Land แถมช่วงนี้มีงาน Winter Holiday (20 พ.ย. – 3 ม.ค.) โลกเวทมนตร์ของแฮร์รี่ พอตเตอร์แต่งธีมคริสต์มาสด้วย ซื้อตั๋วและ Express Pass ล่วงหน้านะ\n📸 ปราสาทฮอกวอตส์ตอนเริ่มมืดเปิดไฟสวยสุด ฮอกส์มี้ดช่วงหน้าหนาวแต่งธีมคริสต์มาส ใส่ผ้าพันคอสีบ้านที่ชอบไปเข้าธีมเลย ถ่ายตอนเช้าที่คนยังน้อยก่อนแล้วค่อยกลับมาถ่ายตอนไฟติดอีกรอบ"],"planned","https://www.youtube.com/shorts/_28jwc8P-7A"),
+    ["Harry Potter, Transformers, Kung Fu Panda, Jurassic World & Minion Land, plus the Winter Holiday event (20 Nov – 3 Jan) with Christmas in the Wizarding World. Buy tickets & Express passes in advance.\n🎄 Christmas 2026 (confirmed): Winter Holiday runs 20 Nov 2026–3 Jan 2027, with the 22 m Christmas tree show, Christmas in Hogsmeade and Santa's Village.","มีโซน Harry Potter, Transformers, Kung Fu Panda, Jurassic World และ Minion Land แถมช่วงนี้มีงาน Winter Holiday (20 พ.ย. – 3 ม.ค.) โลกเวทมนตร์ของแฮร์รี่ พอตเตอร์แต่งธีมคริสต์มาสด้วย ซื้อตั๋วและ Express Pass ล่วงหน้านะ\n📸 ปราสาทฮอกวอตส์ตอนเริ่มมืดเปิดไฟสวยสุด ฮอกส์มี้ดช่วงหน้าหนาวแต่งธีมคริสต์มาส ใส่ผ้าพันคอสีบ้านที่ชอบไปเข้าธีมเลย ถ่ายตอนเช้าที่คนยังน้อยก่อนแล้วค่อยกลับมาถ่ายตอนไฟติดอีกรอบ\n🎄 คริสต์มาสปี 2026 (ยืนยันแล้ว): งาน Winter Holiday 20 พ.ย. 2026–3 ม.ค. 2027 มีโชว์ต้นคริสต์มาสสูง 22 เมตร ฮอกส์มี้ดธีมคริสต์มาส และหมู่บ้านซานตา"],"planned","https://www.youtube.com/shorts/_28jwc8P-7A"),
    I(["Lunch","มื้อกลางวัน"],"food",["Lunch inside the park","มื้อกลางวันในสวนสนุก"],
     ["e.g. Three Broomsticks in the Wizarding World.","เช่น ร้าน Three Broomsticks ในโซนแฮร์รี่ พอตเตอร์ (ได้ฟีลเหมือนหลุดเข้าไปในหนัง)"],"planned",""),
    I(["Afternoon","ช่วงบ่าย"],"sightseeing",["More rides & winter shows","เล่นเครื่องเล่นต่อ & ดูโชว์หน้าหนาว"],
@@ -491,7 +525,7 @@ const ORIGINAL_DATA={
    I("06:30","travel",["Didi from Xintiandi to Shanghai Disney Resort","เรียก Didi จากซินเทียนตี้ไปเซี่ยงไฮ้ดิสนีย์"],
     ["~45–50 min that early; drop-off at the West Public Transport Hub (西PTH), then a 5–10 min walk. Metro alternative: Line 10 to Jiaotong University, change to Line 11 to Disney Resort (~75 min).","เช้าขนาดนี้รถไม่ติด ราว 45–50 นาที ลงที่จุดจอดฝั่งตะวันตก (西PTH) แล้วเดินต่อ 5–10 นาที ถ้าจะนั่งรถไฟใต้ดิน: สาย 10 ไปสถานี Jiaotong University ต่อสาย 11 ไปสถานี Disney Resort (ราว 75 นาที)"],"planned",""),
    I("07:15","sightseeing",["Shanghai Disneyland","เซี่ยงไฮ้ดิสนีย์แลนด์"],
-    ["Arrive for rope drop. Bring both passports and have the tickets linked in the official app. Bag security comes before the gate queue and both are long on NYE, so be in the gate queue by ~07:30. 2025 NYE hours were 08:30–22:00; 2026 hours aren't published yet. Buy tickets ahead (NYE 2025: ¥719/adult).","ไปรอก่อนสวนเปิด พกพาสปอร์ตทั้งสองคน และผูกตั๋วไว้ในแอปให้เรียบร้อย ต้องผ่านจุดตรวจกระเป๋าก่อนถึงคิวหน้าประตู คืนส่งท้ายปีคิวยาวทั้งสองจุด เลยควรไปยืนในคิวหน้าประตูให้ได้ราว 07:30 ปี 2025 สวนเปิด 08:30–22:00 ส่วนปี 2026 ยังไม่ประกาศ ซื้อตั๋วล่วงหน้าไว้เลย (คืนส่งท้ายปี 2025: ผู้ใหญ่ 719 หยวน)\n📸 ช็อตปราสาทคลาสสิก: ยืนกลาง Mickey Avenue/สวนหน้าปราสาท ถ่ายตอนเช้าก่อนคนเต็มลาน แล้วค่อยถ่ายอีกรอบตอนปราสาทเปิดไฟหลังมืด (ราว 17:15)"],"confirm","https://www.youtube.com/shorts/NKstPrb8XR4"),
+    ["Arrive for rope drop. Bring both passports and have the tickets linked in the official app. Bag security comes before the gate queue and both are long on NYE, so be in the gate queue by ~07:30. 2025 NYE hours were 08:30–22:00; 2026 hours aren't published yet. Buy tickets ahead (NYE 2025: ¥719/adult).\n🎄 Christmas décor (confirmed) stays up until 3 Jan 2027. The Disneytown Christmas market is outside the park gates, no ticket needed.","ไปรอก่อนสวนเปิด พกพาสปอร์ตทั้งสองคน และผูกตั๋วไว้ในแอปให้เรียบร้อย ต้องผ่านจุดตรวจกระเป๋าก่อนถึงคิวหน้าประตู คืนส่งท้ายปีคิวยาวทั้งสองจุด เลยควรไปยืนในคิวหน้าประตูให้ได้ราว 07:30 ปี 2025 สวนเปิด 08:30–22:00 ส่วนปี 2026 ยังไม่ประกาศ ซื้อตั๋วล่วงหน้าไว้เลย (คืนส่งท้ายปี 2025: ผู้ใหญ่ 719 หยวน)\n📸 ช็อตปราสาทคลาสสิก: ยืนกลาง Mickey Avenue/สวนหน้าปราสาท ถ่ายตอนเช้าก่อนคนเต็มลาน แล้วค่อยถ่ายอีกรอบตอนปราสาทเปิดไฟหลังมืด (ราว 17:15)\n🎄 ของแต่งคริสต์มาส (ยืนยันแล้ว) อยู่ถึง 3 ม.ค. 2027 ส่วนตลาดคริสต์มาสที่ Disneytown อยู่นอกประตูสวน ไม่ต้องใช้ตั๋วน้า"],"confirm","https://www.youtube.com/shorts/NKstPrb8XR4"),
    I("08:30","sightseeing",["Rope drop → Zootopia: Hot Pursuit (疯狂动物城：热力追踪)","สวนเปิดปุ๊บ ตรงไป Zootopia: Hot Pursuit (疯狂动物城：热力追踪) ก่อนเลย"],
     ["Straight up Mickey Avenue and right past the castle to Zootopia. Early Park Entry doesn't include Zootopia, so everyone starts at 08:30. Typical waits: ~40–50 min at opening, 80–95 min by late morning (more on NYE). If the opening wait is over ~60 min, use its Premier Access slot instead. Single rider exists but can close. Then explore the land for photos.","เดินตรงไปตาม Mickey Avenue แล้วเลี้ยวขวาผ่านปราสาทไปโซน Zootopia บัตรเข้าก่อนเวลาไม่รวมโซนนี้ ทุกคนเลยเริ่มพร้อมกันตอน 08:30 ปกติคิวราว 40–50 นาทีตอนเปิด และ 80–95 นาทีช่วงสาย (คืนส่งท้ายปีอาจนานกว่านี้) ถ้าตอนเปิดคิวเกิน 60 นาที ใช้ Premier Access แทนเลย มีช่องผู้เล่นเดี่ยว (single rider) แต่อาจปิด เล่นเสร็จเดินถ่ายรูปในโซนต่อ น่ารักมาก\n📸 ถ่ายป้ายทางเข้าโซน Zootopia ตอนเช้าที่คนยังน้อย แล้วค่อยกลับมาอีกทีตอนค่ำ โซนนี้เปิดไฟนีออนเมืองซูโทเปียสวยมาก"],"planned","https://www.youtube.com/shorts/Y_8aphqXwIw"),
    I("09:45","sightseeing",["Pirates of the Caribbean: Battle for the Sunken Treasure","Pirates of the Caribbean: Battle for the Sunken Treasure (ล่องเรือโจรสลัดแคริบเบียน)"],
@@ -546,13 +580,25 @@ const ORIGINAL_DATA={
    I(["Sunset into the lights (~16:30–18:00)","ช่วงพระอาทิตย์ตกถึงไฟเปิด (~16:30–18:00)"],"sightseeing",["(Shanghai) The Lujiazui 'skyline reveal' escalator, Metro Exit 6 (陆家嘴站6号口)","(เซี่ยงไฮ้) บันไดเลื่อนวิวตึกระฟ้าลู่เจียจุ่ย ทางออก 6 สถานี Lujiazui (陆家嘴站6号口)"],
     ["Why: most likely the escalator she means, the viral 'most beautiful escalator in the world'. Leave Lujiazui Station (Line 2/14) by Exit 6, the exit nearest IFC Mall, and ride the outdoor escalator up to the Lujiazui Circular Skywalk (陆家嘴环形天桥). As you rise, the Oriental Pearl Tower and the 'three-piece set' (Shanghai Tower, SWFC, Jin Mao) open up in front of you. Free. Best: sunset (~16:55) into the tower lights (~17:30). It gets crowded, so go on a weekday. Quieter options are Exit 1 (Pearl Tower side) or Exit 8 (towards Jin Mao). Area: Lujiazui, Pudong, ~20 min by Metro from Xintiandi; pairs with the IFC & Skywalk idea. Not scheduled; could fill Day 7's open evening.","ทำไมต้องไป: น่าจะเป็นบันไดเลื่อนที่เธอพูดถึงแหละ บันไดเลื่อนไวรัล 'ที่สวยที่สุดในโลก' ออกจากสถานี Lujiazui (สาย 2/14) ทางออก 6 ทางออกที่ใกล้ห้าง IFC ที่สุด แล้วขึ้นบันไดเลื่อนกลางแจ้งไปสะพานลอยวงกลม (陆家嘴环形天桥) ระหว่างที่ลอยขึ้นไป หอไข่มุกกับตึกสามพี่น้อง (Shanghai Tower, SWFC, Jin Mao) จะค่อย ๆ โผล่ขึ้นมาตรงหน้าเลย ฟรี เวลาดีสุด: ช่วงพระอาทิตย์ตก (~16:55) ต่อยาวถึงไฟตึกเปิด (~17:30) คนเยอะ มาวันธรรมดาดีกว่า ถ้าอยากได้มุมคนน้อย ลองทางออก 1 (ฝั่งหอไข่มุก) หรือทางออก 8 (ไปทาง Jin Mao) ย่าน: ลู่เจียจุ่ย ผู่ตง นั่งรถไฟใต้ดินจากซินเทียนตี้ราว 20 นาที ไปคู่กับไอเดียห้าง IFC & สะพานวงกลมได้เลย ยังไม่ได้ใส่ในแผน ใส่ช่วงค่ำว่างของวันที่ 7 ได้\n📸 ช็อตเด็ด: ให้ Keith ยืนต่ำกว่าเธอสองสามขั้นแล้วถ่ายเงยขึ้น เธออยู่กลางเฟรมโดยมีตึกโผล่ขึ้นมาข้างหลัง อัดวิดีโอแนวตั้งตั้งแต่ตีนบันไดจนถึงบนสุดด้วยนะ ถ่ายไว เพราะคนต่อคิวเยอะ"],"idea","https://www.youtube.com/shorts/Qp11WPoJ9Cw"),
    I(["Late afternoon (~15:30–16:45)","บ่ายแก่ ๆ (~15:30–16:45)"],"sightseeing",["(Shanghai) Lujiazui Central Green (陆家嘴中心绿地)","(เซี่ยงไฮ้) สวนลู่เจียจุ่ย เซ็นทรัลกรีน (陆家嘴中心绿地)"],
-    ["Why: the big park with a lawn and lake right by the Oriental Pearl Tower, ringed by the supertall towers. It's a calm spot for wide 'all the towers in one frame' shots without the skywalk crowds, and the old courtyard mansion inside (Chen Guichun's Old House, 陈桂春旧宅) makes a nice old-meets-new contrast. Free (hours to confirm). Best: late-afternoon light, then walk up to the skywalk for the lights. Area: next to the Oriental Pearl Tower, Lujiazui, Pudong, ~5 min walk from Lujiazui Station (Line 2/14). Pairs with the escalator idea. Not scheduled; could fill Day 7's open afternoon.","ทำไมต้องไป: สวนใหญ่ มีสนามหญ้ากับทะเลสาบ อยู่ติดหอไข่มุก ล้อมรอบด้วยตึกระฟ้า ได้มุมกว้างเก็บตึกครบทุกตึกในเฟรมเดียวแบบไม่ต้องเบียดคนบนสะพานลอย แถมข้างในมีบ้านโบราณแบบจีน (บ้านเก่าเฉินกุ้ยชุน 陈桂春旧宅) ได้ฟีลเก่าตัดใหม่ เข้าฟรี (เวลาเปิดรอยืนยัน) เวลาดีสุด: แสงบ่ายแก่ ๆ แล้วเดินขึ้นสะพานลอยรอดูไฟเปิดต่อ ย่าน: ข้างหอไข่มุก ลู่เจียจุ่ย ผู่ตง เดินจากสถานี Lujiazui (สาย 2/14) ราว 5 นาที ไปคู่กับไอเดียบันไดเลื่อนได้ ยังไม่ได้ใส่ในแผน ใส่ช่วงบ่ายว่างของวันที่ 7 ได้\n📸 ช็อตเด็ด: ยืนริมทะเลสาบให้ตึกสะท้อนน้ำ แล้วถ่ายแนวตั้งเก็บหอไข่มุกกับตึกสามพี่น้องในเฟรมเดียว ใส่เสื้อโค้ทสีสด ๆ จะเด้งกับฉากตึกเทา ๆ มาก"],"idea","https://www.youtube.com/shorts/eFOZCj4-2fs")
+    ["Why: the big park with a lawn and lake right by the Oriental Pearl Tower, ringed by the supertall towers. It's a calm spot for wide 'all the towers in one frame' shots without the skywalk crowds, and the old courtyard mansion inside (Chen Guichun's Old House, 陈桂春旧宅) makes a nice old-meets-new contrast. Free (hours to confirm). Best: late-afternoon light, then walk up to the skywalk for the lights. Area: next to the Oriental Pearl Tower, Lujiazui, Pudong, ~5 min walk from Lujiazui Station (Line 2/14). Pairs with the escalator idea. Not scheduled; could fill Day 7's open afternoon.","ทำไมต้องไป: สวนใหญ่ มีสนามหญ้ากับทะเลสาบ อยู่ติดหอไข่มุก ล้อมรอบด้วยตึกระฟ้า ได้มุมกว้างเก็บตึกครบทุกตึกในเฟรมเดียวแบบไม่ต้องเบียดคนบนสะพานลอย แถมข้างในมีบ้านโบราณแบบจีน (บ้านเก่าเฉินกุ้ยชุน 陈桂春旧宅) ได้ฟีลเก่าตัดใหม่ เข้าฟรี (เวลาเปิดรอยืนยัน) เวลาดีสุด: แสงบ่ายแก่ ๆ แล้วเดินขึ้นสะพานลอยรอดูไฟเปิดต่อ ย่าน: ข้างหอไข่มุก ลู่เจียจุ่ย ผู่ตง เดินจากสถานี Lujiazui (สาย 2/14) ราว 5 นาที ไปคู่กับไอเดียบันไดเลื่อนได้ ยังไม่ได้ใส่ในแผน ใส่ช่วงบ่ายว่างของวันที่ 7 ได้\n📸 ช็อตเด็ด: ยืนริมทะเลสาบให้ตึกสะท้อนน้ำ แล้วถ่ายแนวตั้งเก็บหอไข่มุกกับตึกสามพี่น้องในเฟรมเดียว ใส่เสื้อโค้ทสีสด ๆ จะเด้งกับฉากตึกเทา ๆ มาก"],"idea","https://www.youtube.com/shorts/eFOZCj4-2fs"),
+   I(["Suggested: Fri 25 Dec, evening (11:00–21:00)", "แนะนำ: ศุกร์ 25 ธ.ค. ช่วงค่ำ (11:00–21:00)"],"shopping",["(Beijing) 🎄 WF Central Snow Market (王府中环 雪境奇市)", "(ปักกิ่ง) 🎄 ตลาดคริสต์มาสหิมะ WF Central (王府中环 雪境奇市)"],
+    ["Why: a European-style Christmas market with French alpine chalets, mulled-wine and snack stalls and festive lights, on the 3rd floor of WF Central on Wangfujing, about 15–20 min on foot from our apartment (or a quick Didi). Free entry. Dates: based on 2025 (19–21 and 24–28 Dec, 11:00–21:00); 2026 dates not announced yet, so check before going. Suggested: Christmas evening, Fri 25 Dec, after the Forbidden City day. Area: 3F WF Central, 269 Wangfujing St, Dongcheng.", "ทำไมต้องไป: ตลาดคริสต์มาสสไตล์ยุโรป มีบ้านชาเลต์แบบเทือกเขาแอลป์ฝรั่งเศส ร้านไวน์ร้อนกับขนม และไฟประดับวิบวับ อยู่ชั้น 3 ห้าง WF Central ถนนหวังฝูจิ่ง เดินจากที่พักราว 15–20 นาที (หรือเรียก Didi แป๊บเดียว) เข้าฟรี วันที่: อิงจากปี 2025 (19–21 และ 24–28 ธ.ค. เปิด 11:00–21:00) ปี 2026 ยังไม่ประกาศ เช็กอีกทีก่อนไปน้า แนะนำ: คืนคริสต์มาส ศุกร์ 25 ธ.ค. หลังเที่ยวพระราชวังต้องห้าม ย่าน: ชั้น 3 WF Central เลขที่ 269 ถนนหวังฝูจิ่ง เขตตงเฉิง"],"idea"),
+   I(["Suggested: Mon 28 Dec evening (with the LV Ship) or Wed 30 Dec", "แนะนำ: จันทร์ 28 ธ.ค. ช่วงค่ำ (ไปคู่กับเรือ LV) หรือ พุธ 30 ธ.ค."],"shopping",["(Shanghai) 🎄 Jing'an Kerry Centre festive lights & rotating tree (静安嘉里中心)", "(เซี่ยงไฮ้) 🎄 ไฟคริสต์มาส & ต้นคริสต์มาสหมุนได้ ที่ Jing'an Kerry Centre (静安嘉里中心)"],
+    ["Why: one of Shanghai's prettiest Christmas set-ups: a giant rotating Christmas tree, festive light displays and a small Christmas market in the plaza. Free. Dates: based on 2025 (lights 20 Nov–4 Jan, market until 1 Jan); 2026 dates not announced yet. Suggested: Mon 28 Dec evening, it's on Nanjing Rd W near the LV Ship at HKRI Taikoo Hui, or Wed 30 Dec. Area: 1515 Nanjing Rd W, Jing'an (Metro Line 2/7 Jing'an Temple).", "ทำไมต้องไป: หนึ่งในจุดแต่งคริสต์มาสที่สวยสุดในเซี่ยงไฮ้ มีต้นคริสต์มาสยักษ์ที่หมุนได้ ไฟประดับเต็มลาน และตลาดคริสต์มาสเล็ก ๆ เข้าฟรี วันที่: อิงจากปี 2025 (ไฟ 20 พ.ย.–4 ม.ค. ตลาดถึง 1 ม.ค.) ปี 2026 ยังไม่ประกาศ แนะนำ: คืนจันทร์ 28 ธ.ค. อยู่ถนนหนานจิงตะวันตก ใกล้เรือ LV ที่ HKRI Taikoo Hui ไปต่อกันได้เลย หรือพุธ 30 ธ.ค. ก็ได้ ย่าน: 1515 ถนนหนานจิงตะวันตก เขตจิ้งอัน (รถไฟใต้ดินสาย 2/7 สถานี Jing'an Temple)"],"idea"),
+   I(["Suggested: Mon 28 or Tue 29 Dec, or Fri 1 Jan, after dark", "แนะนำ: จันทร์ 28 หรือ อังคาร 29 ธ.ค. หรือ ศุกร์ 1 ม.ค. หลังมืด"],"sightseeing",["(Shanghai) 🎄 Xintiandi Dongtaili aurora lights (新天地东台里)", "(เซี่ยงไฮ้) 🎄 ไฟแสงเหนือที่ซินเทียนตี้ ตงไถหลี่ (新天地东台里)"],
+    ["Why: an 'aurora' light show over the restored shikumen lanes of Dongtaili, right in Xintiandi, a few minutes' walk from the Riverdale. Free. Dates: based on 2025 (16 Dec–11 Jan); 2026 dates not announced yet. Suggested: any evening we're home in Xintiandi: Mon 28 or Tue 29 Dec, or Fri 1 Jan before the airport. Area: 111 Ji'an Rd, Huangpu.", "ทำไมต้องไป: โชว์ไฟ 'แสงเหนือ' เหนือตรอกบ้านชิคูเหมินที่ตงไถหลี่ ในซินเทียนตี้ เดินจากที่พัก Riverdale ไม่กี่นาทีเอง เข้าฟรี วันที่: อิงจากปี 2025 (16 ธ.ค.–11 ม.ค.) ปี 2026 ยังไม่ประกาศ แนะนำ: คืนไหนก็ได้ที่อยู่แถวซินเทียนตี้ จันทร์ 28 หรืออังคาร 29 ธ.ค. หรือศุกร์ 1 ม.ค. ก่อนไปสนามบิน ย่าน: 111 ถนนจี๋อาน เขตหวงผู่"],"idea"),
+   I(["Suggested: Wed 30 Dec, free afternoon into evening", "แนะนำ: พุธ 30 ธ.ค. บ่ายว่าง ๆ ลากยาวถึงค่ำ"],"sightseeing",["(Shanghai) 🎄 West Bund Dream Center winter lights & ice rink (西岸梦中心)", "(เซี่ยงไฮ้) 🎄 ไฟฤดูหนาว & ลานสเก็ตน้ำแข็ง West Bund Dream Center (西岸梦中心)"],
+    ["Why: riverside winter lights plus an outdoor ice rink by the Huangpu River, a fun date-style activity. Lights are free; the rink is about ¥120–180 per person (based on 2025). Dates: based on 2025 (lights 20 Nov–4 Jan); 2026 dates not announced yet. Suggested: our free afternoon/evening on Wed 30 Dec. Area: 2266 Longteng Ave, Xuhui (West Bund), ~20 min Didi from Xintiandi.", "ทำไมต้องไป: ไฟฤดูหนาวริมแม่น้ำหวงผู่ แถมมีลานสเก็ตน้ำแข็งกลางแจ้ง เดตน่ารัก ๆ เลย ดูไฟฟรี ลานสเก็ตราวคนละ 120–180 หยวน (อิงปี 2025) วันที่: อิงจากปี 2025 (ไฟ 20 พ.ย.–4 ม.ค.) ปี 2026 ยังไม่ประกาศ แนะนำ: บ่ายถึงค่ำวันพุธ 30 ธ.ค. ที่ว่างอยู่ ย่าน: 2266 ถนนหลงเถิง เขตสวีฮุ่ย (West Bund) นั่ง Didi จากซินเทียนตี้ราว 20 นาที"],"idea"),
+   I(["Suggested: Tue 29 Dec, add-on to Wukang Rd", "แนะนำ: อังคาร 29 ธ.ค. ต่อจากถนนอู่คัง"],"shopping",["(Shanghai) 🎄 Christmas market at Columbia Circle (上生·新所)", "(เซี่ยงไฮ้) 🎄 ตลาดคริสต์มาสที่โคลัมเบียเซอร์เคิล (上生·新所)"],
+    ["Why: the 1920s country club (see the Columbia Circle idea) dresses up for Christmas with a festive market, plus winter art installations. Dates: based on 2025 (market 24–28 Dec, winter art to March, New Year concerts on 1 Jan); 2026 dates not announced yet, and the market may have finished by 29 Dec, so check first. Suggested: an add-on to Wukang Rd on Tue 29 Dec. Area: 1262 Yan'an Rd W, Changning, ~10 min Didi from Wukang Rd.", "ทำไมต้องไป: คันทรีคลับยุค 1920 (ดูไอเดียโคลัมเบียเซอร์เคิล) แต่งธีมคริสต์มาส มีตลาดคริสต์มาสและงานอาร์ตฤดูหนาว วันที่: อิงจากปี 2025 (ตลาด 24–28 ธ.ค. งานอาร์ตถึงมีนาคม คอนเสิร์ตปีใหม่ 1 ม.ค.) ปี 2026 ยังไม่ประกาศ และตลาดอาจจบก่อน 29 ธ.ค. เช็กก่อนไปน้า แนะนำ: แวะต่อจากถนนอู่คัง อังคาร 29 ธ.ค. ย่าน: 1262 ถนนเหยียนอันตะวันตก เขตฉางหนิง นั่ง Didi จากถนนอู่คังราว 10 นาที"],"idea"),
+   I(["Watch for 2026 dates (2025: ended 28 Dec, shut Mon–Tue)", "รอดูวันที่ปี 2026 (ปี 2025 จบ 28 ธ.ค. ปิดจันทร์–อังคาร)"],"shopping",["(Shanghai) 🎄 Rockbund German Christkindlmarkt (洛克外滩源)", "(เซี่ยงไฮ้) 🎄 ตลาดคริสต์มาสเยอรมัน Rockbund (洛克外滩源)"],
+    ["Why: Shanghai's classic German Christmas market (bratwurst, Glühwein, wooden stalls) among the 1920s buildings behind the Bund. Dates: based on 2025 it ended on Sun 28 Dec and was closed Mon–Tue, so we'd probably miss it (we land in Shanghai on 28 Dec); watch for 2026 dates in case it runs later. Area: Yuanmingyuan Rd at Beijing Rd E, Huangpu, near the Bund.", "ทำไมต้องไป: ตลาดคริสต์มาสเยอรมันสุดคลาสสิกของเซี่ยงไฮ้ (ไส้กรอก ไวน์ร้อน ซุ้มไม้น่ารัก ๆ) ท่ามกลางตึกเก่ายุค 1920 หลังเดอะบันด์ วันที่: อิงจากปี 2025 จบวันอาทิตย์ 28 ธ.ค. และปิดวันจันทร์–อังคาร เลยน่าจะไม่ทัน (เราถึงเซี่ยงไฮ้ 28 ธ.ค.) รอดูวันที่ปี 2026 เผื่อจัดนานขึ้นน้า ย่าน: ถนนหยวนหมิงหยวนตัดถนนปักกิ่งตะวันออก เขตหวงผู่ ใกล้เดอะบันด์"],"idea"),
  ]
 };
 
 // Tap-to-navigate: researched Chinese name + address per place (keyed by English title; nav:false = not a place).
 // Used to seed the plan and as a fallback if an older app copy drops these fields.
-const NAV_SEED={"Flight Bangkok → Beijing (HU7996)":{"nav":false},"Transfer to Conrad Beijing (Chaoyang District)":{"zh":"北京康莱德酒店","zh_addr":"北京市朝阳区东三环北路29号","zh_city":"北京"},"Lunch: Huajia Yiyuan (花家怡园), courtyard Beijing cuisine":{"zh":"花家怡园(四合院总店)","zh_addr":"北京市东城区东直门内大街235号","zh_city":"北京"},"Lama Temple (Yonghegong)":{"zh":"雍和宫","zh_addr":"北京市东城区雍和宫大街12号","zh_city":"北京"},"Wudaoying Hutong: Coffee & Snacks":{"zh":"五道营胡同","zh_addr":"北京市东城区五道营胡同","zh_city":"北京"},"Guozijian Street":{"zh":"国子监街","zh_addr":"北京市东城区国子监街","zh_city":"北京"},"Nanluoguxiang Hutongs":{"zh":"南锣鼓巷","zh_addr":"北京市东城区南锣鼓巷","zh_city":"北京"},"Dinner: In & Out Yunnan, Sanlitun (一坐一忘云南菜 三里屯店)":{"zh":"一坐一忘云南菜(三里屯店)","zh_addr":"北京市朝阳区幸福三村北街1号（三里屯北小街1号）","zh_city":"北京"},"Sanlitun Taikoo Li & Solana Light Festival":{"zh":"三里屯太古里","zh_addr":"北京市朝阳区三里屯路19号","zh_city":"北京"},"Drop bags at Wangfujing Serviced Apartment":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Temple of Heaven":{"zh":"天坛公园(东门)","zh_addr":"北京市东城区天坛路甲1号（天坛公园东门）","zh_city":"北京"},"Taxi to Tiananmen East (for the Forbidden City)":{"zh":"天安门东地铁站","zh_addr":"北京市东城区东长安街（天安门东）","zh_city":"北京"},"Tiananmen Square & Palace Museum (Forbidden City)":{"zh":"故宫博物院","zh_addr":"北京市东城区景山前街4号（午门进）","zh_city":"北京"},"Jingshan Park (short visit)":{"zh":"景山公园","zh_addr":"北京市西城区景山西街44号","zh_city":"北京"},"Lunch: Fangzhuanchang No. 69 Zhajiangmian (方砖厂69号炸酱面)":{"zh":"方砖厂69号炸酱面","zh_addr":"北京市东城区方砖厂胡同1号","zh_city":"北京"},"Early check-in & rest at Wangfujing Serviced Apartment":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Didi to Bianyifang (Chongwenmen)":{"zh":"便宜坊烤鸭(哈德门店)","zh_addr":"北京市东城区崇文门外大街16号便宜坊大厦4层","zh_city":"北京"},"Dinner: Bianyifang Roast Duck (Hademen branch)":{"zh":"便宜坊烤鸭(哈德门店)","zh_addr":"北京市东城区崇文门外大街16号便宜坊大厦4层","zh_city":"北京"},"Taxi/Didi to Universal Beijing Resort (Tongzhou)":{"zh":"北京环球影城主题公园","zh_addr":"北京市通州区北京环球度假区（地铁环球度假区站旁）","zh_city":"北京"},"Universal Studios Beijing":{"zh":"北京环球影城主题公园","zh_addr":"北京市通州区北京环球度假区（地铁环球度假区站旁）","zh_city":"北京"},"Lunch inside the park":{"nav":false},"More rides & winter shows":{"nav":false},"Taxi/Didi back to Wangfujing":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Dinner: Guijie (簋街, Ghost Street)":{"zh":"胡大饭馆(簋街总店)","zh_addr":"北京市东城区东直门内大街233号（簋街）","zh_city":"北京"},"Wangfujing Street lights":{"zh":"王府井步行街","zh_addr":"北京市东城区王府井大街","zh_city":"北京"},"Private driver to Mutianyu Great Wall":{"zh":"慕田峪长城","zh_addr":"北京市怀柔区渤海镇慕田峪村","zh_city":"北京"},"Mutianyu Great Wall":{"zh":"慕田峪长城","zh_addr":"北京市怀柔区渤海镇慕田峪村","zh_city":"北京"},"Lunch: Jingbei Yujia'ao (京北渔家傲), charcoal-grilled rainbow trout":{"zh":"京北渔家傲","zh_addr":"北京市怀柔区渤海镇苇店村北100米","zh_city":"北京"},"Return to central Beijing":{"nav":false},"Nanmen Hotpot":{"zh":"南门铜锅涮肉(大栅栏前门旗舰店6店)","zh_addr":"北京市西城区大栅栏西街36号","zh_city":"北京"},"Qianmen Street (前门大街) & Dashilan":{"zh":"前门大街","zh_addr":"北京市东城区前门大街","zh_city":"北京"},"Slow morning & check-out: Wangfujing Serviced Apartment":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Didi to Beijing South Railway Station (北京南站)":{"zh":"北京南站","zh_addr":"北京市丰台区永外大街车站路12号","zh_city":"北京"},"Train Beijing South → Shanghai Hongqiao":{"zh":"北京南站","zh_addr":"北京市丰台区永外大街车站路12号","zh_city":"北京"},"Check in: Riverdale Residence Xintiandi":{"zh":"长河国际公寓·新天地","zh_addr":"上海市黄浦区寿宁路98号","zh_city":"上海"},"LV Ship \"The Louis\" HKRI Taikoo Hui":{"zh":"兴业太古汇","zh_addr":"上海市静安区南京西路789号兴业太古汇","zh_city":"上海"},"Dinner: Long Time Ago Mutton Skewers 很久以前羊肉串":{"zh":"很久以前羊肉串","zh_addr":"","zh_city":"上海"},"Morning jog: Taipingqiao Park & Fuxing Park loop":{"zh":"太平桥公园","zh_addr":"上海市黄浦区自忠路170号","zh_city":"上海"},"Yu Garden (Yuyuan) & shengjianbao lunch":{"zh":"豫园","zh_addr":"上海市黄浦区福佑路168号（豫园北门）","zh_city":"上海"},"Former French Concession: Wukang Rd & Anfu Rd":{"zh":"武康路","zh_addr":"上海市徐汇区武康路（近安福路）","zh_city":"上海"},"Fuxing Road (复兴路) walk: Wukang Mansion → Fuxing Park → Xintiandi":{"zh":"武康大楼","zh_addr":"上海市徐汇区淮海中路1842-1858号","zh_city":"上海"},"Dinner: 重庆高老九 Chongqing Gaolaojiu Hot Pot (Shanghai Flagship Store)":{"zh":"重庆高老九火锅(上海旗舰店)","zh_addr":"上海市黄浦区九江路399号华盛大厦2楼","zh_city":"上海"},"Morning jog: The Bund to North Bund riverside":{"zh":"外滩","zh_addr":"上海市黄浦区中山东一路（延安东路口）","zh_city":"上海"},"Jing'an Temple & Zhangyuan complex":{"zh":"静安寺","zh_addr":"上海市静安区南京西路1686号","zh_city":"上海"},"No plans":{"nav":false},"Dinner: Shanghai Gong Yan (宫宴)":{"zh":"宫宴(上海店)","zh_addr":"上海市静安区北京西路1485号1幢","zh_city":"上海"},"Didi from Xintiandi to Shanghai Disney Resort":{"zh":"上海迪士尼乐园","zh_addr":"上海市浦东新区川沙新镇黄赵路310号","zh_city":"上海"},"Shanghai Disneyland":{"zh":"上海迪士尼乐园","zh_addr":"上海市浦东新区川沙新镇黄赵路310号","zh_city":"上海"},"Rope drop → Zootopia: Hot Pursuit (疯狂动物城：热力追踪)":{"nav":false},"Pirates of the Caribbean: Battle for the Sunken Treasure":{"nav":false},"Soaring Over the Horizon (Adventure Isle)":{"nav":false},"Early lunch (mobile order in the app)":{"nav":false},"Fantasyland: Seven Dwarfs Mine Train, Peter Pan's Flight, Winnie the Pooh":{"nav":false},"Tomorrowland: TRON Lightcycle Power Run & Buzz Lightyear Planet Rescue":{"nav":false},"Toy Story Land: Rex's Racer & Slinky Dog Spin":{"nav":false},"Early dinner & warm up indoors":{"nav":false},"NYE Fireworks & Castle Projection Show":{"nav":false},"New Year Countdown at Shanghai Disneyland (castle fireworks)":{"nav":false},"Metro Line 11 back to Xintiandi":{"zh":"迪士尼地铁站","zh_addr":"上海市浦东新区上海迪士尼度假区（地铁11号线迪士尼站）","zh_city":"上海"},"China Eastern MU543, Shanghai Pudong (PVG) 23:35 → Singapore Changi (SIN) 05:25 on 2 Jan, nonstop":{"zh":"上海浦东国际机场T1航站楼","zh_addr":"上海市浦东新区上海浦东国际机场T1航站楼","zh_city":"上海"},"(Beijing) SKP & SKP-S (华贸SKP), Guomao":{"zh":"北京SKP","zh_addr":"北京市朝阳区建国路87号","zh_city":"北京"},"(Beijing) Forbidden City Corner Tower at sunset (故宫角楼)":{"zh":"故宫角楼","zh_addr":"北京市东城区景山前街（故宫东北角楼）","zh_city":"北京"},"(Beijing) Hanfu / Qing-style costume photoshoot (汉服旅拍)":{"nav":false},"(Beijing) 798 Art District (798艺术区)":{"zh":"798艺术区","zh_addr":"北京市朝阳区酒仙桥路2号","zh_city":"北京"},"(Beijing) The Place sky screen (世贸天阶)":{"zh":"世贸天阶","zh_addr":"北京市朝阳区光华路甲9号","zh_city":"北京"},"(Shanghai) Columbia Circle (上生·新所)":{"zh":"上生·新所","zh_addr":"上海市长宁区延安西路1262号","zh_city":"上海"},"(Shanghai) IFC Mall & Lujiazui Circular Skywalk (国金中心 · 陆家嘴环形天桥)":{"zh":"上海国金中心商场","zh_addr":"上海市浦东新区世纪大道8号","zh_city":"上海"},"(Shanghai) Tianzifang lanes (田子坊)":{"zh":"田子坊","zh_addr":"上海市黄浦区泰康路210弄","zh_city":"上海"},"(Shanghai) 1933 Old Millfun (1933老场坊)":{"zh":"1933老场坊","zh_addr":"上海市虹口区沙泾路10号","zh_city":"上海"},"(Shanghai) TX Huaihai youth mall & Huaihai Rd (TX淮海 · 淮海中路)":{"zh":"TX淮海","zh_addr":"上海市黄浦区淮海中路523号","zh_city":"上海"},"(Shanghai) The Lujiazui 'skyline reveal' escalator, Metro Exit 6 (陆家嘴站6号口)":{"zh":"陆家嘴地铁站6号口","zh_addr":"上海市浦东新区（陆家嘴地铁站6号口，近国金中心）","zh_city":"上海"},"(Shanghai) Lujiazui Central Green (陆家嘴中心绿地)":{"zh":"陆家嘴中心绿地","zh_addr":"上海市浦东新区陆家嘴环路717号","zh_city":"上海"}};
+const NAV_SEED={"Flight Bangkok → Beijing (HU7996)":{"nav":false},"Transfer to Conrad Beijing (Chaoyang District)":{"zh":"北京康莱德酒店","zh_addr":"北京市朝阳区东三环北路29号","zh_city":"北京"},"Lunch: Huajia Yiyuan (花家怡园), courtyard Beijing cuisine":{"zh":"花家怡园(四合院总店)","zh_addr":"北京市东城区东直门内大街235号","zh_city":"北京"},"Lama Temple (Yonghegong)":{"zh":"雍和宫","zh_addr":"北京市东城区雍和宫大街12号","zh_city":"北京"},"Wudaoying Hutong: Coffee & Snacks":{"zh":"五道营胡同","zh_addr":"北京市东城区五道营胡同","zh_city":"北京"},"Guozijian Street":{"zh":"国子监街","zh_addr":"北京市东城区国子监街","zh_city":"北京"},"Nanluoguxiang Hutongs":{"zh":"南锣鼓巷","zh_addr":"北京市东城区南锣鼓巷","zh_city":"北京"},"Dinner: In & Out Yunnan, Sanlitun (一坐一忘云南菜 三里屯店)":{"zh":"一坐一忘云南菜(三里屯店)","zh_addr":"北京市朝阳区幸福三村北街1号（三里屯北小街1号）","zh_city":"北京"},"Sanlitun Taikoo Li & Solana Light Festival":{"zh":"三里屯太古里","zh_addr":"北京市朝阳区三里屯路19号","zh_city":"北京"},"Drop bags at Wangfujing Serviced Apartment":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Temple of Heaven":{"zh":"天坛公园(东门)","zh_addr":"北京市东城区天坛路甲1号（天坛公园东门）","zh_city":"北京"},"Taxi to Tiananmen East (for the Forbidden City)":{"zh":"天安门东地铁站","zh_addr":"北京市东城区东长安街（天安门东）","zh_city":"北京"},"Tiananmen Square & Palace Museum (Forbidden City)":{"zh":"故宫博物院","zh_addr":"北京市东城区景山前街4号（午门进）","zh_city":"北京"},"Jingshan Park (short visit)":{"zh":"景山公园","zh_addr":"北京市西城区景山西街44号","zh_city":"北京"},"Lunch: Fangzhuanchang No. 69 Zhajiangmian (方砖厂69号炸酱面)":{"zh":"方砖厂69号炸酱面","zh_addr":"北京市东城区方砖厂胡同1号","zh_city":"北京"},"Early check-in & rest at Wangfujing Serviced Apartment":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Didi to Bianyifang (Chongwenmen)":{"zh":"便宜坊烤鸭(哈德门店)","zh_addr":"北京市东城区崇文门外大街16号便宜坊大厦4层","zh_city":"北京"},"Dinner: Bianyifang Roast Duck (Hademen branch)":{"zh":"便宜坊烤鸭(哈德门店)","zh_addr":"北京市东城区崇文门外大街16号便宜坊大厦4层","zh_city":"北京"},"Taxi/Didi to Universal Beijing Resort (Tongzhou)":{"zh":"北京环球影城主题公园","zh_addr":"北京市通州区北京环球度假区（地铁环球度假区站旁）","zh_city":"北京"},"Universal Studios Beijing":{"zh":"北京环球影城主题公园","zh_addr":"北京市通州区北京环球度假区（地铁环球度假区站旁）","zh_city":"北京"},"Lunch inside the park":{"nav":false},"More rides & winter shows":{"nav":false},"Taxi/Didi back to Wangfujing":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Dinner: Guijie (簋街, Ghost Street)":{"zh":"胡大饭馆(簋街总店)","zh_addr":"北京市东城区东直门内大街233号（簋街）","zh_city":"北京"},"Wangfujing Street lights":{"zh":"王府井步行街","zh_addr":"北京市东城区王府井大街","zh_city":"北京"},"Private driver to Mutianyu Great Wall":{"zh":"慕田峪长城","zh_addr":"北京市怀柔区渤海镇慕田峪村","zh_city":"北京"},"Mutianyu Great Wall":{"zh":"慕田峪长城","zh_addr":"北京市怀柔区渤海镇慕田峪村","zh_city":"北京"},"Lunch: Jingbei Yujia'ao (京北渔家傲), charcoal-grilled rainbow trout":{"zh":"京北渔家傲","zh_addr":"北京市怀柔区渤海镇苇店村北100米","zh_city":"北京"},"Return to central Beijing":{"nav":false},"Nanmen Hotpot":{"zh":"南门铜锅涮肉(大栅栏前门旗舰店6店)","zh_addr":"北京市西城区大栅栏西街36号","zh_city":"北京"},"Qianmen Street (前门大街) & Dashilan":{"zh":"前门大街","zh_addr":"北京市东城区前门大街","zh_city":"北京"},"Slow morning & check-out: Wangfujing Serviced Apartment":{"zh":"base佰舍服务式公寓(北京王府井隆福寺街店)","zh_addr":"北京市东城区钱粮胡同17号","zh_city":"北京"},"Didi to Beijing South Railway Station (北京南站)":{"zh":"北京南站","zh_addr":"北京市丰台区永外大街车站路12号","zh_city":"北京"},"Train Beijing South → Shanghai Hongqiao":{"zh":"北京南站","zh_addr":"北京市丰台区永外大街车站路12号","zh_city":"北京"},"Check in: Riverdale Residence Xintiandi":{"zh":"长河国际公寓·新天地","zh_addr":"上海市黄浦区寿宁路98号","zh_city":"上海"},"LV Ship \"The Louis\" HKRI Taikoo Hui":{"zh":"兴业太古汇","zh_addr":"上海市静安区南京西路789号兴业太古汇","zh_city":"上海"},"Dinner: Long Time Ago Mutton Skewers 很久以前羊肉串":{"zh":"很久以前羊肉串","zh_addr":"","zh_city":"上海"},"Morning jog: Taipingqiao Park & Fuxing Park loop":{"zh":"太平桥公园","zh_addr":"上海市黄浦区自忠路170号","zh_city":"上海"},"Yu Garden (Yuyuan) & shengjianbao lunch":{"zh":"豫园","zh_addr":"上海市黄浦区福佑路168号（豫园北门）","zh_city":"上海"},"Former French Concession: Wukang Rd & Anfu Rd":{"zh":"武康路","zh_addr":"上海市徐汇区武康路（近安福路）","zh_city":"上海"},"Fuxing Road (复兴路) walk: Wukang Mansion → Fuxing Park → Xintiandi":{"zh":"武康大楼","zh_addr":"上海市徐汇区淮海中路1842-1858号","zh_city":"上海"},"Dinner: 重庆高老九 Chongqing Gaolaojiu Hot Pot (Shanghai Flagship Store)":{"zh":"重庆高老九火锅(上海旗舰店)","zh_addr":"上海市黄浦区九江路399号华盛大厦2楼","zh_city":"上海"},"Morning jog: The Bund to North Bund riverside":{"zh":"外滩","zh_addr":"上海市黄浦区中山东一路（延安东路口）","zh_city":"上海"},"Jing'an Temple & Zhangyuan complex":{"zh":"静安寺","zh_addr":"上海市静安区南京西路1686号","zh_city":"上海"},"No plans":{"nav":false},"Dinner: Shanghai Gong Yan (宫宴)":{"zh":"宫宴(上海店)","zh_addr":"上海市静安区北京西路1485号1幢","zh_city":"上海"},"Didi from Xintiandi to Shanghai Disney Resort":{"zh":"上海迪士尼乐园","zh_addr":"上海市浦东新区川沙新镇黄赵路310号","zh_city":"上海"},"Shanghai Disneyland":{"zh":"上海迪士尼乐园","zh_addr":"上海市浦东新区川沙新镇黄赵路310号","zh_city":"上海"},"Rope drop → Zootopia: Hot Pursuit (疯狂动物城：热力追踪)":{"nav":false},"Pirates of the Caribbean: Battle for the Sunken Treasure":{"nav":false},"Soaring Over the Horizon (Adventure Isle)":{"nav":false},"Early lunch (mobile order in the app)":{"nav":false},"Fantasyland: Seven Dwarfs Mine Train, Peter Pan's Flight, Winnie the Pooh":{"nav":false},"Tomorrowland: TRON Lightcycle Power Run & Buzz Lightyear Planet Rescue":{"nav":false},"Toy Story Land: Rex's Racer & Slinky Dog Spin":{"nav":false},"Early dinner & warm up indoors":{"nav":false},"NYE Fireworks & Castle Projection Show":{"nav":false},"New Year Countdown at Shanghai Disneyland (castle fireworks)":{"nav":false},"Metro Line 11 back to Xintiandi":{"zh":"迪士尼地铁站","zh_addr":"上海市浦东新区上海迪士尼度假区（地铁11号线迪士尼站）","zh_city":"上海"},"China Eastern MU543, Shanghai Pudong (PVG) 23:35 → Singapore Changi (SIN) 05:25 on 2 Jan, nonstop":{"zh":"上海浦东国际机场T1航站楼","zh_addr":"上海市浦东新区上海浦东国际机场T1航站楼","zh_city":"上海"},"(Beijing) SKP & SKP-S (华贸SKP), Guomao":{"zh":"北京SKP","zh_addr":"北京市朝阳区建国路87号","zh_city":"北京"},"(Beijing) Forbidden City Corner Tower at sunset (故宫角楼)":{"zh":"故宫角楼","zh_addr":"北京市东城区景山前街（故宫东北角楼）","zh_city":"北京"},"(Beijing) Hanfu / Qing-style costume photoshoot (汉服旅拍)":{"nav":false},"(Beijing) 798 Art District (798艺术区)":{"zh":"798艺术区","zh_addr":"北京市朝阳区酒仙桥路2号","zh_city":"北京"},"(Beijing) The Place sky screen (世贸天阶)":{"zh":"世贸天阶","zh_addr":"北京市朝阳区光华路甲9号","zh_city":"北京"},"(Shanghai) Columbia Circle (上生·新所)":{"zh":"上生·新所","zh_addr":"上海市长宁区延安西路1262号","zh_city":"上海"},"(Shanghai) IFC Mall & Lujiazui Circular Skywalk (国金中心 · 陆家嘴环形天桥)":{"zh":"上海国金中心商场","zh_addr":"上海市浦东新区世纪大道8号","zh_city":"上海"},"(Shanghai) Tianzifang lanes (田子坊)":{"zh":"田子坊","zh_addr":"上海市黄浦区泰康路210弄","zh_city":"上海"},"(Shanghai) 1933 Old Millfun (1933老场坊)":{"zh":"1933老场坊","zh_addr":"上海市虹口区沙泾路10号","zh_city":"上海"},"(Shanghai) TX Huaihai youth mall & Huaihai Rd (TX淮海 · 淮海中路)":{"zh":"TX淮海","zh_addr":"上海市黄浦区淮海中路523号","zh_city":"上海"},"(Shanghai) The Lujiazui 'skyline reveal' escalator, Metro Exit 6 (陆家嘴站6号口)":{"zh":"陆家嘴地铁站6号口","zh_addr":"上海市浦东新区（陆家嘴地铁站6号口，近国金中心）","zh_city":"上海"},"(Shanghai) Lujiazui Central Green (陆家嘴中心绿地)":{"zh":"陆家嘴中心绿地","zh_addr":"上海市浦东新区陆家嘴环路717号","zh_city":"上海"},"(Beijing) 🎄 WF Central Snow Market (王府中环 雪境奇市)": {"zh": "王府中环 雪境奇市", "zh_addr": "北京市东城区王府井大街269号王府中环3层", "zh_city": "北京"}, "(Shanghai) 🎄 Jing'an Kerry Centre festive lights & rotating tree (静安嘉里中心)": {"zh": "静安嘉里中心", "zh_addr": "上海市静安区南京西路1515号", "zh_city": "上海"}, "(Shanghai) 🎄 Xintiandi Dongtaili aurora lights (新天地东台里)": {"zh": "新天地东台里", "zh_addr": "上海市黄浦区吉安路111号", "zh_city": "上海"}, "(Shanghai) 🎄 West Bund Dream Center winter lights & ice rink (西岸梦中心)": {"zh": "西岸梦中心", "zh_addr": "上海市徐汇区龙腾大道2266号", "zh_city": "上海"}, "(Shanghai) 🎄 Christmas market at Columbia Circle (上生·新所)": {"zh": "上生·新所", "zh_addr": "上海市长宁区延安西路1262号", "zh_city": "上海"}, "(Shanghai) 🎄 Rockbund German Christkindlmarkt (洛克外滩源)": {"zh": "洛克外滩源", "zh_addr": "上海市黄浦区圆明园路与北京东路交叉口", "zh_city": "上海"}};
 (function(){const t=v=>Array.isArray(v)?String(v[0]):String(v);const ap=it=>{const s=NAV_SEED[t(it.title)];if(s)Object.assign(it,s);};ORIGINAL_DATA.days.forEach(d=>d.items.forEach(ap));ORIGINAL_DATA.ideas.forEach(ap);})();
 
 </script>
@@ -603,7 +649,11 @@ share:"📤 Share",undo:"↩️ Undo",undoShort:"Undo",download:"⬇️ Download
  mbTitle:"Idea",mbTitlePh:"e.g. Hot pot near the hotel",mbNote:"Note (optional)",mbNotePh:"Why it looks good, opening hours, a link…",mbCity:"Where",mbAny:"Not sure",
  mbAdd:"＋ Add to Maybe",mbEmpty:"No ideas yet. Add the first one above ✨",mbToDay:"📅 Add to day…",mbWhich:"Which day?",mbTime:"Time (optional)",mbTimePh:"e.g. 15:00",
  mbPlace:"Add to this day",mbDel:"Delete",mbDelA:t=>`Delete “${t}”`,toMaybe:"💭 Back to Maybe",tToMaybe:"Moved back to Maybe 💭",tIdeaAdded:"Added to Maybe 💭",tToDay:l=>`Added to ${l} ✓`,
- tMaybeNeed:"Give the idea a name first",cBJ:"Beijing",cSH:"Shanghai"},
+ tMaybeNeed:"Give the idea a name first",cBJ:"Beijing",cSH:"Shanghai",
+ tdBtn:"✅ To-Do",tdH:"✅ To-Do: bookings",tdSub:"Everything that needs booking, sorted by buy-by date. Tick it when it's done; it syncs to both phones.",tdUrgent:"something is due within 3 days",
+ tdTodayIs:d=>`Today: ${d} (Singapore/Beijing time)`,tdRisk:"Risk",tdOpens:"Opens",tdBuyBy:"Buy by",tdOpensIn:n=>n===1?"Opens tomorrow":`Opens in ${n} days`,tdDueIn:n=>n===1?"Due tomorrow":`Due in ${n} days`,
+ tdToday:"Due today",tdOverdue:"Overdue",tdDone:"Done ✓",tdAuto:"Booked ✓",tdIf:"If not secured:",tdConfirm:"ℹ️ Rule not officially confirmed: check before relying on it",tdConfirmSt:"ℹ️ Booking status to confirm",
+ tdDoneH:"Done",tdWalkH:"🚶 No booking needed",tdTick:t=>`Mark “${t}” as done`,tdTicked:"Ticked off ✅",tdUnticked:"Marked as not done"},
 th:{refresh:"🔄 รีเฟรช",sAuto:"🔁 ซิงก์อัตโนมัติเปิดอยู่",sChecked:"ตรวจล่าสุด",tPartner:"อัปเดตตามที่แฟนแก้ไขแล้ว ✓",sSaved:"บันทึกแล้ว ✓",sSaving:"กำลังบันทึก…",sChecking:"กำลังตรวจสอบการเปลี่ยนแปลง…",sOffline:"ออฟไลน์ – บันทึกไว้ในเครื่องนี้",sLocal:"บันทึกไว้ในเครื่องนี้",sLast:"แก้ไขล่าสุด",
  tUpToDate:"เป็นแผนล่าสุดแล้ว ✓",tGotLatest:"อัปเดตเป็นแผนล่าสุดแล้ว ✓",tPushed:"บันทึกการแก้ไขของคุณลงแผนที่แชร์แล้ว ✓",
  tOffline:"เชื่อมต่ออินเทอร์เน็ตไม่ได้ – แผนบันทึกไว้ในเครื่องนี้ และจะซิงก์เมื่อกลับมาออนไลน์",tNewApp:"อัปเดตแอปเป็นเวอร์ชันล่าสุดแล้ว ✓",
@@ -640,7 +690,11 @@ share:"📤 แชร์",undo:"↩️ เลิกทำ",undoShort:"เลิ�
  mbTitle:"ไอเดีย",mbTitlePh:"เช่น หม้อไฟใกล้โรงแรม",mbNote:"โน้ต (ไม่ใส่ก็ได้)",mbNotePh:"ทำไมน่าไป เวลาเปิด หรือแปะลิงก์…",mbCity:"อยู่เมืองไหน",mbAny:"ยังไม่แน่ใจ",
  mbAdd:"＋ เพิ่มลงลิสต์",mbEmpty:"ยังไม่มีไอเดียเลย เพิ่มอันแรกด้านบนได้เลยน้า ✨",mbToDay:"📅 ใส่ลงวัน…",mbWhich:"วันไหนดี?",mbTime:"เวลา (ไม่ใส่ก็ได้)",mbTimePh:"เช่น 15:00",
  mbPlace:"ใส่วันนี้เลย",mbDel:"ลบ",mbDelA:t=>`ลบ “${t}”`,toMaybe:"💭 ย้ายกลับไปอาจจะไป",tToMaybe:"ย้ายกลับไปลิสต์อาจจะไปแล้ว 💭",tIdeaAdded:"เพิ่มลงลิสต์อาจจะไปแล้ว 💭",tToDay:l=>`ใส่ลง ${l} แล้ว ✓`,
- tMaybeNeed:"ตั้งชื่อไอเดียก่อนน้า",cBJ:"ปักกิ่ง",cSH:"เซี่ยงไฮ้"}
+ tMaybeNeed:"ตั้งชื่อไอเดียก่อนน้า",cBJ:"ปักกิ่ง",cSH:"เซี่ยงไฮ้",
+ tdBtn:"✅ สิ่งที่ต้องจอง",tdH:"✅ สิ่งที่ต้องจอง",tdSub:"รวมทุกอย่างที่ต้องจอง เรียงตามวันที่ต้องซื้อให้ทัน จองเสร็จแล้วติ๊กไว้ได้เลย ซิงก์ให้ทั้งสองเครื่องเลยน้า",tdUrgent:"มีอันที่ต้องจองภายใน 3 วัน",
+ tdTodayIs:d=>`วันนี้: ${d} (เวลาสิงคโปร์/จีน)`,tdRisk:"ความเสี่ยง",tdOpens:"เปิดขาย",tdBuyBy:"ควรซื้อภายใน",tdOpensIn:n=>n===1?"เปิดขายพรุ่งนี้":`เปิดขายอีก ${n} วัน`,tdDueIn:n=>n===1?"ต้องจองภายในพรุ่งนี้":`เหลืออีก ${n} วัน`,
+ tdToday:"ต้องจองวันนี้",tdOverdue:"เลยกำหนดแล้ว",tdDone:"เรียบร้อย ✓",tdAuto:"จองแล้ว ✓",tdIf:"ถ้าจองไม่ทัน:",tdConfirm:"ℹ️ กฎข้อนี้ยังไม่มีประกาศทางการยืนยัน เช็กอีกทีก่อนนะ",tdConfirmSt:"ℹ️ ยังไม่ชัวร์ว่าจองไปแล้วหรือยัง เช็กอีกทีน้า",
+ tdDoneH:"เรียบร้อยแล้ว",tdWalkH:"🚶 ไม่ต้องจอง ไปได้เลย",tdTick:t=>`ติ๊กว่า “${t}” เรียบร้อยแล้ว`,tdTicked:"ติ๊กแล้ว เก่งมาก ✅",tdUnticked:"เอาติ๊กออกแล้วน้า"}
 };
 let lang="en";
 try{ lang=localStorage.getItem(LANG_KEY)||((navigator.language||"").toLowerCase().startsWith("th")?"th":"en"); }catch(e){}
@@ -706,7 +760,7 @@ function normalize(p){
   if(p.title_en==null&&p.title_th==null&&!Array.isArray(p.title)){ const en=String(p.title||"Our Trip"); pt.title_en=en; pt.title_th=TH_LOOKUP.ptitle[en]||en; }
   return Object.assign({app:"china-trip-planner",version:2},pt,{
     days:p.days.map(d=>{const o=Object.assign({id:d.id||uid(),date:String(d.date||""),items:(d.items||[]).map(ni)},normFields(d,DAY_F,"d_")); const w=normWx(d.weather); if(w) o.weather=w; return o;}),
-    ideas:(p.ideas||[]).map(ni),savedAt:p.savedAt||null}, (l=>l?{log:l}:{})(normLog(p.log)));
+    ideas:(p.ideas||[]).map(ni),savedAt:p.savedAt||null}, (t=>t?{todo:t}:{})(normTodo(p.todo)), (l=>l?{log:l}:{})(normLog(p.log)));
 }
 const original=()=>normalize(clone(ORIGINAL_DATA));
 
@@ -726,6 +780,10 @@ function pickFields(src,o){ delete o.picks; const p=src.picks;
 const LOG_CAP=60, LOG_BY=["keith","her","bot"];
 function logEntry(x){ const o={id:String(x.id),ts:Number(x.ts)||0,by:LOG_BY.includes(x.by)?x.by:"bot",a:String(x.a||"edit"),item:String(x.item||"")};
   ["t","th","d"].forEach(k=>{ if(x[k]!=null&&x[k]!=="") o[k]=String(x[k]); }); return o; }
+// to-do ticks: todo:{<key>:{done:0|1,by,ts}} (keys are the stable ids in TODO_DEFS)
+function normTodo(t){ if(!t||typeof t!=="object"||Array.isArray(t)) return null; const o={};
+  Object.keys(t).forEach(k=>{ const v=t[k]; if(!/^[A-Za-z0-9_-]{1,40}$/.test(k)||!v||typeof v!=="object") return; o[k]={done:v.done?1:0,by:LOG_BY.includes(v.by)?v.by:"bot",ts:Number(v.ts)||0}; });
+  return Object.keys(o).length?o:null; }
 function normLog(l){ if(!Array.isArray(l)) return null;
   const L=l.filter(x=>x&&typeof x==="object"&&x.id).map(logEntry).sort((a,b)=>a.ts-b.ts).slice(-LOG_CAP); return L.length?L:null; }
 const ADCODE={"北京":"110000","上海":"310000"};
@@ -973,6 +1031,8 @@ function render(){
   b.innerHTML=h; b.scrollLeft=sx;
   $("#chips").innerHTML=plan.days.map((d,i)=>`<button class="chip" type="button" data-jump="${d.id}"><b>${esc(T("dayN")(i+1))}</b>${esc(fmtDate(d.date,"short"))}</button>`).join("")+
     `<button class="chip" type="button" data-jump="ideas"><b>${T("ideas")}</b>${plan.ideas.length}</button>`;
+  try{ paintTodoBtn(); }catch(e){}
+  if(document.querySelector("#sheet .tdlist")) paintTodo();
   const mbb=$("#bMaybe"); if(mbb) mbb.innerHTML=`${esc(T("mbBtn"))}<span class="mbn">${plan.ideas.length}</span>`;
   try{ Changes.paint(); }catch(e){}
   if(document.querySelector("#sheet .mbs")) paintMaybe();
@@ -1306,6 +1366,7 @@ $("#bPrint").onclick=()=>{ setTimeout(()=>window.print(),50); };
 $("#bReset").onclick=()=>confirmBox(T("resetH"),T("resetMsg"),T("resetOk"),()=>{replacePlan(original(),T("tReset"));},true);
 $("#bUndo").onclick=undo;
 $("#bMaybe").onclick=()=>openMaybe();
+$("#bTodo").onclick=()=>openTodo();
 $("#bHelp").onclick=()=>openSheet(`<h2>${T("helpH")}${closeX()}</h2>
   <p class="hint">${T("helpBody")}</p>
   <p class="ver" id="verInfo">${T("verLbl")}: ${esc(BUILD.label)}</p>
@@ -1383,6 +1444,10 @@ const Changes=(function(){
         if(pb.h&&!pa.h) push(w,"heart",b.it,b.lid); if(pb.s&&!pa.s) push(w,"star",b.it,b.lid); });
     });
     A.forEach((a,id)=>{ if(!B.has(id)) push(by_(id,["del"]),"del",a.it,a.lid); });
+    const ta=prev.todo||{}, tb=next.todo||{};
+    Object.keys(tb).forEach(k=>{ if(!tb[k].done||(ta[k]&&ta[k].done)) return; const def=TODO_DEFS.find(d=>d.k===k); if(!def) return;
+      let ln=null; for(const [id,b] of B) if(def.m.test(b.it.title_en||"")){ ln=b; break; }
+      push(tb[k].by,"todo",{id:ln?ln.it.id:"todo:"+k,title_en:def.t,title_th:def.th},ln?ln.lid:""); });
     if(ev.length){ events=events.concat(ev).slice(-40); keep(); }
     return ev;
   }
@@ -1397,11 +1462,11 @@ const Changes=(function(){
     en:{add:(n,t,d)=>n>1?`added ${n} things on ${d}`:`added “${t}” on ${d}`, idea:(n,t)=>n>1?`added ${n} ideas to Maybe`:`added “${t}” to Maybe`,
         move:(n,t,d)=>n>1?`moved ${n} things on ${d}`:`moved “${t}” to ${d}`, maybe:(n,t)=>n>1?`moved ${n} things back to Maybe`:`moved “${t}” back to Maybe`,
         edit:(n,t,d)=>n>1?`updated ${n} things on ${d}`:`updated “${t}” on ${d}`, del:(n,t,d)=>n>1?`removed ${n} things${d?` from ${d}`:""}`:`removed “${t}”${d?` from ${d}`:""}`,
-        heart:(n,t)=>n>1?`loved ${n} things ❤️`:`loved “${t}” ❤️`, star:(n,t)=>n>1?`marked ${n} must-dos ⭐`:`marked “${t}” as a must-do ⭐`},
+        heart:(n,t)=>n>1?`loved ${n} things ❤️`:`loved “${t}” ❤️`, todo:(n,t)=>n>1?`ticked off ${n} bookings ✅`:`ticked off “${t}” ✅`, star:(n,t)=>n>1?`marked ${n} must-dos ⭐`:`marked “${t}” as a must-do ⭐`},
     th:{add:(n,t,d)=>n>1?`เพิ่ม ${n} อย่างใน${d}`:`เพิ่ม “${t}” ใน${d}`, idea:(n,t)=>n>1?`เพิ่ม ${n} ไอเดียลงลิสต์อาจจะไป`:`เพิ่ม “${t}” ลงลิสต์อาจจะไป`,
         move:(n,t,d)=>n>1?`ย้าย ${n} อย่างใน${d}`:`ย้าย “${t}” ไป${d}`, maybe:(n,t)=>n>1?`ย้าย ${n} อย่างกลับไปลิสต์อาจจะไป`:`ย้าย “${t}” กลับไปลิสต์อาจจะไป`,
         edit:(n,t,d)=>n>1?`แก้ ${n} อย่างใน${d}`:`แก้ “${t}” ใน${d}`, del:(n,t,d)=>n>1?`ลบ ${n} อย่าง${d?`จาก${d}`:""}`:`ลบ “${t}”${d?` จาก${d}`:""}`,
-        heart:(n,t)=>n>1?`กดใจ ${n} อย่าง ❤️`:`กดใจ “${t}” ❤️`, star:(n,t)=>n>1?`ปักหมุดห้ามพลาด ${n} อย่าง ⭐`:`ปักหมุด “${t}” ว่าห้ามพลาด ⭐`}};
+        todo:(n,t)=>n>1?`ติ๊กจองแล้ว ${n} อย่าง ✅`:`ติ๊ก “${t}” ว่าจองแล้ว ✅`, heart:(n,t)=>n>1?`กดใจ ${n} อย่าง ❤️`:`กดใจ “${t}” ❤️`, star:(n,t)=>n>1?`ปักหมุดห้ามพลาด ${n} อย่าง ⭐`:`ปักหมุด “${t}” ว่าห้ามพลาด ⭐`}};
   const short=s=>{ s=String(s||""); return s.length>42?s.slice(0,40).trimEnd()+"…":s; };
   function text(L){
     const e=L.ev[L.ev.length-1], live=findItem(e.id);
@@ -1527,6 +1592,177 @@ function openMaybe(){
   });
 }
 
+/* ---------- ✅ To-Do: what to book, when sales open, buy-by dates and risk ----------
+   Generated from the plan: each entry links to its day card by title. Done = ticked in plan.todo[key]
+   ({done,by,ts}, synced + merged per key, latest tick wins) or the linked card's status is "booked".
+   Rules researched 15 Nov 2026; ones not confirmed by an official source are flagged "to confirm". */
+const TODO_DEFS=[
+ {k:"flight-hu7996",m:/HU7996/,risk:"H",buy:"2026-11-15",confirm:"status",
+  t:"Flight Bangkok → Beijing (HU7996, 24 Dec)",th:"ไฟลต์กรุงเทพฯ → ปักกิ่ง (HU7996, 24 ธ.ค.)",
+  how:"Airline or Trip.com. The card isn't marked booked yet: tick this if it's already done.",how_th:"จองกับสายการบินหรือ Trip.com ในแผนยังไม่ได้ติ๊กว่าจองแล้ว ถ้าจองไปแล้วติ๊กได้เลยน้า",
+  if_:"No seat = no trip start; Christmas Eve fares climb as it fills.",if_th:"ไม่มีที่นั่ง = ทริปไม่ได้เริ่ม แถมช่วงคริสต์มาสอีฟราคาจะขึ้นเรื่อย ๆ"},
+ {k:"flight-mu543",m:/MU543/,risk:"H",buy:"2026-11-15",confirm:"status",
+  t:"Flight Shanghai → Singapore (MU543, 1 Jan)",th:"ไฟลต์เซี่ยงไฮ้ → สิงคโปร์ (MU543, 1 ม.ค.)",
+  how:"China Eastern or Trip.com. The plan says “not booked yet”: tick this once it's done.",how_th:"จองกับ China Eastern หรือ Trip.com ในแผนยังเขียนว่ายังไม่ได้จอง จองแล้วติ๊กได้เลย",
+  if_:"New Year's Day flights fill up and get pricier; no seat means an extra night.",if_th:"ไฟลต์วันปีใหม่เต็มเร็วและแพงขึ้น ถ้าไม่ได้ที่นั่งต้องค้างเพิ่มอีกคืน"},
+ {k:"gong-yan",m:/Gong Yan/,risk:"H",opens:"2026-11-30",buy:"2026-11-30",confirm:1,
+  t:"Shanghai Gong Yan (宫宴) dinner, 30 Dec",th:"มื้อค่ำ Shanghai Gong Yan (宫宴) 30 ธ.ค.",
+  how:"Official Gong Yan (宫宴) WeChat mini-program or phone; seats usually open about 30 days ahead (to confirm). Pay the deposit to hold it.",how_th:"จองผ่านมินิโปรแกรม WeChat ของ 宫宴 หรือโทรจอง ปกติเปิดให้จองล่วงหน้าประมาณ 30 วัน (รอยืนยัน) ต้องจ่ายมัดจำถึงจะล็อกที่ได้",
+  if_:"Popular show-dinner; holiday-week seats sell out, especially the better tables.",if_th:"ร้านดังแบบมีโชว์ ช่วงปีใหม่ที่นั่งหมดไว โดยเฉพาะโต๊ะดี ๆ"},
+ {k:"disney-tickets",m:/^Shanghai Disneyland$/,risk:"H",opens:"2026-12-01",buy:"2026-12-01",confirm:1,
+  t:"Shanghai Disneyland tickets, 31 Dec (NYE)",th:"ตั๋วเซี่ยงไฮ้ดิสนีย์แลนด์ 31 ธ.ค. (คืนส่งท้ายปี)",
+  how:"Official Shanghai Disney Resort app/website/WeChat, or Trip.com/Klook. Real-name with each passport. Dated prices show on a rolling ~30-day calendar (exact opening day to confirm). Standard tickets bought direct: full refund 7+ days before.",how_th:"ซื้อในแอป/เว็บ/WeChat ทางการของ Shanghai Disney หรือ Trip.com/Klook ใช้ชื่อจริงตามพาสปอร์ตแต่ละคน ปฏิทินขายตั๋วเปิดล่วงหน้าราว 30 วัน (วันเปิดแน่ ๆ รอยืนยัน) ตั๋วปกติที่ซื้อตรงคืนเงินเต็มได้ถ้าก่อน 7 วัน",
+  if_:"NYE is a peak date and can sell out: no ticket, no entry.",if_th:"คืนส่งท้ายปีคนเยอะมาก ตั๋วหมดได้ ไม่มีตั๋ว = เข้าไม่ได้เลย"},
+ {k:"universal",m:/^Universal Studios Beijing$/,risk:"H",opens:"2026-11-26",buy:"2026-12-01",confirm:1,
+  t:"Universal Beijing tickets + Universal Express, 26 Dec",th:"ตั๋ว Universal ปักกิ่ง + Universal Express 26 ธ.ค.",
+  how:"Universal Beijing Resort app, its WeChat/Alipay mini-programs, or Klook/Trip.com (official partners). Real-name with each passport; dated price calendar (~30 days, to confirm). Free refund until 00:00 two days before.",how_th:"ซื้อในแอป Universal Beijing Resort มินิโปรแกรม WeChat/Alipay หรือ Klook/Trip.com (พาร์ตเนอร์ทางการ) ใช้ชื่อตามพาสปอร์ต ปฏิทินราคาประมาณ 30 วัน (รอยืนยัน) คืนเงินฟรีได้ถึงเที่ยงคืนก่อนวันเที่ยว 2 วัน",
+  if_:"Boxing Day Saturday in the Winter Holiday season: Express can sell out, and without it the big rides mean very long queues.",if_th:"วันเสาร์ช่วง Winter Holiday คนแน่น Express หมดได้ ถ้าไม่มีต้องต่อคิวเครื่องเล่นใหญ่นานมาก"},
+ {k:"driver-mutianyu",m:/Private driver to Mutianyu/,risk:"M",buy:"2026-12-06",
+  t:"Private driver to Mutianyu Great Wall, 27 Dec",th:"รถส่วนตัวไปกำแพงเมืองจีนมู่เถียนอวี่ 27 ธ.ค.",
+  how:"Klook/Trip.com day-hire, or ask the Wangfujing apartment. Fix pick-up 07:30 and the stop at Jingbei Yujia'ao (京北渔家傲) for lunch.",how_th:"จองรถเหมาวันใน Klook/Trip.com หรือให้ที่พักแถวหวังฝูจิ่งช่วยจอง นัดรับ 07:30 และแวะกินข้าวที่ 京北渔家傲",
+  if_:"Last-minute Sunday drivers get scarce; public transport adds 1–2 hours each way.",if_th:"หารถวันอาทิตย์กระชั้นชิดยาก ถ้านั่งขนส่งสาธารณะจะเพิ่มเวลาไปกลับอีก 1–2 ชม."},
+ {k:"mutianyu",m:/^Mutianyu Great Wall$/,risk:"M",opens:"2026-12-12",buy:"2026-12-13",confirm:1,
+  t:"Mutianyu Great Wall + cable car / toboggan, 27 Dec",th:"ตั๋วมู่เถียนอวี่ + กระเช้า/สไลเดอร์ 27 ธ.ค.",
+  how:"Official site en.mutianyugreatwall.com: real-name with each passport, bookable up to 15 days ahead (exact opening day to confirm). Cable car (North Gate) and toboggan (Toboggan Gate) are separate tickets and not interchangeable.",how_th:"จองที่เว็บทางการ en.mutianyugreatwall.com ใช้ชื่อตามพาสปอร์ต จองได้ล่วงหน้า 15 วัน (วันเปิดแน่ ๆ รอยืนยัน) ตั๋วกระเช้ากับสไลเดอร์แยกกันนะ ใช้แทนกันไม่ได้",
+  if_:"Entry is real-name online booking; Sunday slots and the cable car can run short. Toboggan may close in icy weather.",if_th:"ต้องจองออนไลน์แบบใช้ชื่อจริง วันอาทิตย์รอบกระเช้าอาจเต็ม ส่วนสไลเดอร์อาจปิดถ้าน้ำแข็งเกาะ"},
+ {k:"train-g15",m:/Train Beijing South/,risk:"M",opens:"2026-12-14",opensAt:"12:45",buy:"2026-12-14",
+  t:"Train G15 Beijing South 12:00 → Shanghai Hongqiao 16:38, 28 Dec",th:"รถไฟ G15 ปักกิ่งใต้ 12:00 → เซี่ยงไฮ้หงเฉียว 16:38 วันที่ 28 ธ.ค.",
+  how:"12306 app (register both passports) or Trip.com. Presale is 15 days including the travel day, so 28 Dec tickets open 14 Dec; Beijing South sells from 12:45 Beijing time.",how_th:"จองในแอป 12306 (ลงทะเบียนพาสปอร์ตทั้งสองคน) หรือ Trip.com ตั๋วเปิดขายล่วงหน้า 15 วันนับวันเดินทางด้วย ตั๋ววันที่ 28 เลยเปิด 14 ธ.ค. สถานีปักกิ่งใต้เปิดขาย 12:45 (เวลาจีน)",
+  if_:"G15 seats go fast; backups are G23 11:00 or G17 13:00 (Shanghai station), or a later arrival.",if_th:"G15 ที่นั่งหมดไว ตัวสำรองคือ G23 11:00 หรือ G17 13:00 (ลงสถานีเซี่ยงไฮ้) ไม่งั้นต้องไปถึงช้าลง"},
+ {k:"huajia",m:/Huajia Yiyuan/,risk:"L",buy:"2026-12-17",
+  t:"Lunch table: Huajia Yiyuan (花家怡园), 24 Dec",th:"จองโต๊ะมื้อกลางวัน Huajia Yiyuan (花家怡园) 24 ธ.ค.",
+  how:"Call 010-5128 3315 (or ask the Conrad concierge).",how_th:"โทร 010-5128 3315 (หรือให้คอนเซียร์จ Conrad ช่วยจอง)",
+  if_:"Christmas Eve lunch can mean a wait for a table.",if_th:"มื้อกลางวันคริสต์มาสอีฟอาจต้องรอโต๊ะนานหน่อย"},
+ {k:"in-out",m:/In & Out Yunnan/,risk:"M",buy:"2026-12-17",
+  t:"Dinner table: In & Out Yunnan Sanlitun (一坐一忘), 24 Dec",th:"จองโต๊ะมื้อค่ำ In & Out ซานหลี่ถุน (一坐一忘) 24 ธ.ค.",
+  how:"Call 010-8454 0086 (or ask the Conrad concierge).",how_th:"โทร 010-8454 0086 (หรือให้คอนเซียร์จ Conrad ช่วย)",
+  if_:"Christmas Eve in Sanlitun: long queues without a booking (backup: Sifang Sanchuan).",if_th:"คืนคริสต์มาสอีฟแถวซานหลี่ถุน ไม่จองคิวยาวแน่ (ร้านสำรอง: Sifang Sanchuan)"},
+ {k:"temple-of-heaven",m:/^Temple of Heaven$/,risk:"L",opens:"2026-12-18",buy:"2026-12-24",
+  t:"Temple of Heaven combo ticket, 25 Dec",th:"ตั๋วรวมหอเทียนถาน 25 ธ.ค.",
+  how:"Optional: “天坛” WeChat account or Visiting Beijing Parks (畅游公园, bjgyol.com.cn), real-name, 1–7 days ahead (online may need a Chinese mobile number). Otherwise buy at the gate with your passport.",how_th:"จองหรือไม่จองก็ได้ ผ่าน WeChat “天坛” หรือ 畅游公园 (bjgyol.com.cn) ใช้ชื่อจริง จองได้ 1–7 วันล่วงหน้า (ออนไลน์อาจต้องใช้เบอร์จีน) ไม่งั้นซื้อหน้างานด้วยพาสปอร์ตได้",
+  if_:"Gate tickets with a passport are fine unless the park hits capacity.",if_th:"ซื้อหน้างานด้วยพาสปอร์ตได้ ยกเว้นวันที่คนเต็มโควตา"},
+ {k:"forbidden-city",m:/Palace Museum/,risk:"H",opens:"2026-12-18",opensAt:"20:00",buy:"2026-12-18",
+  t:"Forbidden City (Palace Museum) tickets, 25 Dec",th:"ตั๋วพระราชวังต้องห้าม (กู้กง) 25 ธ.ค.",
+  how:"Only the official “故宫博物院” WeChat mini-program or ticket.dpm.org.cn: real-name with each passport, one ticket per passport per day. Sales open 7 days before at 20:00 Beijing time. Pick the morning slot (check in by 12:00).",how_th:"ซื้อได้แค่ช่องทางทางการ มินิโปรแกรม WeChat “故宫博物院” หรือ ticket.dpm.org.cn ใช้ชื่อจริงตามพาสปอร์ต 1 พาสปอร์ตต่อ 1 ใบต่อวัน เปิดขายล่วงหน้า 7 วัน ตอน 20:00 (เวลาจีน) เลือกรอบเช้า (ต้องเข้าก่อน 12:00)",
+  if_:"No same-day tickets and Christmas Day sells out: without a timed booking you can't get in.",if_th:"ไม่มีขายตั๋ววันเดียวกัน แถมวันคริสต์มาสหมดไว ไม่จองล่วงหน้า = เข้าไม่ได้เลย"},
+ {k:"bianyifang",m:/Bianyifang Roast Duck/,risk:"M",buy:"2026-12-18",
+  t:"Dinner table: Bianyifang Roast Duck, Hademen (便宜坊), 25 Dec",th:"จองโต๊ะเป็ดย่าง Bianyifang สาขา Hademen (便宜坊) 25 ธ.ค.",
+  how:"Call 010-6711 2244.",how_th:"โทร 010-6711 2244",
+  if_:"Christmas dinner rush; walk-ins may wait a long time.",if_th:"คืนคริสต์มาสคนเยอะ ไม่จองอาจรอนาน"},
+ {k:"disney-premier",m:/Zootopia: Hot Pursuit/,risk:"H",opens:"2026-12-22",opensAt:"00:00",buy:"2026-12-22",
+  t:"Disney Premier Access set (Zootopia, TRON, Mine Train), 31 Dec",th:"Disney Premier Access แบบเซ็ต (Zootopia, TRON, Mine Train) 31 ธ.ค.",
+  how:"Official Shanghai Disney Resort app: sets go on sale 9 days before at 00:00 China time (Trip.com/Klook may sell earlier). Needs a park ticket for the same date first.",how_th:"ซื้อในแอปทางการ Shanghai Disney Resort เซ็ตเปิดขายล่วงหน้า 9 วัน ตอน 00:00 เวลาจีน (Trip.com/Klook อาจขายก่อน) ต้องมีตั๋วเข้าสวนวันเดียวกันก่อนนะ",
+  if_:"Sets are limited and sell out on peak days; NYE waits for headliners can pass 90 minutes.",if_th:"เซ็ตมีจำกัด วันพีคหมดไว คืนส่งท้ายปีคิวเครื่องเล่นดังอาจเกิน 90 นาที"},
+ {k:"gaolaojiu",m:/Gaolaojiu/,risk:"M",buy:"2026-12-22",confirm:1,
+  t:"Dinner: Chongqing Gaolaojiu Hot Pot (重庆高老九), 29 Dec",th:"มื้อค่ำ หม้อไฟ Chongqing Gaolaojiu (重庆高老九) 29 ธ.ค.",
+  how:"Book or take a queue number via Dianping (大众点评) or by phone (booking policy to confirm).",how_th:"จองหรือกดบัตรคิวผ่าน Dianping (大众点评) หรือโทรไป (เรื่องรับจองรอยืนยัน)",
+  if_:"Flagship hot pot gets long evening queues in the holiday week.",if_th:"ร้านสาขาหลัก ช่วงปีใหม่ตอนเย็นคิวยาว"},
+ {k:"lama-temple",m:/Lama Temple/,risk:"L",buy:"2026-12-23",confirm:1,
+  t:"Lama Temple (雍和宫) ticket, 24 Dec",th:"ตั๋ววัดลามะ (雍和宫) 24 ธ.ค.",
+  how:"Official WeChat account “雍和宫游客信众服务” (passport, full-price ¥25, enter by QR) or the on-site ticket centre (advance window to confirm).",how_th:"ซื้อผ่าน WeChat ทางการ “雍和宫游客信众服务” (ใช้พาสปอร์ต ตั๋วเต็ม ¥25 สแกน QR เข้า) หรือซื้อที่จุดขายตั๋วหน้างาน (เปิดจองล่วงหน้ากี่วันรอยืนยัน)",
+  if_:"Weekday in December: usually fine on the day; there's a daily cap.",if_th:"วันธรรมดาเดือนธันวา ปกติซื้อหน้างานได้ แต่มีโควตาต่อวัน"},
+ {k:"jingbei",m:/Jingbei Yujia/,risk:"L",buy:"2026-12-24",
+  t:"Lunch table: Jingbei Yujia'ao (京北渔家傲), 27 Dec",th:"จองโต๊ะมื้อกลางวัน 京北渔家傲 27 ธ.ค.",
+  how:"Ask the driver to call 010-6162 1468 (hours to confirm).",how_th:"ให้คนขับโทรจอง 010-6162 1468 (เวลาเปิดรอยืนยัน)",
+  if_:"Sunday lunch near the Wall can be busy; plenty of farmhouses nearby as backup.",if_th:"กลางวันวันอาทิตย์อาจคนเยอะ แต่แถวนั้นมีร้านบ้านสวนอื่นให้เลือกเยอะ"},
+ {k:"nanmen",m:/Nanmen Hotpot/,risk:"L",buy:"2026-12-26",confirm:1,
+  t:"Dinner: Nanmen Hotpot, Dashilan (南门涮肉), 27 Dec",th:"มื้อค่ำ Nanmen Hotpot ต้าจ้าหลาน (南门涮肉) 27 ธ.ค.",
+  how:"Queue number or booking via Dianping (大众点评); it's still a Maybe idea (booking policy to confirm).",how_th:"กดบัตรคิวหรือจองผ่าน Dianping (大众点评) ตอนนี้ยังเป็นแค่ไอเดีย (เรื่องรับจองรอยืนยัน)",
+  if_:"Queues at dinner time; easy to swap for another hot pot nearby.",if_th:"ช่วงมื้อเย็นคิวยาว แต่หาร้านหม้อไฟแถวนั้นแทนได้ง่าย"},
+ // hotels: already booked (auto-done from the card's status)
+ {k:"hotel-conrad",m:/Transfer to Conrad/,risk:"H",buy:"2026-11-15",t:"Hotel: Conrad Beijing, 24–25 Dec",th:"โรงแรม Conrad Beijing 24–25 ธ.ค.",how:"Booked direct with Hilton.",how_th:"จองตรงกับ Hilton แล้ว"},
+ {k:"hotel-wangfujing",m:/Early check-in & rest at Wangfujing/,risk:"H",buy:"2026-11-15",t:"Hotel: Wangfujing Serviced Apartment, 25–28 Dec",th:"ที่พัก Wangfujing Serviced Apartment 25–28 ธ.ค.",how:"Booked on Agoda.",how_th:"จองผ่าน Agoda แล้ว"},
+ {k:"hotel-riverdale",m:/Check in: Riverdale/,risk:"H",buy:"2026-11-15",t:"Hotel: Riverdale Residence Xintiandi, 28 Dec–1 Jan",th:"ที่พัก Riverdale Residence ซินเทียนตี้ 28 ธ.ค.–1 ม.ค.",how:"Booked on Agoda.",how_th:"จองผ่าน Agoda แล้ว"},
+ // walk-in: nothing to book (shown at the bottom, not counted)
+ {k:"fangzhuanchang",m:/Fangzhuanchang/,walk:1,t:"Fangzhuanchang No. 69 noodles (方砖厂69号), 25 Dec",th:"บะหมี่ 方砖厂69号 25 ธ.ค.",how:"Walk-in only; 13:30 is after the rush.",how_th:"ไม่รับจอง ไปตอน 13:30 จะพ้นช่วงคนเยอะแล้ว"},
+ {k:"guijie",m:/Guijie/,walk:1,t:"Guijie (簋街) dinner, 26 Dec",th:"มื้อค่ำ 簋街 26 ธ.ค.",how:"Walk-in / queue number on the night (Huda 胡大 is busy).",how_th:"walk-in หรือกดบัตรคิวหน้าร้าน (胡大 คนเยอะ)"},
+ {k:"skewers",m:/Long Time Ago/,walk:1,t:"Long Time Ago mutton skewers (很久以前), 28 Dec",th:"เนื้อแกะเสียบไม้ 很久以前 28 ธ.ค.",how:"Walk-in / queue number via Dianping.",how_th:"walk-in หรือกดคิวผ่าน Dianping"},
+ {k:"yu-garden",m:/Yu Garden/,walk:1,t:"Yu Garden (豫园), 29 Dec",th:"สวนอวี้หยวน (豫园) 29 ธ.ค.",how:"Gate ticket with your passport, or the “上海豫园” mini-program; no reservation needed on ordinary days.",how_th:"ซื้อหน้างานด้วยพาสปอร์ต หรือมินิโปรแกรม “上海豫园” วันปกติไม่ต้องจองล่วงหน้า"},
+ {k:"jingan",m:/Jing'an Temple/,walk:1,t:"Jing'an Temple (静安寺), 30 Dec",th:"วัดจิ้งอัน (静安寺) 30 ธ.ค.",how:"¥50 at the gate; no reservation.",how_th:"ซื้อหน้างาน ¥50 ไม่ต้องจอง"}
+];
+const TODO_RISK={H:{en:"High",th:"สูง",c:"r-h"},M:{en:"Medium",th:"กลาง",c:"r-m"},L:{en:"Low",th:"ต่ำ",c:"r-l"}};
+const todayISO=()=>window.__today||new Date(Date.now()+8*3600e3).toISOString().slice(0,10); // Singapore = Beijing time (UTC+8)
+const isoDays=(a,b)=>Math.round((Date.UTC(...b.split("-").map((x,i)=>i===1?x-1:+x))-Date.UTC(...a.split("-").map((x,i)=>i===1?x-1:+x)))/864e5);
+function todoLink(def){
+  for(const d of plan.days){ const it=d.items.find(i=>def.m.test(i.title_en||"")); if(it) return {it,lid:d.id}; }
+  const it=plan.ideas.find(i=>def.m.test(i.title_en||"")); return it?{it,lid:"ideas"}:null;
+}
+function todoList(){
+  const today=todayISO(), T_=plan.todo||{};
+  return TODO_DEFS.map(def=>{
+    const ln=todoLink(def), st=T_[def.k];
+    const auto=!!(ln&&ln.it.status==="booked"), done=auto||!!(st&&st.done);
+    let state="", n=0;
+    if(!def.walk&&!done){
+      if(def.opens&&isoDays(today,def.opens)>0){ state="opens"; n=isoDays(today,def.opens); }
+      else { n=isoDays(today,def.buy); state=n<0?"overdue":n===0?"today":"due"; }
+    }
+    return {def,ln,done,auto,by:st&&st.done?st.by:"",state,n,urgent:!def.walk&&!done&&isoDays(today,def.buy)<=3};
+  }).sort((a,b)=>(a.def.walk?1:0)-(b.def.walk?1:0)||(a.done?1:0)-(b.done?1:0)||String(a.def.buy||"").localeCompare(String(b.def.buy||"")));
+}
+const todoOpen=()=>todoList().filter(x=>!x.def.walk&&!x.done);
+function paintTodoBtn(){
+  const b=$("#bTodo"); if(!b) return; const o=todoOpen(), hot=o.some(x=>x.urgent);
+  b.innerHTML=`${esc(T("tdBtn"))}<span class="mbn">${o.length}</span>${hot?`<span class="tddot" aria-hidden="true"></span>`:""}`;
+  b.setAttribute("aria-label",T("tdBtn")+" · "+o.length+(hot?" · "+T("tdUrgent"):""));
+  b.classList.toggle("hot",hot);
+}
+const tdDate=(iso,at)=>fmtDate(iso,"mid")+(at?" "+at:"");
+function todoRow(x){
+  const d=x.def, L=lang==="th", ln=x.ln, di=ln&&ln.lid!=="ideas"?plan.days.findIndex(z=>z.id===ln.lid):-1;
+  const where=ln?(di>=0?`${T("dayN")(di+1)} · ${fmtDate(plan.days[di].date,"mid")}`:T("ideas")):"";
+  const r=d.walk?null:TODO_RISK[d.risk];
+  const badge=x.done?`<span class="tdst st-done">${esc(x.auto?T("tdAuto"):T("tdDone"))}</span>`
+    :d.walk?"":`<span class="tdst st-${x.state}">${esc(x.state==="opens"?T("tdOpensIn")(x.n):x.state==="overdue"?T("tdOverdue"):x.state==="today"?T("tdToday"):T("tdDueIn")(x.n))}</span>`;
+  const dates=d.walk?"":`<div class="tddates">${d.opens?`<span>🔓 ${esc(T("tdOpens"))} <b>${esc(tdDate(d.opens,d.opensAt))}</b></span>`:""}<span>⏳ ${esc(T("tdBuyBy"))} <b>${esc(tdDate(d.buy,d.opens===d.buy?d.opensAt:""))}</b></span></div>`;
+  return `<li class="tdi${x.done?" done":""}${d.walk?" walk":""} ${r?r.c:""}" data-k="${esc(d.k)}">
+    ${d.walk?`<span class="tdbox walkic" aria-hidden="true">🚶</span>`:`<button class="tdbox" type="button" role="checkbox" aria-checked="${x.done}" data-tick="${esc(d.k)}" ${x.auto?"disabled":""} aria-label="${esc(T("tdTick")(L?d.th:d.t))}">${x.done?"✓":""}</button>`}
+    <div class="tdmain">
+      <div class="tdtop"><button type="button" class="tdt" data-tdjump="${esc(d.k)}"${ln?"":" disabled"}>${zhRuns(L?d.th:d.t)}</button>${r?`<span class="tdrisk ${r.c}">${esc(T("tdRisk"))}: ${esc(r[lang])}</span>`:""}</div>
+      <div class="tdmeta">${where?`<button type="button" class="tdwhere" data-tdjump="${esc(d.k)}">📅 ${esc(where)} ›</button>`:""}${badge}${x.by&&!x.auto?`<span class="tdby">${esc(pname(x.by))} ✓</span>`:""}</div>
+      ${dates}
+      <div class="tdhow">${zhRuns(L?d.how_th:d.how)}</div>
+      ${d.if_?`<div class="tdif">⚠️ ${esc(T("tdIf"))} ${zhRuns(L?d.if_th:d.if_)}</div>`:""}
+      ${d.confirm?`<div class="tdconf">${esc(T(d.confirm==="status"?"tdConfirmSt":"tdConfirm"))}</div>`:""}
+    </div></li>`;
+}
+function paintTodo(){
+  const ul=document.querySelector("#sheet .tdlist"); if(!ul) return;
+  const L=todoList(), act=L.filter(x=>!x.def.walk&&!x.done), done=L.filter(x=>!x.def.walk&&x.done), walk=L.filter(x=>x.def.walk);
+  ul.innerHTML=act.map(todoRow).join("")+(done.length?`<li class="tdsec">${esc(T("tdDoneH"))} · ${done.length}</li>`+done.map(todoRow).join(""):"")+
+    (walk.length?`<li class="tdsec">${esc(T("tdWalkH"))}</li>`+walk.map(todoRow).join(""):"");
+  const c=document.querySelector("#sheet .tdcount"); if(c) c.textContent=act.length;
+  const s=document.querySelector("#sheet .tdtoday"); if(s) s.textContent=T("tdTodayIs")(fmtDate(todayISO(),"mid"));
+}
+function toggleTodo(k,v){
+  const def=TODO_DEFS.find(d=>d.k===k); if(!def||def.walk) return null;
+  const ln=todoLink(def); if(ln&&ln.it.status==="booked") return true;
+  const cur=!!(plan.todo&&plan.todo[k]&&plan.todo[k].done), on=v==null?!cur:!!v; if(on===cur) return on;
+  snapshot();
+  if(!plan.todo){ const lg=plan.log; delete plan.log; plan.todo={}; if(lg) plan.log=lg; } // keep canonical key order: …savedAt, todo, log
+  plan.todo[k]={done:on?1:0,by:whoAmI(),ts:Date.now()};
+  if(on) logAct("todo",{id:ln?ln.it.id:"todo:"+k,title_en:def.t,title_th:def.th},ln?ln.lid:"");
+  commit(); toast(on?T("tdTicked"):T("tdUnticked"),true);
+  return on;
+}
+function openTodo(){
+  openSheet(`<div class="dhd tiph"><div><h2>${esc(T("tdH"))} <span class="mbcount tdcount"></span></h2><div class="tipsub tdtoday"></div></div>${closeX()}</div>
+    <p class="hint tdsub">${esc(T("tdSub"))}</p>
+    <div class="tdlegend"><span class="tdrisk r-h">${esc(T("tdRisk"))}: ${esc(TODO_RISK.H[lang])}</span><span class="tdrisk r-m">${esc(TODO_RISK.M[lang])}</span><span class="tdrisk r-l">${esc(TODO_RISK.L[lang])}</span></div>
+    <ul class="tdlist"></ul>`,
+  s=>{
+    s.classList.add("tipsheet","tdsheet"); s.setAttribute("aria-label",T("tdH"));
+    s.querySelector("[data-x]").onclick=closeSheet;
+    s.querySelector(".tdlist").addEventListener("click",e=>{
+      const tk=e.target.closest("[data-tick]"); if(tk){ toggleTodo(tk.dataset.tick); return; }
+      const j=e.target.closest("[data-tdjump]"); if(j){ const def=TODO_DEFS.find(d=>d.k===j.dataset.tdjump), ln=def&&todoLink(def); if(!ln) return;
+        closeSheet(); setTimeout(()=>{ const c=document.querySelector(`.card[data-id="${ln.it.id}"]`); if(!c){ jump(ln.lid); return; }
+          c.scrollIntoView({behavior:"smooth",block:"center",inline:"center"}); c.classList.remove("hl"); void c.offsetWidth; c.classList.add("hl"); setTimeout(()=>c.classList.remove("hl"),2600); },60); }
+    });
+    paintTodo();
+  });
+}
+
 /* ---------- shared online copy (sync) ---------- */
 // One shared JSON document on textdb.dev, keyed by an unguessable id. Last write wins.
 // Shared doc: {app,rev,by,plan}. rev = time (ms) of the edit it contains.
@@ -1546,7 +1782,7 @@ const Sync=(function(){
   let state="saved", timer=null, chain=Promise.resolve(), lastChecked=0, deferred=false;
   const POLL_MS=window.__pollMs||30000;
   // she's in the middle of something: an open sheet/dialog, a drag (or long-press about to become one), or typing the title
-  const busy=()=>!!$("#sheet")||!!drag||!!pending||document.body.classList.contains("dragging")||document.activeElement===$("#title");
+  const busy=()=>!!$("#sheet:not(:has(.tdsheet))")||!!drag||!!pending||document.body.classList.contains("dragging")||document.activeElement===$("#title");
   const queue=fn=>(chain=chain.then(fn,fn));
   const fmt=ms=>{ if(!ms) return ""; const d=new Date(ms), now=new Date(); const loc=lang==="th"?"th-TH-u-ca-gregory":"en-GB";
     const o=d.toDateString()===now.toDateString()?{hour:"2-digit",minute:"2-digit"}:{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"};
@@ -1566,7 +1802,7 @@ const Sync=(function(){
   const BASE_KEY="chinaTripPlanner.base";
   function setBase(json){ try{ localStorage.setItem(BASE_KEY,json); }catch(e){} }
   function getBase(){ try{ const s=localStorage.getItem(BASE_KEY); return s?normalize(JSON.parse(s)):null; }catch(e){ return null; } }
-  const core=p=>JSON.stringify(p,(k,v)=>k==="id"||k==="ed"||k==="savedAt"||k==="picks"||k==="log"?undefined:v);
+  const core=p=>JSON.stringify(p,(k,v)=>k==="id"||k==="ed"||k==="savedAt"||k==="picks"||k==="log"||k==="todo"?undefined:v);
   const pickMap=p=>{ const m=new Map(); [...p.days.flatMap(d=>d.items),...p.ideas].forEach(it=>m.set(it.id,it.picks||{})); return m; };
   function merge3(base,local,remote){
     if(!base) return null;
@@ -1579,6 +1815,8 @@ const Sync=(function(){
       PICK_WHO.forEach(w=>["h","s"].forEach(k=>{ const b=g(B,it.id,w,k), l=g(Lm,it.id,w,k), r=g(R,it.id,w,k); if(l!==b?l:r) (res[w]=res[w]||{})[k]=1; }));
       it.picks=res; });
     const m=new Map(); [...(remote.log||[]),...(local.log||[])].forEach(e=>m.set(e.id,e)); out.log=[...m.values()];
+    const td={}; [remote.todo||{},local.todo||{}].forEach(t=>Object.keys(t).forEach(k=>{ if(!td[k]||t[k].ts>td[k].ts) td[k]=t[k]; })); out.todo=td; // latest tick wins, per to-do
+    delete out.log; out.log=[...m.values()];
     return normalize(out);
   }
   async function get(){
@@ -1883,7 +2121,7 @@ async function boot(){
     catch(e){ toast(e.message||T("tOpenFail")); }
     window.history.replaceState(null,"",location.href.split("#")[0]);
   }
-  window.__planner={nav:{navPlatform,amapNativeUrl,amapUrl,openAmap,get timer(){return amapTimer}},get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,Sync,Changes,whoAmI,togglePick,showTips,openMaybe,addIdea,ideaToDay,toMaybe,Chat,Wx,BUILD,ready:true};
+  window.__planner={nav:{navPlatform,amapNativeUrl,amapUrl,openAmap,get timer(){return amapTimer}},get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,Sync,Changes,whoAmI,togglePick,showTips,openTodo,toggleTodo,todoList,TODO_DEFS,openMaybe,addIdea,ideaToDay,toMaybe,Chat,Wx,BUILD,ready:true};
 }
 boot();
 })();
