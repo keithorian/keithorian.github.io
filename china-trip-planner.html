@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b5502f">
-<meta name="app-build" content="20261115081840">
+<meta name="app-build" content="20261115083728">
 <title>Our China Trip • Trip Planner</title>
 <style>
 :root{
@@ -103,7 +103,20 @@ body:has(.sheet.tipsheet) #chatFab{display:none}
 .tddot{position:absolute;top:3px;right:3px;width:9px;height:9px;border-radius:50%;background:#e5322d;box-shadow:0 0 0 2px #fff}
 .sheet.tdsheet{max-width:600px}
 .tdsub{margin:0 0 8px}
-.tdlegend{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tdfrow{margin-bottom:10px}
+.tdfrow .tdflbl{display:block;margin-bottom:5px}
+.tdflbl{font-size:12px;font-weight:700;color:var(--muted)}
+.tdlegend{display:flex;gap:5px;flex-wrap:wrap}
+.tdchip{display:inline-flex;align-items:center;gap:4px;min-height:32px;padding:4px 9px;border-radius:999px;border:1.5px solid transparent;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tdchip .tdcn{min-width:18px;padding:0 5px;border-radius:999px;background:rgba(255,255,255,.75);font-size:11px;text-align:center}
+.tdchip.all{background:#f3ece4;color:#5c5047;border-color:#e2d6c9}
+.tdchip.r-h{background:#fde7e4;color:#b42318;border-color:#f6c4bd}.tdchip.r-m{background:#fff1d6;color:#9a6200;border-color:#f3d79a}.tdchip.r-l{background:#e3f4e8;color:#23703f;border-color:#b9e0c5}
+.tdchip[aria-pressed=true]{color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.tdchip[aria-pressed=true] .tdcn{background:rgba(255,255,255,.28)}
+.tdchip.all[aria-pressed=true]{background:#5c5047;border-color:#5c5047}
+.tdchip.r-h[aria-pressed=true]{background:#d93a2b;border-color:#d93a2b}.tdchip.r-m[aria-pressed=true]{background:#e3a21a;border-color:#e3a21a}.tdchip.r-l[aria-pressed=true]{background:#3a9a5b;border-color:#3a9a5b}
+.tdchip[aria-pressed=true]::before{content:"✓";font-size:11px}
+.tdnone{list-style:none;text-align:center;color:var(--muted);font-size:13.5px;padding:18px 8px}
 .tdlist{list-style:none;margin:0;padding:0 2px 2px;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:grid;gap:10px;align-content:start}
 .tdi{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-left:5px solid #ccc;border-radius:14px;padding:10px 12px;background:#fff}
 .tdi.r-h{border-left-color:#d93a2b}.tdi.r-m{border-left-color:#e3a21a}.tdi.r-l{border-left-color:#3a9a5b}
@@ -382,7 +395,7 @@ body:has(.sheet.mbsheet) #chatFab{display:none}
 <div id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastBtn" type="button" hidden data-t="undoShort"></button></div>
 
 <script>
-const BUILD={"id": "20261115081840", "at": "2026-11-15T08:18:40+08:00", "label": "15 Nov 2026, 08:18 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
+const BUILD={"id": "20261115083728", "at": "2026-11-15T08:37:28+08:00", "label": "15 Nov 2026, 08:37 (SGT)", "syncId": "ctp-39f343f07e0f3ba36a7f90e5de168d74", "endpoint": "https://textdb.dev/api/data/"};
 // ORIGINAL plan data (from Travel Planner doc, "China Winter Holiday: 24 Dec - 3 Jan" tab).
 // Text fields are [English, Thai]. Plain strings are used for both languages.
 const D=(date,city,title,stay,tips,items)=>({date,city,title,stay,tips,items});
@@ -653,7 +666,7 @@ share:"📤 Share",undo:"↩️ Undo",undoShort:"Undo",download:"⬇️ Download
  tdBtn:"✅ To-Do",tdH:"✅ To-Do: bookings",tdSub:"Everything that needs booking, sorted by buy-by date. Tick it when it's done; it syncs to both phones.",tdUrgent:"something is due within 3 days",
  tdTodayIs:d=>`Today: ${d} (Singapore/Beijing time)`,tdRisk:"Risk",tdOpens:"Opens",tdBuyBy:"Buy by",tdOpensIn:n=>n===1?"Opens tomorrow":`Opens in ${n} days`,tdDueIn:n=>n===1?"Due tomorrow":`Due in ${n} days`,
  tdToday:"Due today",tdOverdue:"Overdue",tdDone:"Done ✓",tdAuto:"Booked ✓",tdIf:"If not secured:",tdConfirm:"ℹ️ Rule not officially confirmed: check before relying on it",tdConfirmSt:"ℹ️ Booking status to confirm",
- tdDoneH:"Done",tdWalkH:"🚶 No booking needed",tdTick:t=>`Mark “${t}” as done`,tdTicked:"Ticked off ✅",tdUnticked:"Marked as not done"},
+ tdDoneH:"Done",tdWalkH:"🚶 No booking needed",tdTick:t=>`Mark “${t}” as done`,tdTicked:"Ticked off ✅",tdAll:"All",tdFilter:"Filter by risk",tdNone:"Nothing open at this risk level 🎉",tdUnticked:"Marked as not done"},
 th:{refresh:"🔄 รีเฟรช",sAuto:"🔁 ซิงก์อัตโนมัติเปิดอยู่",sChecked:"ตรวจล่าสุด",tPartner:"อัปเดตตามที่แฟนแก้ไขแล้ว ✓",sSaved:"บันทึกแล้ว ✓",sSaving:"กำลังบันทึก…",sChecking:"กำลังตรวจสอบการเปลี่ยนแปลง…",sOffline:"ออฟไลน์ – บันทึกไว้ในเครื่องนี้",sLocal:"บันทึกไว้ในเครื่องนี้",sLast:"แก้ไขล่าสุด",
  tUpToDate:"เป็นแผนล่าสุดแล้ว ✓",tGotLatest:"อัปเดตเป็นแผนล่าสุดแล้ว ✓",tPushed:"บันทึกการแก้ไขของคุณลงแผนที่แชร์แล้ว ✓",
  tOffline:"เชื่อมต่ออินเทอร์เน็ตไม่ได้ – แผนบันทึกไว้ในเครื่องนี้ และจะซิงก์เมื่อกลับมาออนไลน์",tNewApp:"อัปเดตแอปเป็นเวอร์ชันล่าสุดแล้ว ✓",
@@ -694,7 +707,7 @@ share:"📤 แชร์",undo:"↩️ เลิกทำ",undoShort:"เลิ�
  tdBtn:"✅ สิ่งที่ต้องจอง",tdH:"✅ สิ่งที่ต้องจอง",tdSub:"รวมทุกอย่างที่ต้องจอง เรียงตามวันที่ต้องซื้อให้ทัน จองเสร็จแล้วติ๊กไว้ได้เลย ซิงก์ให้ทั้งสองเครื่องเลยน้า",tdUrgent:"มีอันที่ต้องจองภายใน 3 วัน",
  tdTodayIs:d=>`วันนี้: ${d} (เวลาสิงคโปร์/จีน)`,tdRisk:"ความเสี่ยง",tdOpens:"เปิดขาย",tdBuyBy:"ควรซื้อภายใน",tdOpensIn:n=>n===1?"เปิดขายพรุ่งนี้":`เปิดขายอีก ${n} วัน`,tdDueIn:n=>n===1?"ต้องจองภายในพรุ่งนี้":`เหลืออีก ${n} วัน`,
  tdToday:"ต้องจองวันนี้",tdOverdue:"เลยกำหนดแล้ว",tdDone:"เรียบร้อย ✓",tdAuto:"จองแล้ว ✓",tdIf:"ถ้าจองไม่ทัน:",tdConfirm:"ℹ️ กฎข้อนี้ยังไม่มีประกาศทางการยืนยัน เช็กอีกทีก่อนนะ",tdConfirmSt:"ℹ️ ยังไม่ชัวร์ว่าจองไปแล้วหรือยัง เช็กอีกทีน้า",
- tdDoneH:"เรียบร้อยแล้ว",tdWalkH:"🚶 ไม่ต้องจอง ไปได้เลย",tdTick:t=>`ติ๊กว่า “${t}” เรียบร้อยแล้ว`,tdTicked:"ติ๊กแล้ว เก่งมาก ✅",tdUnticked:"เอาติ๊กออกแล้วน้า"}
+ tdDoneH:"เรียบร้อยแล้ว",tdWalkH:"🚶 ไม่ต้องจอง ไปได้เลย",tdTick:t=>`ติ๊กว่า “${t}” เรียบร้อยแล้ว`,tdTicked:"ติ๊กแล้ว เก่งมาก ✅",tdAll:"ทั้งหมด",tdFilter:"กรองตามความเสี่ยง",tdNone:"ระดับนี้ไม่มีอะไรค้างแล้ว 🎉",tdUnticked:"เอาติ๊กออกแล้วน้า"}
 };
 let lang="en";
 try{ lang=localStorage.getItem(LANG_KEY)||((navigator.language||"").toLowerCase().startsWith("th")?"th":"en"); }catch(e){}
@@ -1726,10 +1739,19 @@ function todoRow(x){
       ${d.confirm?`<div class="tdconf">${esc(T(d.confirm==="status"?"tdConfirmSt":"tdConfirm"))}</div>`:""}
     </div></li>`;
 }
+// risk filter: a set of "H"/"M"/"L" (empty = All); kept for this browser session only, never in the shared plan
+const TD_FKEY="chinaTripPlanner.tdFilter";
+function tdFilter(){ try{ const v=JSON.parse(sessionStorage.getItem(TD_FKEY)||"[]"); return Array.isArray(v)?v.filter(r=>TODO_RISK[r]):[]; }catch(e){ return []; } }
+function setTdFilter(f){ const v=["H","M","L"].filter(r=>f.includes(r)); try{ v.length?sessionStorage.setItem(TD_FKEY,JSON.stringify(v)):sessionStorage.removeItem(TD_FKEY); }catch(e){} paintTodo(); return v; }
+function tdChip(r){ const f=tdFilter(); if(r==="all") return setTdFilter([]); return setTdFilter(f.includes(r)?f.filter(x=>x!==r):f.concat(r)); }
 function paintTodo(){
   const ul=document.querySelector("#sheet .tdlist"); if(!ul) return;
-  const L=todoList(), act=L.filter(x=>!x.def.walk&&!x.done), done=L.filter(x=>!x.def.walk&&x.done), walk=L.filter(x=>x.def.walk);
-  ul.innerHTML=act.map(todoRow).join("")+(done.length?`<li class="tdsec">${esc(T("tdDoneH"))} · ${done.length}</li>`+done.map(todoRow).join(""):"")+
+  const L=todoList(), F=tdFilter(), inF=x=>!F.length||F.includes(x.def.risk);
+  const allAct=L.filter(x=>!x.def.walk&&!x.done), act=allAct.filter(inF), done=L.filter(x=>!x.def.walk&&x.done&&inF(x)), walk=F.length?[]:L.filter(x=>x.def.walk);
+  const lg=document.querySelector("#sheet .tdlegend");
+  if(lg) lg.innerHTML=`<button type="button" class="tdchip all" data-tdf="all" aria-pressed="${!F.length}">${esc(T("tdAll"))} <span class="tdcn">${allAct.length}</span></button>`+
+    ["H","M","L"].map(r=>`<button type="button" class="tdchip ${TODO_RISK[r].c}" data-tdf="${r}" aria-pressed="${F.includes(r)}">${esc(TODO_RISK[r][lang])} <span class="tdcn">${allAct.filter(x=>x.def.risk===r).length}</span></button>`).join("");
+  ul.innerHTML=(act.length?act.map(todoRow).join(""):F.length?`<li class="tdnone">${esc(T("tdNone"))}</li>`:"")+(done.length?`<li class="tdsec">${esc(T("tdDoneH"))} · ${done.length}</li>`+done.map(todoRow).join(""):"")+
     (walk.length?`<li class="tdsec">${esc(T("tdWalkH"))}</li>`+walk.map(todoRow).join(""):"");
   const c=document.querySelector("#sheet .tdcount"); if(c) c.textContent=act.length;
   const s=document.querySelector("#sheet .tdtoday"); if(s) s.textContent=T("tdTodayIs")(fmtDate(todayISO(),"mid"));
@@ -1748,11 +1770,12 @@ function toggleTodo(k,v){
 function openTodo(){
   openSheet(`<div class="dhd tiph"><div><h2>${esc(T("tdH"))} <span class="mbcount tdcount"></span></h2><div class="tipsub tdtoday"></div></div>${closeX()}</div>
     <p class="hint tdsub">${esc(T("tdSub"))}</p>
-    <div class="tdlegend"><span class="tdrisk r-h">${esc(T("tdRisk"))}: ${esc(TODO_RISK.H[lang])}</span><span class="tdrisk r-m">${esc(TODO_RISK.M[lang])}</span><span class="tdrisk r-l">${esc(TODO_RISK.L[lang])}</span></div>
+    <div class="tdfrow"><span class="tdflbl">${esc(T("tdRisk"))}:</span><div class="tdlegend" role="group" aria-label="${esc(T("tdFilter"))}"></div></div>
     <ul class="tdlist"></ul>`,
   s=>{
     s.classList.add("tipsheet","tdsheet"); s.setAttribute("aria-label",T("tdH"));
     s.querySelector("[data-x]").onclick=closeSheet;
+    s.querySelector(".tdlegend").addEventListener("click",e=>{ const c=e.target.closest("[data-tdf]"); if(c){ tdChip(c.dataset.tdf); s.querySelector(".tdlist").scrollTop=0; } });
     s.querySelector(".tdlist").addEventListener("click",e=>{
       const tk=e.target.closest("[data-tick]"); if(tk){ toggleTodo(tk.dataset.tick); return; }
       const j=e.target.closest("[data-tdjump]"); if(j){ const def=TODO_DEFS.find(d=>d.k===j.dataset.tdjump), ln=def&&todoLink(def); if(!ln) return;
@@ -2121,7 +2144,7 @@ async function boot(){
     catch(e){ toast(e.message||T("tOpenFail")); }
     window.history.replaceState(null,"",location.href.split("#")[0]);
   }
-  window.__planner={nav:{navPlatform,amapNativeUrl,amapUrl,openAmap,get timer(){return amapTimer}},get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,Sync,Changes,whoAmI,togglePick,showTips,openTodo,toggleTodo,todoList,TODO_DEFS,openMaybe,addIdea,ideaToDay,toMaybe,Chat,Wx,BUILD,ready:true};
+  window.__planner={nav:{navPlatform,amapNativeUrl,amapUrl,openAmap,get timer(){return amapTimer}},get plan(){return plan},get lang(){return lang},setLang,tx,normalize,moveItem:(id,l,i)=>{snapshot();moveItem(id,l,i);commit();},deleteItem,nudge,encodePlan,decodePlan,shareLink,undo,STORE_KEY,Sync,Changes,whoAmI,togglePick,showTips,openTodo,toggleTodo,todoList,TODO_DEFS,tdFilter,openMaybe,addIdea,ideaToDay,toMaybe,Chat,Wx,BUILD,ready:true};
 }
 boot();
 })();
