@@ -1,0 +1,62 @@
+name: Oura sync
+
+# Refreshes the Oura token, pulls a recent window, and commits health/data/daily.json.
+# Schedule and workflow_dispatch run only after this file is on the default branch.
+#
+# Repository secrets (Settings → Secrets and variables → Actions):
+#   OURA_CLIENT_ID       Oura application client id
+#   OURA_CLIENT_SECRET   Oura application client secret
+#   OURA_REFRESH_TOKEN   Current Oura refresh token (the job rotates it)
+#   GH_SECRETS_PAT       Fine-grained PAT with Secrets: Read and write on this repo
+#
+# The job never prints token values. It writes a rotated refresh token back with
+# `gh secret set` before downloading data, so a later failure does not lose it.
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: health-data
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'keithorian/keithorian.github.io'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 50
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Pull Oura and aggregate
+        env:
+          OURA_CLIENT_ID: ${{ secrets.OURA_CLIENT_ID }}
+          OURA_CLIENT_SECRET: ${{ secrets.OURA_CLIENT_SECRET }}
+          OURA_REFRESH_TOKEN: ${{ secrets.OURA_REFRESH_TOKEN }}
+          GH_SECRETS_PAT: ${{ secrets.GH_SECRETS_PAT }}
+        run: python health/scripts/sync_oura.py
+
+      - name: Commit aggregated data
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add health/data/daily.json
+          if git diff --cached --quiet; then
+            echo "No change in aggregated data"
+            exit 0
+          fi
+          git commit -m "Update Oura health data"
+          git pull --rebase origin main
+          git push origin HEAD:main
