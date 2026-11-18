@@ -272,6 +272,9 @@ class PageCopyTests(unittest.TestCase):
         self.assertIn("not a forecast", html)
         self.assertIn("10,000", html)
         self.assertIn("150 minutes", html)
+        self.assertIn("not a cause", html)
+        self.assertIn("Sleep with steps and cardio", html)
+        self.assertIn('id="sleep-latest"', html)
         self.assertIn("log-weight.yml", html)
         self.assertIn('lang="en-GB"', html)
         for american in ("favorite", "labeled", "color of", "toward the"):

@@ -108,7 +108,7 @@ h3 { margin: 0; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.02em; co
   text-decoration: none; font-weight: 700;
 }
 .stats { display: grid; gap: 10px; }
-.stats.four { grid-template-columns: 1fr 1fr; }
+.stats.four, .stats.lead { grid-template-columns: 1fr 1fr; }
 .stat { background: var(--accent-soft); border-radius: 14px; padding: 12px; }
 .stat .num { font-size: 1.8rem; }
 .bar { position: relative; height: 14px; margin-top: 8px; background: var(--track); border-radius: 999px; overflow: visible; }
@@ -153,6 +153,7 @@ footer a { color: var(--accent); }
 
 @media (min-width: 720px) {
   .stats { grid-template-columns: 1.3fr 1fr 1fr; }
+  .stats.lead { grid-template-columns: 1.4fr 1fr 1fr 1fr; }
   .stats.four { grid-template-columns: 1fr 1fr; }
   .split { grid-template-columns: 1fr 1fr; }
   h1 { font-size: 2.4rem; }
