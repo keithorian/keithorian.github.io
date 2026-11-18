@@ -1,0 +1,24 @@
+name: Log weight
+description: Add a weight to the public health log
+title: Log weight
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This writes one line to the public health page. Leave the date blank to use today in Singapore (UTC+8). Only the repository owner is recorded; other submissions are closed.
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      description: Singapore date, as YYYY-MM-DD. Leave blank for today.
+      placeholder: YYYY-MM-DD
+    validations:
+      required: false
+  - type: input
+    id: kg
+    attributes:
+      label: Weight (kg)
+      description: Kilograms, for example 91.4
+      placeholder: "91.4"
+    validations:
+      required: true

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14352c">
+<meta name="description" content="Keith's public log of weight, steps and cardio from his Oura ring. Not medical advice.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Health">
+<title>Health · weight, steps and cardio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%2314352c' stroke-width='6'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to the log</a>
+<header>
+  <div class="wrap head">
+    <div class="brand">
+      <span class="ring" aria-hidden="true"></span>
+      <div>
+        <p class="eyebrow">Singapore time · UTC+8</p>
+        <h1>Health</h1>
+      </div>
+    </div>
+    <p class="dek">Weight, steps and cardio. A personal log from Keith’s Oura ring, not medical advice.</p>
+    <p id="updated" class="updated">Loading the log…</p>
+  </div>
+</header>
+
+<div class="rangewrap">
+  <div class="wrap">
+    <div class="range" role="group" aria-label="Date range">
+      <button type="button" data-days="7" aria-pressed="false">7 days</button>
+      <button type="button" data-days="30" aria-pressed="true">30 days</button>
+      <button type="button" data-days="90" aria-pressed="false">90 days</button>
+    </div>
+    <p id="range-note" class="note">Charts below follow this range. The weight chart adds the same number of days of the illustrative pace.</p>
+  </div>
+</div>
+
+<main id="content" class="wrap">
+  <p id="load-error" class="error" hidden></p>
+
+  <section class="card" aria-labelledby="weight-heading">
+    <div class="card-head">
+      <h2 id="weight-heading">Weight goal</h2>
+      <a class="button" href="https://github.com/keithorian/keithorian.github.io/issues/new?template=log-weight.yml">Log a weight</a>
+    </div>
+    <p class="num" id="weight-value">—</p>
+    <p class="muted" id="weight-when"></p>
+    <p id="weight-progress">Start 92 kg on 18 Nov 2026. Target 80 kg.</p>
+    <div class="bar" id="weight-bar" role="progressbar" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0" aria-label="Weight lost towards 80 kg">
+      <span class="bar-fill" id="weight-fill" aria-hidden="true"></span>
+      <span class="bar-mark" id="weight-pace" title="Illustrative pace" aria-hidden="true"></span>
+    </div>
+    <div class="bar-labels"><span id="weight-start-label">92 kg</span><span id="weight-target-label">80 kg</span></div>
+    <p class="legend">
+      <span class="key"><i class="swatch solid"></i> Logged weight</span>
+      <span class="key"><i class="swatch dashed"></i> Illustrative projection, 0.5 kg per week</span>
+    </p>
+    <div id="weight-chart" class="chart"></div>
+    <p id="pace-note" class="note">The dashed line is an illustrative pace of 0.5 kg per week from 92 kg on 18 Nov 2026. It is a projection, not a forecast. At that pace the line reaches 80 kg on 5 May 2027.</p>
+    <ul id="weight-list" class="plain"></ul>
+  </section>
+
+  <section class="card" aria-labelledby="latest-heading">
+    <h2 id="latest-heading">Latest day</h2>
+    <p class="muted" id="latest-when"></p>
+    <div class="stats">
+      <article class="stat">
+        <h3>Steps</h3>
+        <p class="num" id="steps-value">—</p>
+        <p class="muted" id="steps-of">of 10,000</p>
+        <div class="bar" aria-hidden="true"><span class="bar-fill" id="steps-fill"></span></div>
+      </article>
+      <article class="stat">
+        <h3>Active calories</h3>
+        <p class="num" id="cal-active">—</p>
+        <p class="muted">kcal above rest</p>
+      </article>
+      <article class="stat">
+        <h3>Total calories</h3>
+        <p class="num" id="cal-total">—</p>
+        <p class="muted">kcal, including rest</p>
+      </article>
+    </div>
+    <h3 class="subhead">Steps in this range</h3>
+    <p class="note">Each bar is one day. The line is the 10,000-step target.</p>
+    <div id="steps-chart" class="chart"></div>
+    <p id="steps-summary" class="note"></p>
+  </section>
+
+  <section class="card" aria-labelledby="cardio-heading">
+    <h2 id="cardio-heading">Cardio this week</h2>
+    <p class="muted" id="cardio-when"></p>
+    <p class="num" id="cardio-value">—</p>
+    <p class="muted" id="cardio-of">of 150 minutes</p>
+    <div class="bar" aria-hidden="true"><span class="bar-fill" id="cardio-fill"></span></div>
+    <p id="cardio-detail" class="note"></p>
+    <h3 class="subhead">Cardio by week in this range</h3>
+    <p class="note">The line is 150 minutes. A partial week is a shorter bar on purpose.</p>
+    <div id="cardio-chart" class="chart"></div>
+  </section>
+
+  <section class="card" aria-labelledby="consistency-heading">
+    <h2 id="consistency-heading">Streaks and consistency</h2>
+    <div class="stats four">
+      <article class="stat">
+        <h3>10,000-step streak</h3>
+        <p class="num" id="streak">—</p>
+        <p class="muted">Complete days in a row at or above 10,000 steps.</p>
+      </article>
+      <article class="stat">
+        <h3>Days at 10,000</h3>
+        <p class="num" id="hit-10k">—</p>
+        <p class="muted" id="hit-10k-note">In this range.</p>
+      </article>
+      <article class="stat">
+        <h3>Days with steps</h3>
+        <p class="num" id="logged-days">—</p>
+        <p class="muted">Days in this range with a step count.</p>
+      </article>
+      <article class="stat">
+        <h3>Weeks at 150 min</h3>
+        <p class="num" id="weeks-hit">—</p>
+        <p class="muted">Weeks in this range, including partial weeks.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="weeks-heading">
+    <h2 id="weeks-heading">Weekly summary</h2>
+    <p id="weeks-caption" class="note">Monday to Sunday, Singapore time. Partial means the range does not cover the whole week, or the latest day is still in progress. Averages skip days with no number. Swipe sideways for every column.</p>
+    <div class="tablewrap">
+      <table aria-describedby="weeks-caption">
+        <thead>
+          <tr>
+            <th scope="col">Week</th>
+            <th scope="col">Days</th>
+            <th scope="col">Avg steps</th>
+            <th scope="col">≥10k</th>
+            <th scope="col" title="Each day counts the longer of medium and high activity, and logged workouts. Overlap is not added twice.">Cardio min</th>
+            <th scope="col">Workout min</th>
+            <th scope="col">Avg active kcal</th>
+            <th scope="col">Avg sleep h</th>
+            <th scope="col">Avg readiness</th>
+          </tr>
+        </thead>
+        <tbody id="week-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="sleep-heading">
+    <h2 id="sleep-heading">Sleep</h2>
+    <p id="sleep-summary" class="note">Hours asleep come from the main sleep period. The score is Oura’s sleep score.</p>
+    <div id="sleep-chart" class="chart"></div>
+    <p class="legend">
+      <span class="key"><i class="swatch deep"></i> Deep</span>
+      <span class="key"><i class="swatch rem"></i> REM</span>
+      <span class="key"><i class="swatch light"></i> Light</span>
+    </p>
+  </section>
+
+  <section class="card" aria-labelledby="ready-heading">
+    <h2 id="ready-heading">Readiness</h2>
+    <p id="ready-summary" class="note">Oura readiness score for each day.</p>
+    <div id="ready-chart" class="chart"></div>
+  </section>
+
+  <div class="split">
+    <section class="card" aria-labelledby="hrv-heading">
+      <h2 id="hrv-heading">Heart-rate variability</h2>
+      <p id="hrv-summary" class="note">Average during the main sleep, in milliseconds.</p>
+      <div id="hrv-chart" class="chart"></div>
+    </section>
+    <section class="card" aria-labelledby="rhr-heading">
+      <h2 id="rhr-heading">Resting heart rate</h2>
+      <p id="rhr-summary" class="note">Lowest heart rate during the main sleep, in beats per minute.</p>
+      <div id="rhr-chart" class="chart"></div>
+    </section>
+  </div>
+
+  <section class="card" aria-labelledby="stress-heading">
+    <h2 id="stress-heading">Stress</h2>
+    <p id="stress-summary" class="note">Oura’s label for the day, plus minutes it marked as high stress. This is a log, not a judgement.</p>
+    <div id="stress-chart" class="chart"></div>
+  </section>
+
+  <section class="card" aria-labelledby="workouts-heading">
+    <h2 id="workouts-heading">Workouts</h2>
+    <p id="workout-summary" class="note">Times are Singapore time (UTC+8). The date Oura stored can differ when a session crosses midnight.</p>
+    <ul id="workout-list" class="workouts"></ul>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>This is Keith’s own log of his Oura ring and the weights he writes down. It is not medical advice.</p>
+    <p>Times are in Singapore (UTC+8). This page is public. <a href="https://github.com/keithorian/keithorian.github.io/issues/new?template=log-weight.yml">Log a weight</a></p>
+  </div>
+</footer>
+<script src="app.js" defer></script>
+</body>
+</html>
