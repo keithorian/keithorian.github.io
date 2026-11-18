@@ -273,6 +273,7 @@ class PageCopyTests(unittest.TestCase):
         self.assertIn("10,000", html)
         self.assertIn("150 minutes", html)
         self.assertIn("not a cause", html)
+        self.assertIn("The solid line is the trend.", html)
         self.assertIn("Sleep with steps and cardio", html)
         self.assertIn('id="sleep-latest"', html)
         self.assertIn("log-weight.yml", html)

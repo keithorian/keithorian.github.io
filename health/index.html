@@ -58,6 +58,7 @@
     <p class="legend">
       <span class="key"><i class="swatch solid"></i> Logged weight</span>
       <span class="key"><i class="swatch dashed"></i> Illustrative projection, 0.5 kg per week</span>
+      <span class="key" id="weight-trend-key" hidden><i class="swatch trend"></i> Trend of logged weights</span>
     </p>
     <div id="weight-chart" class="chart"></div>
     <p id="pace-note" class="note">The dashed line is an illustrative pace of 0.5 kg per week from 92 kg on 18 Nov 2026. It is a projection, not a forecast. At that pace the line reaches 80 kg on 5 May 2027.</p>
@@ -91,7 +92,7 @@
       </article>
     </div>
     <h3 class="subhead">Steps in this range</h3>
-    <p class="note">Each bar is one day. The line is the 10,000-step target.</p>
+    <p class="note">Each bar is one day. The solid line is the trend. The dashed line is the 10,000-step target.</p>
     <div id="steps-chart" class="chart"></div>
     <p id="steps-summary" class="note"></p>
   </section>
@@ -104,7 +105,7 @@
     <div class="bar" aria-hidden="true"><span class="bar-fill" id="cardio-fill"></span></div>
     <p id="cardio-detail" class="note"></p>
     <h3 class="subhead">Cardio by week in this range</h3>
-    <p class="note">The line is 150 minutes. A partial week is a shorter bar on purpose.</p>
+    <p class="note">The dashed line is 150 minutes. The solid line is the trend. A partial week is a shorter bar on purpose.</p>
     <div id="cardio-chart" class="chart"></div>
   </section>
 
@@ -187,6 +188,7 @@
       <span class="key"><i class="swatch deep"></i> Deep</span>
       <span class="key"><i class="swatch rem"></i> REM</span>
       <span class="key"><i class="swatch light"></i> Light</span>
+      <span class="key"><i class="swatch trend"></i> Trend in hours asleep</span>
     </p>
   </section>
 

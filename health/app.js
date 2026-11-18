@@ -170,6 +170,7 @@
       bar: css("--bar") || "#0b6b48",
       goal: css("--goal") || "#8d3b32",
       proj: css("--mark") || "#b86112",
+      trend: css("--trend") || "#1d4e89",
       deep: css("--deep") || "#1e4d7b",
       rem: css("--rem") || "#2a7f7a",
       light: css("--light") || "#c5ddd2",
@@ -185,8 +186,33 @@
       return;
     }
     node.setAttribute("role", "img");
-    node.setAttribute("aria-label", summary);
+    const labelled = svg.includes(">Trend<") ? `${summary} Solid line labelled Trend.` : summary;
+    node.setAttribute("aria-label", labelled);
     node.innerHTML = svg;
+  }
+
+  function linearFit(points) {
+    if (points.length < 2) return null;
+    let sx = 0;
+    let sy = 0;
+    let sxx = 0;
+    let sxy = 0;
+    for (const point of points) {
+      sx += point.x;
+      sy += point.y;
+      sxx += point.x * point.x;
+      sxy += point.x * point.y;
+    }
+    const den = points.length * sxx - sx * sx;
+    if (den === 0) return null;
+    const slope = (points.length * sxy - sx * sy) / den;
+    const intercept = (sy - slope * sx) / points.length;
+    return { slope, intercept };
+  }
+
+  function trendMarkup(x0, y0, x1, y1, colour, width) {
+    return `<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${colour}" stroke-width="2" stroke-linecap="round"/>`
+      + `<text x="${(width - 8).toFixed(1)}" y="22" text-anchor="end" font-size="11" fill="${colour}">Trend</text>`;
   }
 
   function axisLabels(count) {
@@ -203,12 +229,22 @@
     const plotW = width - pad.l - pad.r;
     const plotH = height - pad.t - pad.b;
     const nums = values.filter((value) => value != null);
+    const known = [];
+    values.forEach((value, index) => {
+      if (value != null) known.push({ x: index, y: value });
+    });
+    const fit = linearFit(known);
     const peak = Math.max(goal || 0, ...(nums.length ? nums : [0]), 1);
-    const yMax = peak * 1.08;
+    let yMax = peak * 1.08;
+    if (fit) {
+      const yStart = fit.intercept + fit.slope * known[0].x;
+      const yEnd = fit.intercept + fit.slope * known[known.length - 1].x;
+      yMax = Math.max(yMax, yStart, yEnd, 1);
+    }
     const n = Math.max(values.length, 1);
     const slot = plotW / n;
     const yAt = (value) => pad.t + plotH - (value / yMax) * plotH;
-    const ticks = [0, Math.round(yMax / 2), Math.round(yMax)];
+    const ticks = [0, Math.round(yMax / 2), Math.round(yMax)].filter((tick) => !goal || Math.abs(tick - goal) / yMax > 0.08);
     let body = `<svg viewBox="0 0 ${width} ${height}" aria-hidden="true" font-family="Avenir Next, Segoe UI, system-ui, sans-serif">`;
     for (const tick of ticks) {
       const y = yAt(tick);
@@ -227,6 +263,17 @@
       const w = Math.max(1, slot * 0.7);
       body += `<rect x="${x.toFixed(2)}" y="${(yAt(value)).toFixed(2)}" width="${w.toFixed(2)}" height="${h.toFixed(2)}" rx="2" fill="${c.bar}"><title>${xml(labels[index])}: ${xml(num.format(value))}</title></rect>`;
     });
+    if (fit) {
+      const xOf = (index) => pad.l + index * slot + slot / 2;
+      body += trendMarkup(
+        xOf(known[0].x),
+        yAt(fit.intercept + fit.slope * known[0].x),
+        xOf(known[known.length - 1].x),
+        yAt(fit.intercept + fit.slope * known[known.length - 1].x),
+        c.trend,
+        width,
+      );
+    }
     for (const index of axisLabels(labels.length)) {
       const x = pad.l + index * slot + slot / 2;
       const anchor = labels.length > 1 && index === 0 ? "start" : (labels.length > 1 && index === labels.length - 1 ? "end" : "middle");
@@ -245,8 +292,17 @@
     const plotH = height - pad.t - pad.b;
     const nums = values.filter((value) => value != null);
     if (!nums.length) return "";
+    const known = [];
+    values.forEach((value, index) => {
+      if (value != null) known.push({ x: index, y: value });
+    });
+    const fit = linearFit(known);
     let yMin = Math.min(...nums);
     let yMax = Math.max(...nums);
+    if (fit) {
+      yMin = Math.min(yMin, fit.intercept + fit.slope * known[0].x, fit.intercept + fit.slope * known[known.length - 1].x);
+      yMax = Math.max(yMax, fit.intercept + fit.slope * known[0].x, fit.intercept + fit.slope * known[known.length - 1].x);
+    }
     if (opts && opts.floor != null) yMin = Math.min(yMin, opts.floor);
     if (opts && opts.ceil != null) yMax = Math.max(yMax, opts.ceil);
     if (yMax - yMin < 1) {
@@ -283,6 +339,16 @@
       else segment.push({ x: xAt(index), y: yAt(value), label: labels[index], value });
     });
     flush();
+    if (fit) {
+      body += trendMarkup(
+        xAt(known[0].x),
+        yAt(fit.intercept + fit.slope * known[0].x),
+        xAt(known[known.length - 1].x),
+        yAt(fit.intercept + fit.slope * known[known.length - 1].x),
+        c.trend,
+        width,
+      );
+    }
     for (const index of axisLabels(labels.length)) {
       const anchor = labels.length > 1 && index === 0 ? "start" : (labels.length > 1 && index === labels.length - 1 ? "end" : "middle");
       body += `<text x="${xAt(index).toFixed(1)}" y="${height - 8}" text-anchor="${anchor}" font-size="11" fill="${c.ink}">${xml(labels[index])}</text>`;
@@ -298,8 +364,16 @@
     const pad = { l: 44, r: 10, t: 16, b: 28 };
     const plotW = width - pad.l - pad.r;
     const plotH = height - pad.t - pad.b;
-    const totals = rows.map((row) => (row.deep_h || 0) + (row.rem_h || 0) + (row.light_h || 0));
-    const peak = Math.max(8, ...totals, 1);
+    const totals = rows.map((row) => (row.sleep_h == null ? null : row.sleep_h));
+    const known = [];
+    totals.forEach((value, index) => {
+      if (value != null) known.push({ x: index, y: value });
+    });
+    const fit = linearFit(known);
+    const peak = Math.max(8, ...known.map((point) => point.y), 1, ...(fit ? [
+      fit.intercept + fit.slope * known[0].x,
+      fit.intercept + fit.slope * known[known.length - 1].x,
+    ] : []));
     const yMax = peak * 1.05;
     const slot = plotW / Math.max(rows.length, 1);
     const yAt = (value) => pad.t + plotH - (value / yMax) * plotH;
@@ -328,6 +402,17 @@
         base += hours;
       }
     });
+    if (fit) {
+      const xOf = (index) => pad.l + index * slot + slot / 2;
+      body += trendMarkup(
+        xOf(known[0].x),
+        yAt(fit.intercept + fit.slope * known[0].x),
+        xOf(known[known.length - 1].x),
+        yAt(fit.intercept + fit.slope * known[known.length - 1].x),
+        c.trend,
+        width,
+      );
+    }
     const labels = rows.map((row) => formatDay(row.date));
     for (const index of axisLabels(labels.length)) {
       const x = pad.l + index * slot + slot / 2;
@@ -350,10 +435,17 @@
     if (end < start) end = start;
     const days = calendar(start, end);
     const logged = new Map(weights.map((row) => [row.date, row.kg]));
+    const actual = weights.filter((row) => row.date >= start && row.date <= end);
+    const weightFit = linearFit(actual.map((row) => ({ x: diffDays(start, row.date), y: row.kg })));
     const ys = [];
     for (const day of days) {
       if (day >= goals.weight_start_date) ys.push(guideKg(day, goals));
       if (logged.has(day)) ys.push(logged.get(day));
+    }
+    if (weightFit && actual.length >= 2) {
+      const x0 = diffDays(start, actual[0].date);
+      const x1 = diffDays(start, actual[actual.length - 1].date);
+      ys.push(weightFit.intercept + weightFit.slope * x0, weightFit.intercept + weightFit.slope * x1);
     }
     if (!ys.length) return { svg: "", offScale: true };
     let yMin = Math.min(...ys);
@@ -388,7 +480,6 @@
       const last = proj[proj.length - 1];
       body += `<text x="${xAt(last) - 4}" y="${yAt(guideKg(last, goals)) - 6}" text-anchor="end" font-size="11" fill="${c.proj}">Projection</text>`;
     }
-    const actual = weights.filter((row) => row.date >= start && row.date <= end);
     if (actual.length > 1) {
       const points = actual.map((row) => `${xAt(row.date).toFixed(1)},${yAt(row.kg).toFixed(1)}`).join(" ");
       body += `<polyline fill="none" stroke="${c.accent}" stroke-width="2.5" points="${points}"/>`;
@@ -396,6 +487,20 @@
     for (const row of actual) {
       body += `<circle cx="${xAt(row.date).toFixed(1)}" cy="${yAt(row.kg).toFixed(1)}" r="4.5" fill="${c.accent}"><title>${xml(formatDay(row.date, true))}: ${kgFmt.format(row.kg)} kg</title></circle>`;
     }
+    if (weightFit && actual.length >= 2) {
+      const first = actual[0];
+      const last = actual[actual.length - 1];
+      body += trendMarkup(
+        xAt(first.date),
+        yAt(weightFit.intercept + weightFit.slope * diffDays(start, first.date)),
+        xAt(last.date),
+        yAt(weightFit.intercept + weightFit.slope * diffDays(start, last.date)),
+        c.trend,
+        width,
+      );
+    }
+    const trendKey = $("weight-trend-key");
+    if (trendKey) trendKey.hidden = !(weightFit && actual.length >= 2);
     const labelDays = [...new Set([start, days[Math.floor((days.length - 1) / 2)], end])];
     for (const iso of labelDays) {
       const anchor = iso === start && iso !== end ? "start" : (iso === end && iso !== start ? "end" : "middle");
@@ -680,6 +785,14 @@
       yMin -= padY;
       yMax += padY;
     }
+    const fit = linearFit(points.map((point) => ({ x: point.x, y: point.y })));
+    if (fit) {
+      const xs = points.map((point) => point.x);
+      const x0 = Math.min(...xs);
+      const x1 = Math.max(...xs);
+      yMin = Math.min(yMin, fit.intercept + fit.slope * x0, fit.intercept + fit.slope * x1);
+      yMax = Math.max(yMax, fit.intercept + fit.slope * x0, fit.intercept + fit.slope * x1);
+    }
     const xAt = (value) => pad.l + ((value - xMin) / (xMax - xMin)) * plotW;
     const yAt = (value) => pad.t + plotH - ((value - yMin) / (yMax - yMin)) * plotH;
     const yTicks = [yMin, (yMin + yMax) / 2, yMax].map((value) => Math.round(value));
@@ -689,6 +802,12 @@
       const y = yAt(tick);
       body += `<line x1="${pad.l}" y1="${y}" x2="${width - pad.r}" y2="${y}" stroke="${c.grid}"/>`;
       body += `<text x="${pad.l - 6}" y="${y + 4}" text-anchor="end" font-size="11" fill="${c.ink}">${xml(num.format(tick))}</text>`;
+    }
+    if (fit) {
+      const xs = points.map((point) => point.x);
+      const x0 = Math.min(...xs);
+      const x1 = Math.max(...xs);
+      body += trendMarkup(xAt(x0), yAt(fit.intercept + fit.slope * x0), xAt(x1), yAt(fit.intercept + fit.slope * x1), c.trend, width);
     }
     for (const point of points) {
       body += `<circle cx="${xAt(point.x).toFixed(1)}" cy="${yAt(point.y).toFixed(1)}" r="4" fill="${c.accent}" fill-opacity="0.85"><title>${xml(point.label)}: ${point.x.toFixed(2)} h, ${xml(num.format(point.y))}</title></circle>`;
