@@ -35,7 +35,7 @@
       <button type="button" data-days="30" aria-pressed="true">30 days</button>
       <button type="button" data-days="90" aria-pressed="false">90 days</button>
     </div>
-    <p id="range-note" class="note">Charts below follow this range. The weight chart adds the same number of days of the illustrative pace.</p>
+    <p id="range-note" class="note">This filters the charts below. The weight chart also adds this many days of the illustrative pace.</p>
   </div>
 </div>
 
@@ -67,12 +67,17 @@
   <section class="card" aria-labelledby="latest-heading">
     <h2 id="latest-heading">Latest day</h2>
     <p class="muted" id="latest-when"></p>
-    <div class="stats">
+    <div class="stats lead">
       <article class="stat">
         <h3>Steps</h3>
         <p class="num" id="steps-value">—</p>
         <p class="muted" id="steps-of">of 10,000</p>
         <div class="bar" aria-hidden="true"><span class="bar-fill" id="steps-fill"></span></div>
+      </article>
+      <article class="stat">
+        <h3>Asleep</h3>
+        <p class="num" id="sleep-latest">—</p>
+        <p class="muted" id="sleep-latest-note">Hours in the main sleep</p>
       </article>
       <article class="stat">
         <h3>Active calories</h3>
@@ -150,6 +155,28 @@
         <tbody id="week-body"></tbody>
       </table>
     </div>
+  </section>
+
+  <section class="card" aria-labelledby="corr-heading">
+    <h2 id="corr-heading">Sleep with steps and cardio</h2>
+    <p id="corr-summary" class="note">Each night’s main sleep is paired with that same day’s steps, cardio and readiness. This describes the dates in view. It is not a cause, and it is not medical advice.</p>
+    <ul id="corr-lines" class="plain"></ul>
+    <div class="stats">
+      <article class="stat">
+        <h3>Under 7 hours</h3>
+        <p class="num" id="corr-short-n">—</p>
+        <p class="muted" id="corr-short-detail"></p>
+      </article>
+      <article class="stat">
+        <h3>7 hours or more</h3>
+        <p class="num" id="corr-long-n">—</p>
+        <p class="muted" id="corr-long-detail"></p>
+      </article>
+    </div>
+    <h3 class="subhead">Hours asleep and steps</h3>
+    <div id="corr-steps-chart" class="chart"></div>
+    <h3 class="subhead">Hours asleep and readiness</h3>
+    <div id="corr-ready-chart" class="chart"></div>
   </section>
 
   <section class="card" aria-labelledby="sleep-heading">

@@ -6,7 +6,7 @@ Personal site. The China trip planner is `china-trip-planner.html`.
 
 Public page, after this is on `main`: <https://keithorian.github.io/health/>
 
-It logs weight from 92 kg on 18 Nov 2026 towards 80 kg, plus steps, cardio, sleep, readiness, heart-rate variability, resting heart rate, stress and workouts from an Oura ring. Times are Singapore time (UTC+8). The dashed weight line is an illustrative 0.5 kg/week pace, not a forecast, and the page is not medical advice.
+It logs weight from 92 kg on 18 Nov 2026 towards 80 kg, plus steps, cardio, sleep, readiness, heart-rate variability, resting heart rate, stress and workouts from an Oura ring. Sleep is also paired with the same day’s steps, cardio and readiness, as a description of those dates rather than a cause. Times are Singapore time (UTC+8). The dashed weight line is an illustrative 0.5 kg/week pace, not a forecast, and the page is not medical advice.
 
 Oura data is refreshed by **Oura sync** (every 6 hours, and whenever you run it from the Actions tab). It commits `health/data/daily.json` only when the aggregated numbers change. The raw pull, including anything minute-by-minute, is not committed.
 

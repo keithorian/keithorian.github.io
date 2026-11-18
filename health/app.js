@@ -475,13 +475,14 @@
     const spanDays = calendar(rangeStart, dataEnd);
 
     setText("updated", doc.generated_at ? formatUpdated(doc.generated_at) : "Updated time unavailable");
-    setText("range-note", `Showing ${rangeLabel(rangeStart, dataEnd)}. Charts below follow this range. The weight chart adds ${state.range} days of the illustrative pace.`);
+    setText("range-note", `Showing ${rangeLabel(rangeStart, dataEnd)}. This filters the charts below. The weight chart also adds this many days of the illustrative pace.`);
 
     renderWeight(goals, asOf);
     renderLatest(latest, goals, inRange, spanDays);
     renderCardio(byDate, dataEnd, goals, rangeStart, dataEnd);
     renderConsistency(days, inRange, spanDays, byDate, rangeStart, dataEnd, goals);
     renderWeeks(byDate, rangeStart, dataEnd, goals);
+    renderCorrelation(inRange);
     renderRecovery(inRange);
     renderWorkouts(doc.workouts || [], rangeStart, dataEnd);
   }
@@ -543,6 +544,13 @@
     $("steps-fill").style.width = `${pct}%`;
     setText("cal-active", latest.active_cal == null ? "—" : num.format(latest.active_cal));
     setText("cal-total", latest.total_cal == null ? "—" : num.format(latest.total_cal));
+    setText("sleep-latest", latest.sleep_h == null ? "—" : latest.sleep_h.toFixed(2));
+    setText(
+      "sleep-latest-note",
+      latest.sleep_h == null
+        ? "No main sleep recorded"
+        : (latest.sleep_score == null ? "Hours asleep" : `Hours asleep · score ${latest.sleep_score}`),
+    );
 
     const byDate = new Map(inRange.map((row) => [row.date, row]));
     const labels = spanDays.map((day) => formatDay(day));
@@ -642,6 +650,173 @@
       tr.append(td);
       body.append(tr);
     }
+  }
+
+  function scatterChart(points) {
+    if (!points.length) return "";
+    const c = colours();
+    const width = 640;
+    const height = 220;
+    const pad = { l: 48, r: 14, t: 16, b: 32 };
+    const plotW = width - pad.l - pad.r;
+    const plotH = height - pad.t - pad.b;
+    let xMin = Math.min(...points.map((point) => point.x));
+    let xMax = Math.max(...points.map((point) => point.x));
+    let yMin = Math.min(...points.map((point) => point.y));
+    let yMax = Math.max(...points.map((point) => point.y));
+    if (xMax - xMin < 0.4) {
+      xMin -= 0.3;
+      xMax += 0.3;
+    } else {
+      const padX = (xMax - xMin) * 0.08;
+      xMin -= padX;
+      xMax += padX;
+    }
+    if (yMax - yMin < 1) {
+      yMin -= 1;
+      yMax += 1;
+    } else {
+      const padY = (yMax - yMin) * 0.1;
+      yMin -= padY;
+      yMax += padY;
+    }
+    const xAt = (value) => pad.l + ((value - xMin) / (xMax - xMin)) * plotW;
+    const yAt = (value) => pad.t + plotH - ((value - yMin) / (yMax - yMin)) * plotH;
+    const yTicks = [yMin, (yMin + yMax) / 2, yMax].map((value) => Math.round(value));
+    const xTicks = [xMin, (xMin + xMax) / 2, xMax];
+    let body = `<svg viewBox="0 0 ${width} ${height}" aria-hidden="true" font-family="Avenir Next, Segoe UI, system-ui, sans-serif">`;
+    for (const tick of yTicks) {
+      const y = yAt(tick);
+      body += `<line x1="${pad.l}" y1="${y}" x2="${width - pad.r}" y2="${y}" stroke="${c.grid}"/>`;
+      body += `<text x="${pad.l - 6}" y="${y + 4}" text-anchor="end" font-size="11" fill="${c.ink}">${xml(num.format(tick))}</text>`;
+    }
+    for (const point of points) {
+      body += `<circle cx="${xAt(point.x).toFixed(1)}" cy="${yAt(point.y).toFixed(1)}" r="4" fill="${c.accent}" fill-opacity="0.85"><title>${xml(point.label)}: ${point.x.toFixed(2)} h, ${xml(num.format(point.y))}</title></circle>`;
+    }
+    xTicks.forEach((tick, index) => {
+      const anchor = index === 0 ? "start" : (index === xTicks.length - 1 ? "end" : "middle");
+      body += `<text x="${xAt(tick).toFixed(1)}" y="${height - 8}" text-anchor="${anchor}" font-size="11" fill="${c.ink}">${tick.toFixed(1)} h</text>`;
+    });
+    body += "</svg>";
+    return body;
+  }
+
+  function formatR(value) {
+    return `${value < 0 ? "−" : ""}${Math.abs(value).toFixed(2)}`;
+  }
+
+  function describeLink(r, count, copy) {
+    if (r == null || count < 8) {
+      return `Not enough days with both ${copy.both} to describe a link (${num.format(count)} day${count === 1 ? "" : "s"}).`;
+    }
+    const shown = `r = ${formatR(r)}, ${num.format(count)} days`;
+    if (Math.abs(r) < 0.2) return `${copy.flat} do not move together in these dates (${shown}).`;
+    const strength = Math.abs(r) >= 0.7 ? "a strong link in these dates" : Math.abs(r) >= 0.4 ? "a moderate link" : "a weak link";
+    const direction = r > 0 ? copy.higher : copy.lower;
+    return `${copy.more} goes with ${direction} (${strength}, ${shown}).`;
+  }
+
+  function pairs(rows, xField, yField) {
+    return rows.filter((row) => row[xField] != null && row[yField] != null);
+  }
+
+  function correlation(rows, xField, yField) {
+    const matched = pairs(rows, xField, yField);
+    const n = matched.length;
+    if (n < 3) return { r: null, n };
+    const xs = matched.map((row) => row[xField]);
+    const ys = matched.map((row) => row[yField]);
+    const meanX = xs.reduce((sum, value) => sum + value, 0) / n;
+    const meanY = ys.reduce((sum, value) => sum + value, 0) / n;
+    let nume = 0;
+    let dx = 0;
+    let dy = 0;
+    for (let i = 0; i < n; i += 1) {
+      const x = xs[i] - meanX;
+      const y = ys[i] - meanY;
+      nume += x * y;
+      dx += x * x;
+      dy += y * y;
+    }
+    if (dx === 0 || dy === 0) return { r: null, n };
+    return { r: nume / Math.sqrt(dx * dy), n };
+  }
+
+  function groupBlurb(rows) {
+    if (!rows.length) return "No nights in this range.";
+    const steps = mean(rows, "steps", 0);
+    const cardio = mean(rows, "cardio_min", 0);
+    const ready = mean(rows, "readiness", 0);
+    const bits = [];
+    if (steps != null) bits.push(`${num.format(steps)} steps`);
+    if (cardio != null) bits.push(`${num.format(cardio)} cardio min`);
+    if (ready != null) bits.push(`readiness ${num.format(ready)}`);
+    return bits.length ? `Average ${bits.join(", ")}.` : "No steps, cardio or readiness on these nights.";
+  }
+
+  function renderCorrelation(inRange) {
+    const rows = inRange.filter((row) => !row.incomplete);
+    const leftOut = inRange.some((row) => row.incomplete);
+    const steps = correlation(rows, "sleep_h", "steps");
+    const cardio = correlation(rows, "sleep_h", "cardio_min");
+    const ready = correlation(rows, "sleep_h", "readiness");
+    const lines = $("corr-lines");
+    lines.replaceChildren();
+    const sentences = [
+      describeLink(steps.r, steps.n, {
+        both: "a sleep length and a step count",
+        flat: "Sleep length and steps",
+        more: "Longer sleep",
+        higher: "more steps",
+        lower: "fewer steps",
+      }),
+      describeLink(cardio.r, cardio.n, {
+        both: "a sleep length and a cardio total",
+        flat: "Sleep length and cardio",
+        more: "Longer sleep",
+        higher: "more cardio minutes",
+        lower: "fewer cardio minutes",
+      }),
+      describeLink(ready.r, ready.n, {
+        both: "a sleep length and a readiness score",
+        flat: "Sleep length and readiness",
+        more: "Longer sleep",
+        higher: "higher readiness",
+        lower: "lower readiness",
+      }),
+    ];
+    for (const sentence of sentences) {
+      const item = document.createElement("li");
+      item.textContent = sentence;
+      lines.append(item);
+    }
+    const base = "Each night’s main sleep is paired with that same day’s steps, cardio and readiness. This describes the dates in view. It is not a cause, and it is not medical advice.";
+    const hold = leftOut ? " The latest day is still in progress, so it is left out of these pairings." : "";
+    setText("corr-summary", base + hold);
+
+    const short = rows.filter((row) => row.sleep_h != null && row.sleep_h < 7);
+    const longer = rows.filter((row) => row.sleep_h != null && row.sleep_h >= 7);
+    setText("corr-short-n", `${num.format(short.length)} night${short.length === 1 ? "" : "s"}`);
+    setText("corr-long-n", `${num.format(longer.length)} night${longer.length === 1 ? "" : "s"}`);
+    setText("corr-short-detail", groupBlurb(short));
+    setText("corr-long-detail", groupBlurb(longer));
+
+    const stepPoints = pairs(rows, "sleep_h", "steps").map((row) => ({
+      x: row.sleep_h, y: row.steps, label: formatDay(row.date, true),
+    }));
+    const readyPoints = pairs(rows, "sleep_h", "readiness").map((row) => ({
+      x: row.sleep_h, y: row.readiness, label: formatDay(row.date, true),
+    }));
+    mountChart(
+      $("corr-steps-chart"),
+      `Scatter of hours asleep against steps. ${sentences[0]}`,
+      scatterChart(stepPoints),
+    );
+    mountChart(
+      $("corr-ready-chart"),
+      `Scatter of hours asleep against readiness. ${sentences[2]}`,
+      scatterChart(readyPoints),
+    );
   }
 
   function latestWith(rows, field) {
