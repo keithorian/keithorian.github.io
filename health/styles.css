@@ -11,6 +11,7 @@
   --accent-soft: #e5f6ee;
   --mark: #b86112;
   --goal: #8d3b32;
+  --trend: #1d4e89;
   --deep: #1e4d7b;
   --rem: #2a7f7a;
   --light: #c5ddd2;
@@ -38,6 +39,7 @@
     --accent-soft: #16382c;
     --mark: #f0b27a;
     --goal: #f0b2ab;
+    --trend: #9ec0e4;
     --deep: #9ec0e4;
     --rem: #8fd4cf;
     --light: #3d5c52;
@@ -122,6 +124,7 @@ h3 { margin: 0; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.02em; co
 .key { display: inline-flex; align-items: center; gap: 6px; }
 .swatch { width: 22px; height: 4px; border-radius: 99px; display: inline-block; background: var(--accent); }
 .swatch.dashed { height: 0; border-top: 3px dashed var(--mark); background: none; }
+.swatch.trend { background: var(--trend); height: 3px; }
 .swatch.deep { background: var(--deep); height: 10px; }
 .swatch.rem { background: var(--rem); height: 10px; }
 .swatch.light { background: var(--light); height: 10px; border: 1px solid var(--line); }
