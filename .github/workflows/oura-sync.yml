@@ -14,8 +14,8 @@ name: Oura sync
 
 on:
   schedule:
-    # Once a day at 09:00 Singapore time (UTC+8), which is 01:00 UTC.
-    - cron: "0 1 * * *"
+    # Twice a day at 09:00 and 21:00 Singapore time (UTC+8), which is 01:00 and 13:00 UTC.
+    - cron: "0 1,13 * * *"
   workflow_dispatch:
 
 permissions:
