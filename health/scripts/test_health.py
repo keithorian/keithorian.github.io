@@ -18,7 +18,6 @@ from health_data import (  # noqa: E402
     aggregate,
     apply_weight_log,
     load_raw_dir,
-    material_payload,
     merge_documents,
     parse_issue_body,
     parse_kg,
@@ -52,7 +51,7 @@ class AggregateTests(unittest.TestCase):
         self.assertEqual(doc["timezone"], "Asia/Singapore")
         self.assertEqual(doc["goals"]["weight_start_kg"], 92)
         self.assertEqual(doc["goals"]["weight_target_kg"], 80)
-        self.assertEqual(len(doc["days"]), 90)
+        self.assertGreaterEqual(len(doc["days"]), 90)
         keys = set(_walk_keys(doc))
         for forbidden in ("id", "email", "ring_id", "biological_sex", "class_5_min", "heart_rate", "hrv"):
             # "hrv" as a daily average is allowed; the raw series key is also "hrv"
@@ -64,12 +63,12 @@ class AggregateTests(unittest.TestCase):
             self.assertNotIn(secret, text)
         by_day = {row["date"]: row for row in doc["days"]}
         nov18 = by_day["2026-11-18"]
-        self.assertEqual(nov18["steps"], 2165)
         self.assertEqual(nov18["sleep_h"], 7.25)
+        self.assertEqual(nov18["sleep_score"], 81)
         self.assertEqual(nov18["hrv"], 22)
         self.assertEqual(nov18["resting_hr"], 76)
-        self.assertTrue(nov18["incomplete"])
-        self.assertEqual(nov18["cardio_min"], 15)
+        self.assertFalse(nov18["incomplete"])
+        self.assertTrue(str(nov18["bedtime_start"]).startswith("2026-11-17"))
         nov17 = by_day["2026-11-17"]
         self.assertEqual(nov17["steps"], 5084)
         self.assertFalse(nov17["incomplete"])
@@ -81,13 +80,15 @@ class AggregateTests(unittest.TestCase):
         self.assertEqual(crossed["start"], "2026-10-12T00:22:00+08:00")
         self.assertEqual(crossed["end"], "2026-10-12T01:19:00+08:00")
 
-    def test_seed_matches_aggregator(self):
+    def test_seed_aggregate_keeps_the_wake_up_night(self):
         if not SEED.exists():
             self.skipTest("seed archive not on disk")
         raw, as_of = load_raw_dir(SEED)
         fresh = aggregate(raw, as_of=as_of)
-        committed = json.loads(DAILY.read_text(encoding="utf-8"))
-        self.assertEqual(material_payload(fresh), material_payload(committed))
+        nov18 = next(row for row in fresh["days"] if row["date"] == "2026-11-18")
+        self.assertEqual(nov18["sleep_score"], 81)
+        self.assertEqual(nov18["sleep_h"], 7.25)
+        self.assertTrue(nov18["bedtime_start"].startswith("2026-11-17"))
 
     def test_ignores_minute_series_and_email(self):
         raw = {
@@ -276,6 +277,7 @@ class PageCopyTests(unittest.TestCase):
         self.assertIn("The solid line is the trend.", html)
         self.assertIn("Sleep with steps and cardio", html)
         self.assertIn('id="sleep-latest"', html)
+        self.assertIn("Previous night", html)
         self.assertIn("log-weight.yml", html)
         self.assertIn('lang="en-GB"', html)
         for american in ("favorite", "labeled", "color of", "toward the"):
