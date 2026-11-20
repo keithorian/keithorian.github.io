@@ -649,13 +649,9 @@
     $("steps-fill").style.width = `${pct}%`;
     setText("cal-active", latest.active_cal == null ? "—" : num.format(latest.active_cal));
     setText("cal-total", latest.total_cal == null ? "—" : num.format(latest.total_cal));
-    setText("sleep-latest", latest.sleep_h == null ? "—" : latest.sleep_h.toFixed(2));
-    setText(
-      "sleep-latest-note",
-      latest.sleep_h == null
-        ? "No main sleep recorded"
-        : (latest.sleep_score == null ? "Hours asleep" : `Hours asleep · score ${latest.sleep_score}`),
-    );
+    const night = scoredNight(state.doc.days);
+    setText("sleep-latest", night ? String(night.sleep_score) : "—");
+    setText("sleep-latest-note", night ? previousNightNote(night) : "No sleep score yet");
 
     const byDate = new Map(inRange.map((row) => [row.date, row]));
     const labels = spanDays.map((day) => formatDay(day));
@@ -938,6 +934,18 @@
     );
   }
 
+  function scoredNight(days) {
+    for (let i = days.length - 1; i >= 0; i -= 1) {
+      if (days[i].sleep_score != null) return days[i];
+    }
+    return null;
+  }
+
+  function previousNightNote(night) {
+    const hours = night.sleep_h == null ? "" : ` · ${night.sleep_h.toFixed(2)} h`;
+    return `Previous night, ${formatDay(night.date, true)}${hours}`;
+  }
+
   function latestWith(rows, field) {
     for (let i = rows.length - 1; i >= 0; i -= 1) {
       if (rows[i][field] != null) return rows[i];
@@ -947,19 +955,20 @@
 
   function renderRecovery(rows) {
     const labels = rows.map((row) => formatDay(row.date));
-    const sleep = latestWith(rows, "sleep_h") || latestWith(rows, "sleep_score");
+    const sleep = scoredNight(rows) || latestWith(rows, "sleep_h");
     const sleepAvg = mean(rows, "sleep_h", 2);
     const scoreAvg = mean(rows, "sleep_score", 0);
-    let sleepText = "Hours asleep come from the main sleep period. The score is Oura’s sleep score.";
-    if (sleep) {
-      const bits = [`${weekday(sleep.date)} ${formatDay(sleep.date)}`];
+    let sleepText = "The score is the previous night: the main sleep that ended that morning.";
+    if (sleep && sleep.sleep_score != null) {
+      const bits = [`Previous night’s score ${sleep.sleep_score} (${formatDay(sleep.date, true)})`];
       if (sleep.sleep_h != null) bits.push(`${sleep.sleep_h.toFixed(2)} h asleep`);
-      if (sleep.sleep_score != null) bits.push(`score ${sleep.sleep_score}`);
       if (sleep.efficiency != null) bits.push(`efficiency ${sleep.efficiency}%`);
       if (sleep.bedtime_start && sleep.bedtime_end) bits.push(`in bed ${clock(sleep.bedtime_start)}–${clock(sleep.bedtime_end)}`);
       sleepText = `${bits.join(" · ")}.`;
       if (sleepAvg != null) sleepText += ` Average asleep in this range: ${sleepAvg.toFixed(2)} h.`;
       if (scoreAvg != null) sleepText += ` Average score: ${scoreAvg}.`;
+    } else if (sleep) {
+      sleepText = `${formatDay(sleep.date, true)} has ${sleep.sleep_h.toFixed(2)} h asleep and no score yet.`;
     }
     setText("sleep-summary", sleepText);
     mountChart($("sleep-chart"), sleepText, rows.some((row) => row.sleep_h != null) ? stackedSleep(rows) : "");
