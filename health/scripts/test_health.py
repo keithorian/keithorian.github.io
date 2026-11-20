@@ -14,9 +14,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from health_data import (  # noqa: E402
+    HISTORY_DAYS,
     ROOT,
     aggregate,
     apply_weight_log,
+    blank_day,
     load_raw_dir,
     material_payload,
     merge_documents,
@@ -52,7 +54,7 @@ class AggregateTests(unittest.TestCase):
         self.assertEqual(doc["timezone"], "Asia/Singapore")
         self.assertEqual(doc["goals"]["weight_start_kg"], 92)
         self.assertEqual(doc["goals"]["weight_target_kg"], 80)
-        self.assertEqual(len(doc["days"]), 90)
+        self.assertEqual(len(doc["days"]), HISTORY_DAYS)
         keys = set(_walk_keys(doc))
         for forbidden in ("id", "email", "ring_id", "biological_sex", "class_5_min", "heart_rate", "hrv"):
             # "hrv" as a daily average is allowed; the raw series key is also "hrv"
@@ -63,18 +65,26 @@ class AggregateTests(unittest.TestCase):
         for secret in ("@", "access_token", "refresh_token", "movement_30", "class_5_min"):
             self.assertNotIn(secret, text)
         by_day = {row["date"]: row for row in doc["days"]}
+        first, last = doc["days"][0]["date"], doc["days"][-1]["date"]
+        self.assertEqual(
+            (date.fromisoformat(last) - date.fromisoformat(first)).days,
+            HISTORY_DAYS - 1,
+        )
         nov18 = by_day["2026-11-18"]
-        self.assertEqual(nov18["steps"], 2165)
+        self.assertEqual(nov18["steps"], 4409)
         self.assertEqual(nov18["sleep_h"], 7.25)
         self.assertEqual(nov18["hrv"], 22)
         self.assertEqual(nov18["resting_hr"], 76)
-        self.assertTrue(nov18["incomplete"])
-        self.assertEqual(nov18["cardio_min"], 15)
+        self.assertFalse(nov18["incomplete"])
+        self.assertEqual(nov18["cardio_min"], 40)
         nov17 = by_day["2026-11-17"]
         self.assertEqual(nov17["steps"], 5084)
         self.assertFalse(nov17["incomplete"])
         self.assertEqual(by_day["2026-09-07"]["cardio_min"], 48)
-        self.assertEqual(by_day["2026-08-22"]["cardio_min"], 119)
+        self.assertEqual(by_day[first]["cardio_min"], 28)
+        self.assertEqual(first, "2026-08-23")
+        self.assertNotIn("2026-08-22", by_day)
+        self.assertTrue(by_day[last]["incomplete"])
         crossed = next(
             item for item in doc["workouts"] if item["day"] == "2026-10-11" and item["minutes"] == 57
         )
@@ -204,6 +214,52 @@ class AggregateTests(unittest.TestCase):
         self.assertEqual(day["hrv"], 30)
         self.assertEqual(day["resting_hr"], 60)
         self.assertEqual(day["cardio_min"], 20)
+
+    def test_merge_drops_days_older_than_history_window(self):
+        as_of = AS_OF
+        today = as_of.date()
+        old = (today - timedelta(days=HISTORY_DAYS)).isoformat()
+        keep = (today - timedelta(days=HISTORY_DAYS - 1)).isoformat()
+        existing = {
+            "days": [
+                {**blank_day(old), "steps": 1, "cardio_min": 1},
+                {**blank_day(keep), "steps": 2, "cardio_min": 2},
+            ],
+            "workouts": [
+                {"day": old, "start": f"{old}T10:00:00+08:00", "activity": "walk", "minutes": 10},
+                {"day": keep, "start": f"{keep}T10:00:00+08:00", "activity": "walk", "minutes": 20},
+            ],
+        }
+        fresh = aggregate(
+            {
+                "daily_activity": [
+                    {
+                        "day": today.isoformat(),
+                        "steps": 3,
+                        "active_calories": 1,
+                        "total_calories": 2,
+                        "score": 50,
+                        "medium_activity_time": 0,
+                        "high_activity_time": 0,
+                    }
+                ]
+            },
+            as_of=as_of,
+        )
+        merged = merge_documents(
+            existing,
+            fresh,
+            ok_endpoints={"daily_activity"},
+            window_start=(today - timedelta(days=29)).isoformat(),
+            window_end=today.isoformat(),
+            as_of=as_of,
+        )
+        dates = [row["date"] for row in merged["days"]]
+        self.assertNotIn(old, dates)
+        self.assertIn(keep, dates)
+        self.assertIn(today.isoformat(), dates)
+        self.assertEqual(len(merged["days"]), 2)
+        self.assertEqual([item["day"] for item in merged["workouts"]], [keep])
 
     def test_sync_window(self):
         start, end = sync_window(None, date(2026, 11, 18))
