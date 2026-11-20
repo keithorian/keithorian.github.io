@@ -44,6 +44,9 @@ GOALS = {
     "cardio_min_per_week": 150,
 }
 
+# Public JSON keeps a rolling inclusive window ending on as_of (SGT).
+HISTORY_DAYS = 90
+
 ROOT = Path(__file__).resolve().parents[2]
 DAILY_PATH = ROOT / "health" / "data" / "daily.json"
 WEIGHT_PATH = ROOT / "health" / "data" / "weight.csv"
@@ -347,6 +350,12 @@ def merge_documents(
     else:
         workouts = list((existing or {}).get("workouts") or fresh.get("workouts") or [])
     workouts.sort(key=lambda item: (item.get("start") or "", item.get("activity") or ""))
+
+    # Drop days older than the rolling window so daily.json does not grow
+    # by one entry on every successful sync.
+    cutoff = (as_of.astimezone(SGT).date() - timedelta(days=HISTORY_DAYS - 1)).isoformat()
+    merged = [row for row in merged if row["date"] >= cutoff]
+    workouts = [item for item in workouts if str(item.get("day") or "") >= cutoff]
 
     return {
         "timezone": "Asia/Singapore",
@@ -678,12 +687,13 @@ def pull_window(token: str, start: date, end: date) -> tuple[dict[str, list[dict
 
 def sync_window(existing: dict[str, Any] | None, today: date) -> tuple[date, date]:
     """Recent overlap, widened when stored days stop before today."""
+    full_start = today - timedelta(days=HISTORY_DAYS - 1)
     start = today - timedelta(days=29)
     if not existing or not existing.get("days"):
-        return today - timedelta(days=89), today
+        return full_start, today
     dates = [row["date"] for row in existing["days"] if row.get("date")]
     if not dates:
-        return today - timedelta(days=89), today
+        return full_start, today
     last = date.fromisoformat(max(dates))
     catchup = last - timedelta(days=2)
     if catchup < start:
